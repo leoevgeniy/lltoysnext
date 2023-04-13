@@ -1,0 +1,25 @@
+.header .lupa {
+    position: relative;
+    right: 15%;
+    border: none;
+    color: white;
+    }
+.header .lupa:hover {
+    background: none;
+    border-color: #fefbec;
+    --bs-btn-active-bg: #fefbec;
+}
+.header .lupa svg {
+
+}
+.header .form-control {
+    border-radius: 25px;
+    border: none;
+    background: #F49CCC;
+    }
+.header .form-control:enabled {
+    border-radius: 25px;
+    border: none;
+    background: #F49CCC;
+    color: white;
+    }

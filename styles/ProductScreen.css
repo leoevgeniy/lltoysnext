@@ -1,0 +1,11 @@
+.descriptionArea, .h1 {
+    padding: 5px;
+    display: block;
+    display: -webkit-box;
+    /*max-width: 100%;*/
+    font-size: 20px;
+    -webkit-line-clamp: 10; /* количество строк */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -1,0 +1,17 @@
+.fullImage {
+    position: fixed;
+    z-index:2;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    height: 100%;
+    pointer-events: none;
+}
+.centeredImage {
+    display: block;
+}
+.selectedImage {
+    display: table-cell;
+    vertical-align:middle;
+
+}

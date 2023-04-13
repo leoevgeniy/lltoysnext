@@ -1,7 +1,48 @@
 import '@/styles/globals.css'
+import {Provider} from "react-redux";
+import App from "next/app";
+import {createWrapper} from 'next-redux-wrapper';
+import React from "react";
+import store from "@/redux/store";
+import Layout from '@/components/layout'
+import '@/styles/header.css'
+import '@/styles/catalog.css'
+import '@/styles/fontawesome.min.css'
+import 'bootstrap/dist/css/bootstrap.css'
+import '@/styles/searchBox.css'
+import '@/styles/loginScreen.css'
+import '@/styles/footer.css'
+import '@/styles/page404.css'
+import '@/styles/topCarousel.css'
+import '@/styles/ProductScreen.css'
+import '@/styles/ProductImageCarousel.css'
+import '@/styles/homeScreen.css'
+import '@/styles/imageModal.css'
+import '@/styles/inputPD.css'
+import '@/styles/PageNotFound.css'
+import '@/styles/product.css'
 
-const App = ({ Component, pageProps }) => {
-  return <Component {...pageProps} />
+const MyApp = ({Component, ...rest}) => {
+    // static async getInitialProps({Component, ctx}) {
+    //     const appProps = Component.getInitialProps ? await Component.getInitialProps(ctx): {};
+    //
+    //     console.log(appProps)
+    //     return { appProps: appProps };
+    //
+    // }
+    const wrapper = createWrapper(() => store);
+    const {appProps} = wrapper.useWrappedStore(rest);
+    return (
+        <Provider store={store}>
+            <Layout>
+                <Component {...appProps} />
+            </Layout>
+        </Provider>
+    )
+
 }
+// const makeStore = () => store;
+// const wrapper = createWrapper(makeStore);
 
-export default App
+
+export default MyApp

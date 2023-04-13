@@ -1,0 +1,108 @@
+.footer{
+    position: relative;
+    /*bottom: 0;*/
+    /*height: 80px;*/
+    /*background: no-repeat url("../../img/footerbg.jpg");*/
+    /*background-size: cover;*/
+    /*width: 100%;*/
+    align-items: center;
+    background-color: black;
+    margin-top: 10px;
+    margin-left: 0;
+    margin-right: 0;
+    /*height: 0;*/
+    /*padding-top: 31.23%;*/
+}
+/*.footer #about {*/
+    /*height: 80%;*/
+    /*margin: 2%;*/
+
+
+/*}*/
+/*.footer #delivery {*/
+/*    height: 80%;*/
+/*    margin: 2%;*/
+
+/*}*/
+/*@media (max-width: 1400px) {*/
+/*    .footer {*/
+/*        height: 90px;*/
+/*    }*/
+/*    .footer #about {*/
+/*        height: 50%;*/
+/*        margin: 2%;*/
+/*    }*/
+/*    .footer #delivery {*/
+/*        height: 50%;*/
+/*        margin: 2%;*/
+/*    }*/
+/*}*/
+/*@media (max-width: 1200px) {*/
+/*    .footer {*/
+/*        height: 70px;*/
+/*    }*/
+/*    .footer #about {*/
+/*        height: 60%;*/
+/*        margin: 2%;*/
+/*    }*/
+/*    .footer #delivery {*/
+/*        height: 60%;*/
+/*        margin: 2%;*/
+/*    }*/
+/*}*/
+/*@media (max-width: 992px) {*/
+/*    .footer {*/
+/*        height: 70px;*/
+/*    }*/
+/*    .footer #about {*/
+/*        height: 60%;*/
+/*        margin: 2%;*/
+/*    }*/
+/*    .footer #delivery {*/
+/*        height: 60%;*/
+/*        margin: 2%;*/
+/*    }*/
+/*}*/
+/*@media (max-width: 768px) {*/
+/*    .footer {*/
+/*        height: 70px;*/
+/*    }*/
+/*    .footer #about {*/
+/*        height: 60%;*/
+/*        margin: 2%;*/
+/*    }*/
+/*    .footer #delivery {*/
+/*        height: 60%;*/
+/*        margin: 2%;*/
+/*    }*/
+/*}*/
+/*@media (max-width: 576px) {*/
+/*    .footer {*/
+/*        !*height: 70px;*!*/
+/*    }*/
+/*    .footer #about {*/
+/*        height: 40%;*/
+/*        margin: 2%;*/
+/*    }*/
+/*    .footer #delivery {*/
+/*        height: 40%;*/
+/*        margin: 2%;*/
+/*    }*/
+/*}*/
+
+/* @media (max-width: 375px) {*/
+/*     .footer {*/
+/*         height: 50px;*/
+/*         width: 100%;*/
+/*     }*/
+/*     .footer #about {*/
+/*         height: 40%;*/
+/*         margin: 2%;*/
+/*         max-width: 45%;*/
+/*     }*/
+/*     .footer #delivery {*/
+/*         height: 40%;*/
+/*         margin: 2%;*/
+/*         max-width: 45%;*/
+/*     }*/
+/* }*/

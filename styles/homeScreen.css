@@ -1,0 +1,354 @@
+.popular {
+    display: flex;
+}
+.popular .line {
+    height: 40px;
+    width: 100%;
+    background-color: #e5097f;
+}
+.popular span {
+    width: 15%;
+}
+.homescreen .home {
+    position: absolute;
+    width: 8%;
+    left: 7%;
+    top: 15%;
+}
+/*.homescreen .catalogSmall{*/
+/*    display: none;*/
+/*}*/
+.homescreen .user {
+    width: 8%;
+    position: absolute;
+    left: 27%;
+    top: 15%;
+}
+.homescreen .cart {
+    width: 8%;
+    position: absolute;
+    left: 17%;
+    top: 15%;
+}
+.homescreen .cartBadge {
+    /*width: 2%;*/
+    position: absolute;
+    left: 23%;
+    top: 17%;
+}
+.homescreen .logo {
+    width: 20%;
+    position: absolute;
+    left: 50%;
+    top: 15%;
+    transform: translate(-50%);
+}
+.homescreen .mainlady{
+    position: relative;
+    background: no-repeat url("../public/mainlady.png");
+    background-size: contain;
+    width: 100%;
+    height: 0;
+    padding-top: 31.23%;
+}
+.homescreen .sorting {
+    font-size: 10px !important;
+}
+.discount {
+    position: absolute;
+    background: no-repeat url("../public/sale10.png");
+    background-size: contain;
+    width: 100%;
+    height: 0;
+    padding-top: 31.23%;
+}
+
+.categories {
+    display: grid;
+    grid-gap: 5px;
+    justify-content: center;
+    grid: repeat(2, 400px) / repeat(3, 33%)
+}
+.categories2 {
+    display: grid;
+    grid-gap: 5px;
+    justify-content: center;
+    grid: repeat(2, 400px) / repeat(3, 33%)
+}
+.category {
+    background-size: cover;
+}
+.categorySecond {
+    background-size: cover;
+}
+.category1 {
+    grid-area: 1 / 1 / 2 / 2;
+    background: center no-repeat url("../public/erotic.jpg");
+    background-size: contain;
+}
+.category2 {
+    grid-area: 1 / 2 / 3 / 2;
+    background: center no-repeat url("../public/bdsm.png");
+    background-size: contain;
+}
+.category3 {
+    grid-area: 1 / 3 / 2 / 4;
+    background: center no-repeat url("../public/lubricants.png");
+    background-size: contain;
+}
+.category4 {
+    grid-area: 2 / 1 / 3 / 2;
+    background: center no-repeat url("../public/toys.png");
+    background-size: contain;
+}
+.category5 {
+    grid-area: 2 / 3 / 3 / 4;
+    background: center no-repeat url("../public/things.png");
+    background-size: contain;
+}
+.category6 {
+    grid-area: 1 / 1 / 2 / 2;
+    background: center no-repeat url("../public/sexmebel.jpg");
+    background-size: contain;
+}
+.category7 {
+    grid-area: 1 / 2 / 3 / 2;
+    background: center no-repeat url("../public/women.jpg");
+    background-size: contain;
+}
+.category8 {
+    grid-area: 1 / 3 / 2 / 4;
+    background: center no-repeat url("../public/men.jpg");
+    background-size: contain;
+}
+.category9 {
+    grid-area: 2 / 1 / 3 / 2;
+    background: center no-repeat url("../public/nignee.jpg");
+    background-size: contain;
+}
+.category10 {
+    grid-area: 2 / 3 / 3 / 4;
+    background: center no-repeat url("../public/kupalniki.jpg");
+    background-size: contain;
+}
+.category11 {
+    grid-area: none;
+    background: center no-repeat url("../public/womenSmall.jpg");
+    background-size: contain;
+}
+@media (max-width: 1400px) {
+    .categories, .categories2 {
+        display: grid;
+        grid-gap: 5px;
+        justify-content: center;
+        grid: repeat(2, 350px) / repeat(3, 33%)
+    }
+}
+@media (max-width: 1200px) {
+    .categories, .categories2 {
+        display: grid;
+        grid-gap: 5px;
+        justify-content: center;
+        grid: repeat(2, 300px) / repeat(3, 33%)
+    }
+}
+
+@media (max-width: 992px) {
+    .categories, .categories2  {
+        display: grid;
+        grid-gap: 5px;
+        justify-content: center;
+        grid: repeat(2, 230px) / repeat(3, 33%)
+    }
+}
+@media (max-width: 768px) {
+    .popular span {
+        width: 40%;
+    }
+    .categories, .categories2  {
+        display: grid;
+        grid-gap: 5px;
+        justify-content: center;
+        grid: repeat(2, 160px) / repeat(3, 33%)
+    }
+}
+
+@media (max-width: 576px) {
+    .categories{
+        display: grid;
+        grid-gap: 5px;
+        justify-content: center;
+        grid: repeat(2, 200px) / repeat(2, 50%)
+    }
+    .categories2{
+        display: grid;
+        grid-gap: 5px;
+        justify-content: center;
+        grid: repeat(2, 200px) / repeat(2, 50%)
+    }
+
+    .category1 {
+        grid-area: 1 / 1 / 2 / 2;
+        background: center no-repeat url("../public/erotic.png");
+        background-size: contain;
+    }
+    .category2 {
+        grid-area: none;
+        background: center no-repeat url("../public/bdsmhorisontal.png");
+        background-size: contain;
+    }
+    .category3 {
+        grid-area: 1 / 2 / 2 / 3;
+        background: center no-repeat url("../public/lubricants.png");
+        background-size: contain;
+    }
+    .category4 {
+        grid-area: 2 / 1 / 3 / 2;
+        background: center no-repeat url("../public/toys.png");
+        background-size: contain;
+    }
+    .category5 {
+        grid-area: 2 / 2 / 3 / 3;
+        background: center no-repeat url("../public/things.png");
+        background-size: contain;
+    }
+    .category6 {
+        grid-area: none;
+    }
+    .category11 {
+        grid-area: 1 / 1 / 2 / 2;
+    }
+    .category7 {
+        grid-area: none;
+    }
+    .category8 {
+        grid-area: 1 / 2 / 2 / 3;
+    }
+    .category9 {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+    .category10 {
+        grid-area: 2 / 2 / 3 / 3;
+    }
+}
+
+@media (max-width: 376px) {
+    .popular span {
+        width: 75%;
+    }
+    .categories{
+        display: grid;
+        grid-gap: 5px;
+        justify-content: center;
+        grid: repeat(4, 280px) / repeat(1, 100%)
+    }
+    .categories2{
+        display: grid;
+        grid-gap: 5px;
+        justify-content: center;
+        grid: repeat(4, 280px) / repeat(1, 100%)
+    }
+    .category1 {
+        grid-area: 1 / 1 / 2 / 2;
+        background: center no-repeat url("../public/erotic.png");
+        background-size: contain;
+    }
+    .category2 {
+        grid-area: none;
+        background: center no-repeat url("../public/bdsm.png");
+        background-size: contain;
+    }
+    .category3 {
+        grid-area: 2 / 1 / 3 / 2;
+        background: center no-repeat url("../public/lubricants.png");
+        background-size: contain;
+    }
+    .category4 {
+        grid-area: 3 / 1 / 4 / 2;
+        background: center no-repeat url("../public/toys.png");
+        background-size: contain;
+    }
+    .category5 {
+        grid-area: 4 / 1 / 5 / 2;
+        background: center no-repeat url("../public/things.png");
+        background-size: contain;
+    }
+    .category6 {
+        grid-area: 1 / 1 / 2 / 2;
+    }
+    .category7 {
+        grid-area: none;
+    }
+    .category8 {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+    .category9 {
+        grid-area: 3 / 1 / 4 / 2;
+    }
+    .category10 {
+        grid-area: 4 / 1 / 5 / 2;
+    }
+}
+
+
+
+
+
+.content {
+    display: block;
+    justify-content: flex-start;
+    text-align: start;
+}
+
+.accordion-button {
+    font-size: 30px;
+}
+
+.mainSection {
+    display: flex;
+}
+
+.bar {
+
+    display: block;
+}
+.figure {
+    width: 100%; /* Ширина области */
+    height: 400px; /* Высота области */
+    margin: 0; /* Обнуляем отступы */
+    background-color: #9e8f9e;
+}
+.figure img {
+    width: 100%; /* Ширина изображений */
+    height: 100%; /* Высота изображении */
+    /*flex-shrink: 0;*/
+    object-fit: contain; /* Вписываем фотографию в область */
+
+}
+@media (min-width:768px) {
+    .figure img {
+        object-fit: contain; /* Вписываем фотографию в область */
+    }
+}
+/*main {*/
+/*    background-image: url("https://celes.club/uploads/posts/2022-05/1653471347_2-celes-club-p-nezhnii-zadnii-fon-krasivie-2.jpg");*/
+/*    background-position: center;*/
+/*    background-size: cover;*/
+/*}*/
+.itemColor {
+    color: #00cc66;
+}
+
+/*@media (max-width: 900px) {*/
+/*    .bar{*/
+/*        display: none;*/
+/*    }*/
+/*}*/
+/*@media (max-width: 391px) {*/
+/*    .appcontainer {*/
+/*      padding-left: 0;*/
+/*      padding-right: 0;*/
+/*      margin-right: 0;*/
+
+/*    }*/
+/*  }*/

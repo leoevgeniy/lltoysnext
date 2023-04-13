@@ -1,0 +1,49 @@
+
+@media (max-width: 1200px) {
+    .firstTitle {
+        font-size: 2vw;
+        font-weight: bold;
+    }
+    .subTitle {
+        font-size: 1.5vw;
+        color: #1f2326 !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .firstTitle {
+        font-size: 3vw;
+        font-weight: bold;
+    }
+    .subTitle {
+        font-size: 2vw;
+    }
+}
+@media (max-width: 700px) {
+    .firstTitle {
+        font-size: 3vw;
+        font-weight: bold;
+    }
+    .subTitle {
+        font-size: 2vw;
+    }
+}
+@media (max-width: 395px) {
+    .firstTitle {
+        font-size: 5vw;
+        font-weight: bold;
+    }
+    .subTitle {
+        font-size: 2vw;
+    }
+}
+@media (min-width: 1201px) {
+    .firstTitle {
+        font-size: 1.5vw;
+        font-weight: bold;
+    }
+    .subTitle {
+        font-size: 1vw;
+    }
+}
+
