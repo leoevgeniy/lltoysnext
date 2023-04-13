@@ -1,6 +1,7 @@
 import React from "react";
 import {useState} from "react";
 import Head from "next/head";
+import HomeScreen from '../screens/HomeScreen'
 import MyVerticallyCenteredModal from '../components/MyVerticallyCenteredModal'
 
 const Home = () => {
@@ -19,7 +20,7 @@ const Home = () => {
                 />
 
             </Head>
-
+            <HomeScreen/>
         </>
 
 

@@ -1,26 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Image } from "react-bootstrap";
+import Image from "next/image";
 import ItemsCarousel from "react-items-carousel";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import Loader from "./Loader";
 import Message from "./Message";
 
-const pageWidth = document.documentElement.scrollWidth
-let numberOfCards = 0
-if (pageWidth < 1400 && pageWidth > 1200) {
-    numberOfCards = 7
-} else if (pageWidth <= 1200 && pageWidth > 991) {
-    numberOfCards = 5
-} else if (pageWidth < 992 && pageWidth > 574) {
-    numberOfCards = 3
-} else if (pageWidth < 575 && pageWidth > 360) {
-    numberOfCards = 2
-} else if (pageWidth < 361) {
-    numberOfCards = 2
-} else {numberOfCards = 7}
-const chevronWidth = 60;
-const autoPlayDelay = 4000;
+
+
 
 function ProductCarousel() {
     const { loading, error, products } = useSelector(
@@ -39,6 +26,25 @@ function ProductCarousel() {
         }
         
     }, [state]);
+    useEffect(() => {
+        let pageWidth = 0
+        if (typeof document !== 'undefined') {
+        pageWidth = document.documentElement.scrollWidth}
+        let numberOfCards = 0
+        if (pageWidth < 1400 && pageWidth > 1200) {
+            numberOfCards = 7
+        } else if (pageWidth <= 1200 && pageWidth > 991) {
+            numberOfCards = 5
+        } else if (pageWidth < 992 && pageWidth > 574) {
+            numberOfCards = 3
+        } else if (pageWidth < 575 && pageWidth > 360) {
+            numberOfCards = 2
+        } else if (pageWidth < 361) {
+            numberOfCards = 2
+        } else {numberOfCards = 7}
+        const chevronWidth = 60;
+        const autoPlayDelay = 4000;
+    },[])
 
     const onChange = value => setState({ activeItemIndex: value });
 

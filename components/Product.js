@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {Button, Card, Form} from 'react-bootstrap'
 import Rating from './Rating'
-import {Link, useHistory} from 'react-router-dom'
-// import "bootstrap/dist/css/bootstrap.css";
-import '../components/css/product.css'
+import Link from 'next/link'
 
 function Product({product}) {
 

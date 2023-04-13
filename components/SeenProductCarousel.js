@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import {useDispatch, useSelector} from "react-redux";
-import { Image } from "react-bootstrap";
+import {useSelector} from "react-redux";
+import Image from "next/image";
 import ItemsCarousel from "react-items-carousel";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import Loader from "./Loader";
 import Message from "./Message";
-import {listSeenProducts} from "../actions/productActions";
+import {listSeenProducts} from "@/redux/actions/productAction";
 
-const pageWidth = document.documentElement.scrollWidth
+let pageWidth = 0
+if (typeof document !== 'undefined') {
+    pageWidth = document.documentElement.scrollWidth}
 let numberOfCards = 0
 if (pageWidth < 1400 && pageWidth > 1200) {
     numberOfCards = 7

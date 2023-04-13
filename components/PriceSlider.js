@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react'
 import {useSelector} from "react-redux"
-import InputRange from 'react-input-range'
-import 'react-input-range/lib/css/index.css'
 import Button from "react-bootstrap/Button"
 import {Col, Row} from "react-bootstrap";
 
@@ -34,16 +32,16 @@ function PriceSlider(props) {
                 <div  className='w-100'>
                     <p className='mb-4'> Диапазон: {Number(range.min).toFixed(0)} - {Number(range.max).toFixed(0)} </p>
 
-                    <InputRange
-                        maxValue={Number(Number(maxPrice).toFixed(0))+100}
-                        minValue={Number('0')}
-                        step={100}
-                        value={range}
-                        onChange={value => {
-                            setRange(value)
-                        }}
+                    {/*<InputRange*/}
+                    {/*    maxValue={Number(Number(maxPrice).toFixed(0))+100}*/}
+                    {/*    minValue={Number('0')}*/}
+                    {/*    step={100}*/}
+                    {/*    value={range}*/}
+                    {/*    onChange={value => {*/}
+                    {/*        setRange(value)*/}
+                    {/*    }}*/}
 
-                    />
+                    {/*/>*/}
 
                     <Button
                         as={Col}

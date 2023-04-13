@@ -1,7 +1,7 @@
 import React from "react";
 import {Pagination} from "react-bootstrap";
-import {LinkContainer} from "react-router-bootstrap";
-import {useHistory} from "react-router-dom";
+// import {LinkContainer} from "react-router-bootstrap";
+import {useRouter} from "next/router";
 
 function Paginate({pages, page, keyword = "", isAdmin = false}) {
     let filter = ''
@@ -9,7 +9,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
     let category = ''
     let filterQuery = ''
 
-    let history = useHistory();
+    let history = useRouter();
     const query = new URLSearchParams(history.location.search)
     if (query.get('category')) {category = query.get('category')}
     if (query.get('filter')) {filterQuery = query.get('filter')}

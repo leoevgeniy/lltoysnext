@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Image } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import Image from "next/image";
+import Link from 'next/link'
 import Carousel from 'react-bootstrap/Carousel';
-import deliveryFree from '../img/freeship.jpg'
-import cardDiscount from '../img/discount10.jpg'
+import deliveryFree from '@/public/freeship.jpg'
+import cardDiscount from '@/public/discount10.jpg'
 
 
 function BannersCarousel(props) {

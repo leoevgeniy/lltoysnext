@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import {useSelector} from "react-redux";
-import {Checkbox} from "@mui/material";
-import {ButtonToolbar, Form, FormCheck, FormControl, FormGroup, FormLabel, Navbar} from "react-bootstrap";
-import {useHistory} from "react-router-dom";
+import {Form, FormCheck, FormGroup, FormLabel} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import {listCatalog} from "../actions/productActions";
-import {logout} from "../actions/userActions";
+import {listCatalog} from "@/redux/actions/productAction";
+import {logout} from "@/redux/actions/userActions";
+import {useRouter} from "next/router";
 
 function ProductsFilter(props) {
     const [expanded, setExpanded] = useState(false);
@@ -23,7 +22,7 @@ function ProductsFilter(props) {
 
     let category = ''
 
-    const history = useHistory()
+    const history = useRouter()
     const query = new URLSearchParams(history.location.search)
     if (query.get('category')) {
         category = query.get('category')
