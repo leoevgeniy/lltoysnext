@@ -16,9 +16,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
+from baseresponse.urls import product_urls
+from django.conf import settings
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('update/', include('baseupdate.urls')),
-    path('request/', include('baseresponse.urls')),
-]
+    # path('api/', include('baseresponse.urls')),
+    path('api/products/', include('baseresponse.urls.product_urls')),
+    path('api/users/', include('baseresponse.urls.user_urls')),
+    path('api/order/', include('baseresponse.urls.order_urls')),
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_URL)
+
