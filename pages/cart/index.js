@@ -1,19 +1,25 @@
 import React, {useEffect, useState} from 'react'
-import {Link} from 'react-router-dom'
+import Link from 'next/link'
 import {useDispatch, useSelector} from 'react-redux'
 import {Row, Col, ListGroup, Image, Form, Button, Card, ListGroupItem, Container} from 'react-bootstrap'
-import Message from '../components/Message'
-import {addToCart, removeFromCart} from '../actions/cartActions'
+import Message from '../../components/Message'
+import {addToCart, removeFromCart} from '@/redux/actions/cartActions'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {solid} from '@fortawesome/fontawesome-svg-core/import.macro';
+import {useRouter} from "next/router";
+import {useSearchParams} from "next/navigation";
 
 
-function CartScreen({match, location, history}) {
+function Index() {
     const [sizeChange, setSizeChange] = useState('')
-    const productId = match.params.id
+
+    const router = useRouter()
+    const productId = router.query
+    console.log(productId)
     const [amount, setAmount] = useState(0)
     const [totalPrice, setTotalPrice] = useState(0)
-    const query = new URLSearchParams(location.search)
+    const query = useSearchParams();
+    // const query = new URLSearchParams(location.search)
     const [qty, setQty] = useState(Number(query.get('qty')))
     const userLogin = useSelector(state => state.userLogin)
     const {loading, userInfo, error} = userLogin
@@ -32,9 +38,9 @@ function CartScreen({match, location, history}) {
     useEffect(() => {
         if (productId) {
             dispatch(addToCart(productId, qty, color, size, 'undefined', 0.1))
-            history.push('/cart')
+            router.push('/cart')
         }
-    },[dispatch, productId, qty, size, color])
+    }, [dispatch, productId, qty, size, color])
     // useEffect(() => {
     //     // shippmentCostCalculation();
     //     // if (query.get('color')) {setColor(}
@@ -43,7 +49,7 @@ function CartScreen({match, location, history}) {
     //
     //     // setAmount(cartItems.reduce((acc, item) => acc + Number(item.qty), 0))
     //     // setTotalPrice(cartItems.reduce((acc, item) => acc + Number(item.qty) * item.price, 0).toFixed(0))
-    // }, [dispatch, productId, qty, size, color, history, amount, totalPrice])
+    // }, [dispatch, productId, qty, size, color, router, amount, totalPrice])
 
     const removeFromCartHandler = (id) => {
         dispatch(removeFromCart(id))
@@ -51,10 +57,10 @@ function CartScreen({match, location, history}) {
 
     const checkoutHandler = () => {
         if (userInfo) {
-            // history.push('/login?redirect=shipping')
-            history.push('/shipping')
+            // router.push('/login?redirect=shipping')
+            router.push('/shipping')
         } else {
-            history.push('/inputpd')
+            router.push('/inputpd')
         }
     }
 
@@ -62,18 +68,19 @@ function CartScreen({match, location, history}) {
         <Container>
             <Row className='w-100'>
                 <Col xs={12} sm={12} md={8}>
-                    <Link to="/" className="btn btn-light my-3">
+                    <Link href="/" className="btn btn-light my-3">
                         Назад
                     </Link>
                     <h1> Корзина</h1>
                     {
+                        cartItems &&
                         cartItems.length === 0 ? (
                             <Message variant='info'>
-                                Корзина пуста <Link to='/'>Назад</Link>
+                                Корзина пуста <Link href='/'>Назад</Link>
                             </Message>
                         ) : (
                             <ListGroup variant='flush'>
-                                {cartItems.map((item, ind) => (
+                                {cartItems && cartItems.map((item, ind) => (
 
                                     <ListGroupItem key={ind}>
                                         <Row>
@@ -81,7 +88,7 @@ function CartScreen({match, location, history}) {
                                                 <Image src={item.image} alt={item.name} fluid rounded/>
                                             </Col>
                                             <Col md={3}>
-                                                <Link to={`/products/${item.product}`}>{item.name}</Link>
+                                                <Link href={`/products/${item.product}`}>{item.name}</Link>
                                             </Col>
                                             <Col md={2}>
                                                 ₽ {item.price}
@@ -108,7 +115,7 @@ function CartScreen({match, location, history}) {
                                                     }
 
                                                 </Form.Control>
-                                                {(item.color && item.color!=='цвет не указан') &&
+                                                {(item.color && item.color !== 'цвет не указан') &&
                                                     <Form.Control
                                                         as="select"
                                                         value={item.color + (item.size ? (' / ') : ('')) + item.size}
@@ -159,11 +166,16 @@ function CartScreen({match, location, history}) {
                     <Card>
                         <ListGroup variant='flush'>
                             <ListGroupItem>
-                                <h6>Общее кол-во ({cartItems.reduce((acc, item) => acc + Number(item.qty), 0)}) </h6>
-                                ₽ {cartItems.reduce((acc, item) => acc + Number(item.qty) * item.price, 0).toFixed(0)}
+                                {cartItems && <>
+                                    <h6>Общее кол-во
+                                        ({cartItems.reduce((acc, item) => acc + Number(item.qty), 0)}) </h6>
+                                    ₽ {cartItems.reduce((acc, item) => acc + Number(item.qty) * item.price, 0).toFixed(0)}
+                                </>
+                                }
                             </ListGroupItem>
                         </ListGroup>
-                        <ListGroupItem>
+                        { cartItems &&
+                            <ListGroupItem>
                             <Button
                                 type='button'
                                 className='w-100'
@@ -172,7 +184,7 @@ function CartScreen({match, location, history}) {
                             >
                                 Заказать
                             </Button>
-                        </ListGroupItem>
+                        </ListGroupItem>}
                     </Card>
                 </Col>
 
@@ -181,4 +193,4 @@ function CartScreen({match, location, history}) {
     )
 }
 
-export default CartScreen
+export default Index

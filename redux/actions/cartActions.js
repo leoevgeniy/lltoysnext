@@ -5,8 +5,7 @@ import {
     CART_SAVE_SHIPPING_ADDRESS,
     CART_SAVE_SHIPPING_COST,
     CART_SAVE_PAYMENT_METHOD, CART_SAVE_SHIPPING_COST_RESET
-} from '../constants/cartConstants'
-import isWebColor from "react-native-web/dist/modules/isWebColor";
+} from '@/redux/typesCart'
 
 export const addToCart = (id, qty, color, size, ind, discount) => async (dispatch, getState) => {
     const {data} = await axios.get(`/api/products/${id}`)

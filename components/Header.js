@@ -64,7 +64,7 @@ export default function Header(props) {
 
     return (
         <header className='header' style={{'width':'100%'}}>
-            <Offcanvas show={show} onHide={handleClose} className='catalog' style={{'maxWidth': '85%'}}>
+            <Offcanvas show={show} onHide={handleClose} className='catalog'>
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>Каталог</Offcanvas.Title>
                 </Offcanvas.Header>

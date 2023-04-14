@@ -18,6 +18,9 @@
 /*.homescreen .catalogSmall{*/
 /*    display: none;*/
 /*}*/
+.homescreen {
+    background-color: white;
+}
 .homescreen .user {
     width: 8%;
     position: absolute;
@@ -67,13 +70,13 @@
     display: grid;
     grid-gap: 5px;
     justify-content: center;
-    grid: repeat(2, 400px) / repeat(3, 33%)
+    grid: repeat(2, 50%) / repeat(3, 33%)
 }
 .categories2 {
     display: grid;
     grid-gap: 5px;
     justify-content: center;
-    grid: repeat(2, 400px) / repeat(3, 33%)
+    grid: repeat(2, 50%) / repeat(3, 33%)
 }
 .category {
     background-size: cover;
@@ -83,84 +86,84 @@
 }
 .category1 {
     grid-area: 1 / 1 / 2 / 2;
-    background: center no-repeat url("../public/erotic.jpg");
+    /*background: center no-repeat url("../public/erotic.jpg");*/
     background-size: contain;
 }
 .category2 {
     grid-area: 1 / 2 / 3 / 2;
-    background: center no-repeat url("../public/bdsm.png");
+    /*background: center no-repeat url("../public/bdsm.png");*/
     background-size: contain;
 }
 .category3 {
     grid-area: 1 / 3 / 2 / 4;
-    background: center no-repeat url("../public/lubricants.png");
+    /*background: center no-repeat url("../public/lubricants.png");*/
     background-size: contain;
 }
 .category4 {
     grid-area: 2 / 1 / 3 / 2;
-    background: center no-repeat url("../public/toys.png");
+    /*background: center no-repeat url("../public/toys.png");*/
     background-size: contain;
 }
 .category5 {
     grid-area: 2 / 3 / 3 / 4;
-    background: center no-repeat url("../public/things.png");
+    /*background: center no-repeat url("../public/things.png");*/
     background-size: contain;
 }
 .category6 {
     grid-area: 1 / 1 / 2 / 2;
-    background: center no-repeat url("../public/sexmebel.jpg");
+    /*background: center no-repeat url("../public/sexmebel.jpg");*/
     background-size: contain;
 }
 .category7 {
     grid-area: 1 / 2 / 3 / 2;
-    background: center no-repeat url("../public/women.jpg");
+    /*background: center no-repeat url("../public/women.jpg");*/
     background-size: contain;
 }
 .category8 {
     grid-area: 1 / 3 / 2 / 4;
-    background: center no-repeat url("../public/men.jpg");
+    /*background: center no-repeat url("../public/men.jpg");*/
     background-size: contain;
 }
 .category9 {
     grid-area: 2 / 1 / 3 / 2;
-    background: center no-repeat url("../public/nignee.jpg");
+    /*background: center no-repeat url("../public/nignee.jpg");*/
     background-size: contain;
 }
 .category10 {
     grid-area: 2 / 3 / 3 / 4;
-    background: center no-repeat url("../public/kupalniki.jpg");
+    /*background: center no-repeat url("../public/kupalniki.jpg");*/
     background-size: contain;
 }
-.category11 {
-    grid-area: none;
-    background: center no-repeat url("../public/womenSmall.jpg");
-    background-size: contain;
-}
-@media (max-width: 1400px) {
-    .categories, .categories2 {
-        display: grid;
-        grid-gap: 5px;
-        justify-content: center;
-        grid: repeat(2, 350px) / repeat(3, 33%)
-    }
-}
-@media (max-width: 1200px) {
-    .categories, .categories2 {
-        display: grid;
-        grid-gap: 5px;
-        justify-content: center;
-        grid: repeat(2, 300px) / repeat(3, 33%)
-    }
-}
+/*.category11 {*/
+/*    grid-area: none;*/
+/*    background: center no-repeat url("../public/womenSmall.jpg");*/
+/*    background-size: contain;*/
+/*}*/
+/*@media (max-width: 1400px) {*/
+/*    .categories, .categories2 {*/
+/*        display: grid;*/
+/*        grid-gap: 5px;*/
+/*        justify-content: center;*/
+/*        grid: repeat(2, 350px) / repeat(3, 33%)*/
+/*    }*/
+/*}*/
+/*@media (max-width: 1200px) {*/
+/*    .categories, .categories2 {*/
+/*        display: grid;*/
+/*        grid-gap: 5px;*/
+/*        justify-content: center;*/
+/*        grid: repeat(2, 300px) / repeat(3, 33%)*/
+/*    }*/
+/*}*/
 
-@media (max-width: 992px) {
-    .categories, .categories2  {
-        display: grid;
-        grid-gap: 5px;
-        justify-content: center;
-        grid: repeat(2, 230px) / repeat(3, 33%)
-    }
-}
+/*@media (max-width: 992px) {*/
+/*    .categories, .categories2  {*/
+/*        display: grid;*/
+/*        grid-gap: 5px;*/
+/*        justify-content: center;*/
+/*        grid: repeat(2, 230px) / repeat(3, 33%)*/
+/*    }*/
+/*}*/
 @media (max-width: 768px) {
     .popular span {
         width: 40%;
@@ -169,7 +172,7 @@
         display: grid;
         grid-gap: 5px;
         justify-content: center;
-        grid: repeat(2, 160px) / repeat(3, 33%)
+        grid: repeat(2, 50%) / repeat(3, 33%)
     }
 }
 
@@ -178,38 +181,38 @@
         display: grid;
         grid-gap: 5px;
         justify-content: center;
-        grid: repeat(2, 200px) / repeat(2, 50%)
+        grid: repeat(2, 50%) / repeat(2, 50%)
     }
     .categories2{
         display: grid;
         grid-gap: 5px;
         justify-content: center;
-        grid: repeat(2, 200px) / repeat(2, 50%)
+        grid: repeat(2, 50%) / repeat(2, 50%)
     }
 
     .category1 {
         grid-area: 1 / 1 / 2 / 2;
-        background: center no-repeat url("../public/erotic.png");
+        /*background: center no-repeat url("../public/erotic.png");*/
         background-size: contain;
     }
     .category2 {
         grid-area: none;
-        background: center no-repeat url("../public/bdsmhorisontal.png");
+        /*background: center no-repeat url("../public/bdsmhorisontal.png");*/
         background-size: contain;
     }
     .category3 {
         grid-area: 1 / 2 / 2 / 3;
-        background: center no-repeat url("../public/lubricants.png");
+        /*background: center no-repeat url("../public/lubricants.png");*/
         background-size: contain;
     }
     .category4 {
         grid-area: 2 / 1 / 3 / 2;
-        background: center no-repeat url("../public/toys.png");
+        /*background: center no-repeat url("../public/toys.png");*/
         background-size: contain;
     }
     .category5 {
         grid-area: 2 / 2 / 3 / 3;
-        background: center no-repeat url("../public/things.png");
+        /*background: center no-repeat url("../public/things.png");*/
         background-size: contain;
     }
     .category6 {
@@ -240,13 +243,13 @@
         display: grid;
         grid-gap: 5px;
         justify-content: center;
-        grid: repeat(4, 280px) / repeat(1, 100%)
+        grid: repeat(4, 25%) / repeat(1, 100%)
     }
     .categories2{
         display: grid;
         grid-gap: 5px;
         justify-content: center;
-        grid: repeat(4, 280px) / repeat(1, 100%)
+        grid: repeat(4, 25%) / repeat(1, 100%)
     }
     .category1 {
         grid-area: 1 / 1 / 2 / 2;
@@ -300,9 +303,9 @@
     text-align: start;
 }
 
-.accordion-button {
-    font-size: 30px;
-}
+/*.accordion-button {*/
+/*    font-size: 30px;*/
+/*}*/
 
 .mainSection {
     display: flex;

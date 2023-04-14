@@ -1,4 +1,10 @@
-
+.catalog {
+    font-size: small;
+    min-width: 20%;
+}
+.btn-close {
+    color: #1f2326 !important;
+}
 @media (max-width: 1200px) {
     .firstTitle {
         font-size: 2vw;
@@ -21,11 +27,11 @@
 }
 @media (max-width: 700px) {
     .firstTitle {
-        font-size: 3vw;
+        font-size: 4vw;
         font-weight: bold;
     }
     .subTitle {
-        font-size: 2vw;
+        font-size: 4vw;
     }
 }
 @media (max-width: 395px) {
@@ -34,16 +40,16 @@
         font-weight: bold;
     }
     .subTitle {
-        font-size: 2vw;
+        font-size: 5vw;
     }
 }
 @media (min-width: 1201px) {
     .firstTitle {
-        font-size: 1.5vw;
+        font-size: 0.9vw;
         font-weight: bold;
     }
     .subTitle {
-        font-size: 1vw;
+        font-size: 0.8vw;
     }
 }
 

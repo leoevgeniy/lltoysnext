@@ -14,9 +14,9 @@ function BannersCarousel(props) {
             {
                 slids.map((slide, i) =>
                     <Carousel.Item key={i}>
-                        <img
+                        <Image
                             className="d-block w-100 my-3"
-                            style={{'height': '30vh'}}
+                            style={{'height': '35vh'}}
                             src={slide}
                             alt={alts[i]}
                         />
