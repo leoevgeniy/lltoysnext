@@ -6,7 +6,7 @@ import home from '@/public/home.png'
 import cartImg from '@/public/cart.png'
 import user from '@/public/user.png'
 import logo from '@/public/logo.png'
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import BannersCarousel from '@/components/BannersCarousel'
 import erotic from '@/public/erotic.jpg'
 import bdsm from '@/public/bdsmhorisontal.png'
@@ -23,6 +23,7 @@ import kupalniki from '@/public/kupalniki.jpg'
 
 
 const HomeScreen = () => {
+    const dispatch = useDispatch()
     const userLogin = useSelector((state) => state.userLogin);
     const {userInfo} = userLogin;
     const cart = useSelector(state => state.cart)

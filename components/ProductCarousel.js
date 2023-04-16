@@ -13,6 +13,9 @@ function ProductCarousel() {
     const { loading, error, products } = useSelector(
         (state) => state.productsTopRated
     );
+    let numberOfCards = 0
+    const chevronWidth = 60;
+    const autoPlayDelay = 4000;
 
     // const [activeItemIndex, setActiveItemIndex] = useState(0);
     const [state, setState] = useState({activeItemIndex: 0})
@@ -30,7 +33,6 @@ function ProductCarousel() {
         let pageWidth = 0
         if (typeof document !== 'undefined') {
         pageWidth = document.documentElement.scrollWidth}
-        let numberOfCards = 0
         if (pageWidth < 1400 && pageWidth > 1200) {
             numberOfCards = 7
         } else if (pageWidth <= 1200 && pageWidth > 991) {
@@ -42,8 +44,6 @@ function ProductCarousel() {
         } else if (pageWidth < 361) {
             numberOfCards = 2
         } else {numberOfCards = 7}
-        const chevronWidth = 60;
-        const autoPlayDelay = 4000;
     },[])
 
     const onChange = value => setState({ activeItemIndex: value });

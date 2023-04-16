@@ -10,6 +10,7 @@ import {
     productSeenReducer,
     productMigrateReducer,
     productMigrateUpdateReducer,
+    productCategoryReducer
 } from "@/redux/reducers/productReducer";
 import {cartReducer} from "@/redux/reducers/cartReducers";
 import {
@@ -36,6 +37,7 @@ import {combineReducers} from "redux";
 
 const rootReducer = combineReducers({
     productList: productListReducer,
+    categoryproduct: productCategoryReducer,
     catalogList: catalogReducer,
     productDetails: productDetailsReducer,
     productDelete: productDeleteReducer,

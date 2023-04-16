@@ -2,6 +2,7 @@ import * as t from '../types'
 import axios from "axios";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import {API_HOST} from '@/consts'
+import {CATEGORY_PRODUCTS__SUCCESS, CATEGORY_PRODUCTS_SUCCESS} from "../types";
 
 export const listProducts = (keyword = '', sort = '', vendor = '', collection = '', material = '', color ='', size = '', priceLow='', priceUp='') =>
     async (dispatch) => {
@@ -23,9 +24,9 @@ export const listProducts = (keyword = '', sort = '', vendor = '', collection = 
                 filterColumn = `?vendor=${vendor}&collection=${collection}&material=${material}&color=${color}&size=${size}&priceLow=${priceLow}&priceUp=${priceUp}`
             }
             dispatch({type: t.PRODUCT_LIST_REQUEST});
-            console.log(process.env.API_HOST)
-            const {data} = await axios.get(`${process.env.API_HOST}/api/products${keyword}${sort}${filterColumn}`);
+            const {data} = await axios.get(`${API_HOST}/api/products${keyword}${sort}${filterColumn}`);
             data['filter'] = filter
+            console.log(data)
             dispatch({
                 type: t.PRODUCT_LIST_SUCCESS,
                 payload: data,
@@ -59,12 +60,31 @@ export const listCatalog = () =>
             });
         }
     };
+export const listCategoryProducts = (category = '') =>
+    async (dispatch) => {
+        try {
+            dispatch({type: t.CATEGORY_PRODUCTS_REQUEST});
+            const {data} = await axios.get(`${API_HOST}/api/products/category/${category}`);
+            dispatch({
+                type: t.CATEGORY_PRODUCTS_SUCCESS,
+                payload: data,
+            });
+        } catch (error) {
+            dispatch({
+                type: t.CATEGORY_PRODUCTS_FAIL,
+                payload:
+                    error.response && error.response.data.detail
+                        ? error.response.data.detail
+                        : error.message,
+            });
+        }
+    };
 
 export const listTopProducts = (keyword = '') =>
     async (dispatch) => {
         try {
             dispatch({type: t.PRODUCT_TOP_REQUEST});
-            const {data} = await axios.get(`${process.env.API_HOST}/api/products/top`);
+            const {data} = await axios.get(`${API_HOST}/api/products/top`);
 
             dispatch({
                 type: t.PRODUCT_TOP_SUCCESS,
@@ -90,7 +110,7 @@ export const listSeenProducts = (oppenedItems = []) =>
                     "Content-type": "application/json",
                 },
             };
-            const {data} = await axios.post(`${process.env.API_HOST}/api/products/seen`, sentData, config);
+            const {data} = await axios.post(`${API_HOST}/api/products/seen`, sentData, config);
             dispatch({
                 type: t.SEEN_PRODUCT_SUCCESS,
                 payload: data,
@@ -108,7 +128,7 @@ export const listSeenProducts = (oppenedItems = []) =>
 export const listProductDetails = (id) => async (dispatch) => {
     try {
         dispatch({type: t.PRODUCT_DETAILS_REQUEST});
-        const {data} = await axios.get(`${process.env.API_HOST}/api/products/${id}`);
+        const {data} = await axios.get(`${API_HOST}/api/products/${id}`);
         dispatch({
             type: t.PRODUCT_DETAILS_SUCCESS,
             payload: data,
@@ -158,7 +178,7 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
             },
         };
 
-        await axios.delete(`${process.env.API_HOST}/api/products/delete/${id}/`, config);
+        await axios.delete(`${API_HOST}/api/products/delete/${id}/`, config);
 
         dispatch({
             type: t.PRODUCT_DELETE_SUCCESS,
@@ -191,7 +211,7 @@ export const createProduct = () => async (dispatch, getState) => {
             },
         };
 
-        const {data} = await axios.post(`${process.env.API_HOST}/api/products/create/`, {}, config);
+        const {data} = await axios.post(`${API_HOST}/api/products/create/`, {}, config);
 
         dispatch({
             type: t.PRODUCT_CREATE_SUCCESS,
@@ -225,7 +245,7 @@ export const migrateProduct = () => async (dispatch, getState) => {
             },
         };
 
-        const {data} = await axios.get(`${process.env.API_HOST}/migrate/`, {}, config);
+        const {data} = await axios.get(`${API_HOST}/migrate/`, {}, config);
 
         dispatch({
             type: t.PRODUCT_MIGRATE_SUCCESS,
@@ -259,7 +279,7 @@ export const migrateUpdateProduct = () => async (dispatch, getState) => {
             },
         };
 
-        const {data} = await axios.get(`${process.env.API_HOST}/update/`, {}, config);
+        const {data} = await axios.get(`${API_HOST}/update/`, {}, config);
 
         dispatch({
             type: t.PRODUCT_MIGRATE_UPDATE_SUCCESS,
@@ -293,7 +313,7 @@ export const superSaleProduct = () => async (dispatch, getState) => {
             },
         };
 
-        const {data} = await axios.get(`${process.env.API_HOST}/api/products/supersale/`, {}, config);
+        const {data} = await axios.get(`${API_HOST}/api/products/supersale/`, {}, config);
 
         dispatch({
             type: t.PRODUCT_MIGRATE_UPDATE_SUCCESS,
@@ -328,7 +348,7 @@ export const updateProduct = (product) => async (dispatch, getState) => {
         };
 
         const {data} = await axios.put(
-            `/api/products/update/${product._id}/`,
+            `${API_HOST}/api/products/update/${product._id}/`,
             product,
             config
         );
@@ -369,7 +389,7 @@ export const createProductReview =
             };
 
             const {data} = await axios.post(
-                `${process.env.API_HOST}/api/products/${productId}/reviews/`,
+                `${API_HOST}/api/products/${productId}/reviews/`,
                 review,
                 config
             );

@@ -2,6 +2,8 @@ import React from "react";
 import {Pagination} from "react-bootstrap";
 // import {LinkContainer} from "react-router-bootstrap";
 import {useRouter} from "next/router";
+import Link from "next/link";
+import {useSearchParams} from "next/navigation";
 
 function Paginate({pages, page, keyword = "", isAdmin = false}) {
     let filter = ''
@@ -10,7 +12,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
     let filterQuery = ''
 
     let history = useRouter();
-    const query = new URLSearchParams(history.location.search)
+    const query = useSearchParams();
     if (query.get('category')) {category = query.get('category')}
     if (query.get('filter')) {filterQuery = query.get('filter')}
     if (query.get('keyword')) {keywordQuery = query.get('keyword')}
@@ -51,19 +53,19 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
         <div style={{display: "flex", justifyContent: "center"}}>
             {pages > 1 && page > 10 && (
                 <Pagination>
-                    <LinkContainer
+                    <Link
                         key={-1}
-                        to={
+                        href={
                             !isAdmin
                                 ? `/${keyword}${filter}&page=${1}`
                                 : `/admin/productlist/${keyword}${filter}&page=${1}`
                         }
                     >
                         <Pagination.First/>
-                    </LinkContainer>
-                    <LinkContainer
+                    </Link>
+                    <Link
                         key={page - 10}
-                        to={
+                        href={
                             !isAdmin
                                 ? `/${keyword}${filter}&page=${page - 10}`
                                 : `/admin/productlist/${keyword}${filter}&page=${
@@ -72,13 +74,13 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                         }
                     >
                         <Pagination.Ellipsis/>
-                    </LinkContainer>
+                    </Link>
                     {[...Array(pages).keys()].map(function (x) {
                         if (x + 1 >= page - 5 && x + 1 <= page + 5) {
                             return (
-                                <LinkContainer
+                                <Link
                                     key={x + 1}
-                                    to={
+                                    href={
                                         !isAdmin
                                             ? `/${keyword}${filter}&page=${
                                                 x + 1
@@ -91,15 +93,15 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                                     <Pagination.Item active={x + 1 === page}>
                                         {x + 1}
                                     </Pagination.Item>
-                                </LinkContainer>
+                                </Link>
                             );
                         }
                         return null;
                     })}
                     {page + 6 <= pages && (
-                        <LinkContainer
+                        <Link
                             key={page + 6}
-                            to={
+                            href={
                                 !isAdmin
                                     ? `/${keyword}${filter}&page=${page + 6}`
                                     : `/admin/productlist/${keyword}${filter}&page=${
@@ -108,19 +110,19 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                             }
                         >
                             <Pagination.Ellipsis/>
-                        </LinkContainer>
+                        </Link>
                     )}
                     {page + 7 <= pages && (
-                        <LinkContainer
+                        <Link
                             key={pages}
-                            to={
+                            href={
                                 !isAdmin
                                     ? `/${keyword}${filter}&page=${pages}`
                                     : `/admin/productlist/${keyword}${filter}&page=${pages}`
                             }
                         >
                             <Pagination.Last/>
-                        </LinkContainer>
+                        </Link>
                     )}
 
 
@@ -131,9 +133,9 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                     {[...Array(pages).keys()].map((x) => {
                         if (x + 1 <= page + 5) {
                             return (
-                                <LinkContainer
+                                <Link
                                     key={x + 1}
-                                    to={
+                                    href={
                                         !isAdmin
                                             ? `/${keyword}${filter}&page=${
                                                 x + 1
@@ -146,15 +148,15 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                                     <Pagination.Item active={x + 1 === page}>
                                         {x + 1}
                                     </Pagination.Item>
-                                </LinkContainer>
+                                </Link>
                             );
                         }
                         return null;
                     })}
                     {page + 6 <= pages && (
-                        <LinkContainer
+                        <Link
                             key={page + 6}
-                            to={
+                            href={
                                 !isAdmin
                                     ? `/${keyword}${filter}&page=${page + 6}`
                                     : `/admin/productlist/${keyword}${filter}&page=${
@@ -163,19 +165,19 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                             }
                         >
                             <Pagination.Ellipsis/>
-                        </LinkContainer>
+                        </Link>
                     )}
                     {page + 7 <= pages && (
-                        <LinkContainer
+                        <Link
                             key={pages}
-                            to={
+                            href={
                                 !isAdmin
                                     ? `/${keyword}${filter}&page=${pages}`
                                     : `/admin/productlist/${keyword}${filter}&page=${pages}`
                             }
                         >
                             <Pagination.Last/>
-                        </LinkContainer>
+                        </Link>
                     )}
                 </Pagination>
             )}

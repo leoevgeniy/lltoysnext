@@ -7,8 +7,18 @@ function Product({product}) {
 
     let price = Number(product.retailPrice)
     const [qty, setQty] = useState(1);
-    const [color, setColor] = useState(Object.keys(product.colors[0]))
-    const [size, setSize] = useState(product.colors[0][Object.keys(product.colors[0])][0])
+    const [color, setColor] = useState(Object.keys(product.colors)[0])
+    // console.log(product.colors[0]);
+    // console.log(Object.keys(product.colors[0])[0]);
+    const [size, setSize] = useState('')
+        // useState(product.colors[0][Object.keys(product.colors[0])][0])
+    useEffect(() => {
+        if (product.colors[0]) {
+            setSize(product.colors[0][Object.keys(product.colors[0])][0])
+        }
+
+
+    })
 
     let szString = ''
     if (color && size) {
@@ -67,12 +77,12 @@ function Product({product}) {
     const srcLink=`https://feed.p5s.ru/images/mid/${cat}/mid_${product.prodId}.jpg`
     return (
         <Card itemScope itemType="http://schema.org/Product" className='my-3 py-0 h-100 rounded cardstyle head'>
-            <Link to={`/products/${product._id}`}>
+            <Link href={`/products/${product._id}`}>
                 <Card.Img itemProp="image" src={srcLink} title={product.name}/>
             </Link>
 
             <Card.Body itemProp="offers" itemScope itemType="http://schema.org/Offer" className='py-0 body'>
-                <Link to={`/products/${product._id}`}>
+                <Link href={`/products/${product._id}`}>
                     <Card.Title
                         // style={{'font-size' : '1vw', 'font-weight': 'bold'}}
                     >
@@ -90,7 +100,7 @@ function Product({product}) {
                     <meta itemProp="priceCurrency" content="RUB"/>
                     <span className='price py-0'>₽ {price.toFixed(0)} </span> </p>
                 <div className='d-inline-block pb-3 w-100'>
-                    {((Object.keys(product.colors[0])[0] && Object.keys(product.colors[0])[0] != 'цвет не указан') && product.colors[0][Object.keys(product.colors[0])[0]]!=='') &&
+                    {((product.colors[0] && Object.keys(product.colors[0])[0] && Object.keys(product.colors[0])[0] != 'цвет не указан') && product.colors[0][Object.keys(product.colors[0])[0]]!=='') &&
                             <Form.Control
                             className='size'
                             as="select"
@@ -121,7 +131,7 @@ function Product({product}) {
 
 
                     }
-                    <Link  className='asButton w-100 text-center mt-4' to={`/cart/${product._id}?qty=${qty}${szString}`}>Купить</Link>
+                    <Link  className='asButton w-100 text-center mt-4' href={`/cart/${product._id}?qty=${qty}${szString}`}>Купить</Link>
                 </div>
 
             </Card.Body>

@@ -79,6 +79,32 @@ export const catalogReducer = (state = { catalog: {} }, action) => {
             return state;
     }
 };
+export const productCategoryReducer = (state = { products: [] }, action) => {
+    switch (action.type) {
+        case t.CATEGORY_PRODUCTS_REQUEST :
+            return { loading: true, products: [] };
+        case t.CATEGORY_PRODUCTS_SUCCESS:
+            return {
+                loading: false,
+                products: action.payload.products,
+                page: action.payload.page,
+                pages: action.payload.pages,
+                filter: action.payload.filter,
+                vendorList: action.payload.vendorList,
+                collectionList: action.payload.collectionList,
+                materialList: action.payload.materialList,
+                colorList: action.payload.colorList,
+                sizeList: action.payload.sizeList,
+                priceUpApi: action.payload.priceUpApi,
+                priceLowApi: action.payload.priceLowApi,
+                maxPrice: action.payload.maxPrice
+            };
+        case t.CATEGORY_PRODUCTS_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+};
 
 export const productDetailsReducer = (
     state = { product: { reviews: [] } },
