@@ -149,7 +149,7 @@ def getProducts(request):
     page = int(page)
 
     serializer = ProductSerializer(products, many=True)
-
+    print(serializer.data)
     return Response(
         {'products': serializer.data, 'page': page, 'pages': paginator.num_pages, 'vendorList': vendorList,
          'collectionList': collectionList, 'colorUrlList': colorUrlList, 'materialList': materialList,
@@ -157,19 +157,55 @@ def getProducts(request):
          'priceUpApi': priceUpApi, 'priceLowApi': priceLowApi, 'maxPrice': maxPrice})
 
 
-@api_view(['Get'])
+@api_view(['GET'])
+def getCategotyProducts(request, pk):
+    print(request, pk)
+    products = Product.objects.filter(Q(category__category__icontains=pk)).distinct().order_by('name')
+    # maxPrice = Product.objects.filter(Q(name__icontains=query) & Q(category__category__icontains=category) & Q(
+    #     category__subCategory__icontains=filterer) &
+    #                                   Q(assortiment__countInStock__gt=0) & Q(brand__icontains=vendor) & Q(
+    #     CollectionName__contains=collection) &
+    #                                   Q(material__icontains=material) & Q(assortiment__color__icontains=color) &
+    #                                   Q(assortiment__size__icontains=size)).aggregate(Max('retailPrice'))[
+    #     'retailPrice__max']
+    page = request.query_params.get('page')
+    paginator = Paginator(products, 24)
+    allProducts = products
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+
+    if page == None:
+        page = 1
+
+    page = int(page)
+
+    serializer = ProductSerializer(products, many=True)
+    print(serializer.data)
+    return Response(
+        {'products': serializer.data, 'page': page, 'pages': paginator.num_pages
+         # 'vendorList': vendorList,
+         # 'collectionList': collectionList, 'colorUrlList': colorUrlList, 'materialList': materialList,
+         # 'colorList': colorList, 'sizeList': sizeList,
+         # 'priceUpApi': priceUpApi, 'priceLowApi': priceLowApi, 'maxPrice': maxPrice
+    }
+    )
+
+
+@api_view(['GET'])
 def getCatalog(request):
     catalog = {}
     categories = Category.objects.all()
     for category in categories:
         if category.category not in catalog:
             catalog[category.category] = [category.subCategory]
-            print(category.category)
             # catalog[category.category].append(category.subCategory)
         else:
             if category.subCategory not in catalog[category.category]:
                 catalog[category.category].append(category.subCategory)
-    print(catalog)
     return Response(catalog)
 
 
