@@ -115,7 +115,7 @@ export default function Header(props) {
                         <Navbar.Brand className='d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none logo w-50'>
                             <Link href="/" onClick={() => setExpanded(false)} className='ms-auto'>
                                 {/*    /!*<Navbar.Brand>МАГАЗИН РАДОСТИ</Navbar.Brand>*!/*/}
-                                <Image className='logo' src={kuragi} alt='Магазин Куражи'/>
+                                <Image priority className='logo' src={kuragi} alt='Магазин Куражи'/>
                             </Link>
                         </Navbar.Brand>
                     }
@@ -127,7 +127,7 @@ export default function Header(props) {
                             <Navbar.Brand className='align-self-center'>
                                 <Link href="/" onClick={() => setExpanded(false)} >
                                     {/*    /!*<Navbar.Brand>МАГАЗИН РАДОСТИ</Navbar.Brand>*!/*/}
-                                    <Image  className='img-fluid logo' src={kuragi} alt='Магазин Куражи'/>
+                                    <Image  priority className='img-fluid logo' src={kuragi} alt='Магазин Куражи'/>
                                 </Link>
                             </Navbar.Brand>
                             <Nav.Link  onClick={handleShow} className='align-self-center fs-2 catalog'>

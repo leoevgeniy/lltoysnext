@@ -12,37 +12,34 @@ import ProductCarousel from '@/components/ProductCarousel'
 import SeenProductCarousel from '@/components/SeenProductCarousel'
 import {useSearchParams} from "next/navigation";
 import {PRODUCT_DETAILS_RESET} from '@/redux/types'
-import {useRouter} from "next/router";
+import {Router, useRouter, withRouter} from "next/router";
+import ReactPaginate from 'react-paginate';
+import App, {AppContext} from "next/app";
+import axios from "axios";
+import {API_HOST} from "@/consts";
 
 export const getServerSideProps = async (context) => {
+    const id = context.params['id']
+    console.log(id)
+    let data = {}
+    try {
+        const {data} = await axios.get(`${API_HOST}/api/products/category/${id}`);
+        // data = await res.json()
 
-    // const {id} = context.params
-    console.log(context.params.id)
-    const {id} = context.params
-    // const dispatch = useDispatch()
-//     const dispatch = useDispatch()
-//
-//     dispatch(listCatalog());
-//     dispatch(listTopProducts())
-//     await useDispatch(listCategoryProducts(id))
-//
-//     dispatch({type: PRODUCT_DETAILS_RESET})
-//     setPriceUp(productList.priceUpApi)
-//     setPriceLow(productList.priceLowApi)
-//     if (localStorage.getItem('oppenedItems')) {
-//         setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))
-//         dispatch(listSeenProducts(oppenedItems))
-//     }
+    } catch {}
     return{
-        props: { id: id }
+        props: {
+            data,
+            id
+        }
     }
 }
 
-const Category = () => {
+const Category = ({data}) => {
     const history = useRouter()
     const id = history.query.id
     const productList = useSelector((state) => state.categoryproduct);
-    const { error, loading, products, page, pages, filter } = productList;
+    const { error, loading, products, page, pages} = productList;
     const dispatch = useDispatch()
     // const [sort, setSort] = useState('')
     // const [priceSortUp, setPriceSortUp] = useState(false);
@@ -65,25 +62,14 @@ const Category = () => {
     // const [priceRange, setPriceRange] = useState([])
     // const [priceLow, setPriceLow] = useState(productList.priceLowApi)
     // const [priceUp, setPriceUp] = useState(productList.priceUpApi)
-    //
     const searchParams = useSearchParams();
-    let keyword = searchParams
-    //
+    let keyword = searchParams.get('keyword')
     useEffect(() => {
-    //
-    //
-    //     dispatch(listCatalog());
-    //     dispatch(listTopProducts())
-        dispatch(listCategoryProducts(id))
-    //
-    //     dispatch({type: PRODUCT_DETAILS_RESET})
-    //     setPriceUp(productList.priceUpApi)
-    //     setPriceLow(productList.priceLowApi)
-    //     if (localStorage.getItem('oppenedItems')) {
-    //         setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))
-    //         dispatch(listSeenProducts(oppenedItems))
-    //     }
-    },[])
+        // dispatch(listCategoryProducts(id))
+
+
+    },[id])
+
     return (
         <>
             {loading ? (
@@ -93,6 +79,8 @@ const Category = () => {
                 ) :
                 <div className="content justify-content-center">
                     {/*{(filter || category) ? (*/}
+
+
                     <div>
                         <Row className='mb-4 mx-0 w-100 justify-content-center text-center'>
                             {Array.from(products).map(
@@ -142,4 +130,5 @@ const Category = () => {
      )
 }
 
-export default Category
+
+export default withRouter(Category)

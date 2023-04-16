@@ -12,7 +12,7 @@ function Footer() {
                 <Row className='d-flex py-3 justify-content-md-center text-white text-center' md='auto'>
                     <Link href="/"
                           className='d-none d-sm-none d-md-none d-lg-block d-xl-block d-xxl-block justify-self-left'>
-                        <Image quality={100} layout="responsive" className='logo align-self-auto' src={kuragi} alt='Sex Shop logo'/>
+                        <Image quality={100} priority className='logo img-fluid align-self-auto' src={kuragi} alt='Sex Shop logo'/>
                     </Link>
                     <div className='d-flex justify-content-center'>
                         <div id='delivery'

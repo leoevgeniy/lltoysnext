@@ -59,7 +59,7 @@
 }
 .discount {
     position: absolute;
-    background: no-repeat url("../public/sale10.png");
+    /*background: no-repeat url("../public/sale10.png");*/
     background-size: contain;
     width: 100%;
     height: 0;
@@ -134,36 +134,36 @@
     /*background: center no-repeat url("../public/kupalniki.jpg");*/
     background-size: contain;
 }
-/*.category11 {*/
-/*    grid-area: none;*/
-/*    background: center no-repeat url("../public/womenSmall.jpg");*/
-/*    background-size: contain;*/
-/*}*/
-/*@media (max-width: 1400px) {*/
-/*    .categories, .categories2 {*/
-/*        display: grid;*/
-/*        grid-gap: 5px;*/
-/*        justify-content: center;*/
-/*        grid: repeat(2, 350px) / repeat(3, 33%)*/
-/*    }*/
-/*}*/
-/*@media (max-width: 1200px) {*/
-/*    .categories, .categories2 {*/
-/*        display: grid;*/
-/*        grid-gap: 5px;*/
-/*        justify-content: center;*/
-/*        grid: repeat(2, 300px) / repeat(3, 33%)*/
-/*    }*/
-/*}*/
+.category11 {
+    grid-area: none;
+    /*background: center no-repeat url("../public/womenSmall.jpg");*/
+    background-size: contain;
+}
+@media (max-width: 1400px) {
+    .categories, .categories2 {
+        display: grid;
+        grid-gap: 5px;
+        justify-content: center;
+        grid: repeat(2, 50%) / repeat(3, 33%)
+    }
+}
+@media (max-width: 1200px) {
+    .categories, .categories2 {
+        display: grid;
+        grid-gap: 5px;
+        justify-content: center;
+        grid: repeat(2, 50%) / repeat(3, 33%)
+    }
+}
 
-/*@media (max-width: 992px) {*/
-/*    .categories, .categories2  {*/
-/*        display: grid;*/
-/*        grid-gap: 5px;*/
-/*        justify-content: center;*/
-/*        grid: repeat(2, 230px) / repeat(3, 33%)*/
-/*    }*/
-/*}*/
+@media (max-width: 992px) {
+    .categories, .categories2  {
+        display: grid;
+        grid-gap: 5px;
+        justify-content: center;
+        grid: repeat(2, 50%) / repeat(3, 33%)
+    }
+}
 @media (max-width: 768px) {
     .popular span {
         width: 40%;
@@ -253,27 +253,27 @@
     }
     .category1 {
         grid-area: 1 / 1 / 2 / 2;
-        background: center no-repeat url("../public/erotic.png");
+        /*background: center no-repeat url("../public/erotic.png");*/
         background-size: contain;
     }
     .category2 {
         grid-area: none;
-        background: center no-repeat url("../public/bdsm.png");
+        /*background: center no-repeat url("../public/bdsm.png");*/
         background-size: contain;
     }
     .category3 {
         grid-area: 2 / 1 / 3 / 2;
-        background: center no-repeat url("../public/lubricants.png");
+        /*background: center no-repeat url("../public/lubricants.png");*/
         background-size: contain;
     }
     .category4 {
         grid-area: 3 / 1 / 4 / 2;
-        background: center no-repeat url("../public/toys.png");
+        /*background: center no-repeat url("../public/toys.png");*/
         background-size: contain;
     }
     .category5 {
         grid-area: 4 / 1 / 5 / 2;
-        background: center no-repeat url("../public/things.png");
+        /*background: center no-repeat url("../public/things.png");*/
         background-size: contain;
     }
     .category6 {

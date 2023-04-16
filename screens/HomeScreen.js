@@ -9,7 +9,7 @@ import logo from '@/public/logo.png'
 import {useDispatch, useSelector} from "react-redux";
 import BannersCarousel from '@/components/BannersCarousel'
 import erotic from '@/public/erotic.jpg'
-import bdsm from '@/public/bdsmhorisontal.png'
+import bdsm from '@/public/bdsm.png'
 import lubricants from '@/public/lubricants.png'
 import toys from '@/public/toys.png'
 import things from '@/public/things.png'
@@ -49,52 +49,48 @@ const HomeScreen = () => {
                 }
 
                 <Link href='/'>
-                    <Image className='logo' src={logo} alt='logo' />
+                    <Image priority className='logo' src={logo} alt='logo' />
                 </Link>
             </div>
             <div className="w-100 pt-1">
                     <div className='categories'>
                         <Link className='category category1' href='/category/Эротическая одежда'>
-                            <Image loading="lazy" src={erotic} alt='Эротическая одежда'/>
+                            <Image placeholder='blur' loading="lazy" src={erotic} alt='Эротическая одежда'/>
                         </Link>
                         <Link className='category category2' href='/category/BDSM, садо-мазо товары'>
-                            <Image loading="lazy" src={bdsm} alt='BDSM, садо-мазо товары'/>
+                            <Image placeholder='blur' loading="lazy" src={bdsm} alt='BDSM, садо-мазо товары'/>
                         </Link>
                         <Link className='category category3' href='/category/Смазки, лубриканты'>
-                            <Image loading="lazy" src={lubricants} alt='Смазки, лубриканты'/>
+                            <Image placeholder='blur' loading="lazy" src={lubricants} alt='Смазки, лубриканты'/>
                         </Link>
                         <Link className='category category4' href='/category/Анальные игрушки'>
-                            <Image loading="lazy" src={toys} alt='Анальные игрушки'/>
+                            <Image placeholder='blur' loading="lazy" src={toys} alt='Анальные игрушки'/>
                         </Link>
                         <Link className='category category5' href='/category/Приятные мелочи'>
-                            <Image loading="lazy" src={things} alt='Приятные мелочи'/>
+                            <Image placeholder='blur' loading="lazy" src={things} alt='Приятные мелочи'/>
                         </Link>
-                        {/*<Link className='category category2' href='/?category=BDSM, садо-мазо товары'/>*/}
-                        {/*<Link className='category category3' href='/?category=Смазки, лубриканты'/>*/}
-                        {/*<Link className='category category4' href='/?category=Анальные игрушки'/>*/}
-                        {/*<Link className='category category5' href='/?category=Приятные мелочи'/>*/}
                     </div>
             </div>
             <BannersCarousel/>
             <div className="w-100">
                 <div className='categories2'>
                     <Link className='category category6' href='/category/Секс-мебель и качели'>
-                        <Image loading="lazy" src={sexmebel} alt='Секс-мебель и качели'/>
+                        <Image placeholder='blur' loading="lazy" src={sexmebel} alt='Секс-мебель и качели' className='h-auto'/>
                     </Link>
                     <Link className='category category7' href='/category/Секс-товары для женщин'>
-                        <Image loading="lazy" src={women} alt='Секс-товары для женщин'/>
+                        <Image placeholder='blur' loading="lazy" src={women} alt='Секс-товары для женщин'/>
                     </Link>
                     <Link className='category category11' href='/category/Секс-товары для женщин'>
-                        <Image loading="lazy" src={womenSmall} alt='Секс-товары для женщин'/>
+                        <Image placeholder='blur' loading="lazy" src={womenSmall} alt='Секс-товары для женщин'/>
                     </Link>
                     <Link className='category category8' href='/category/Секс-товары для мужчин'>
-                        <Image loading="lazy" src={men} alt='Секс-товары для мужчин'/>
+                        <Image placeholder='blur' loading="lazy" src={men} alt='Секс-товары для мужчин'/>
                     </Link>
                     <Link className='category category9' href='/category/Нижнее белье'>
-                        <Image loading="lazy" src={nignee} alt='Нижнее белье'/>
+                        <Image placeholder='blur' loading="lazy" src={nignee} alt='Нижнее белье'/>
                     </Link>
                     <Link className='category category10' href='/category/Купальники'>
-                        <Image loading="lazy" src={kupalniki} alt='Купальники'/>
+                        <Image placeholder='blur' loading="lazy" src={kupalniki} alt='Купальники'/>
                     </Link>
                 </div>
             </div>

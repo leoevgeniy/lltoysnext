@@ -1,5 +1,5 @@
 import React from "react";
-import {Pagination} from "react-bootstrap";
+import {NavLink, Pagination} from "react-bootstrap";
 // import {LinkContainer} from "react-router-bootstrap";
 import {useRouter} from "next/router";
 import Link from "next/link";
@@ -11,7 +11,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
     let category = ''
     let filterQuery = ''
 
-    let history = useRouter();
+    // let history = useRouter();
     const query = useSearchParams();
     if (query.get('category')) {category = query.get('category')}
     if (query.get('filter')) {filterQuery = query.get('filter')}
@@ -48,12 +48,11 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
     } else {
         keyword = '?keyword='
     }
-
     return (
         <div style={{display: "flex", justifyContent: "center"}}>
             {pages > 1 && page > 10 && (
                 <Pagination>
-                    <Link
+                    <span
                         key={-1}
                         href={
                             !isAdmin
@@ -62,8 +61,8 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                         }
                     >
                         <Pagination.First/>
-                    </Link>
-                    <Link
+                    </span>
+                    <span
                         key={page - 10}
                         href={
                             !isAdmin
@@ -74,11 +73,11 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                         }
                     >
                         <Pagination.Ellipsis/>
-                    </Link>
+                    </span>
                     {[...Array(pages).keys()].map(function (x) {
                         if (x + 1 >= page - 5 && x + 1 <= page + 5) {
                             return (
-                                <Link
+                                <span
                                     key={x + 1}
                                     href={
                                         !isAdmin
@@ -93,13 +92,13 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                                     <Pagination.Item active={x + 1 === page}>
                                         {x + 1}
                                     </Pagination.Item>
-                                </Link>
+                                </span>
                             );
                         }
                         return null;
                     })}
                     {page + 6 <= pages && (
-                        <Link
+                        <span
                             key={page + 6}
                             href={
                                 !isAdmin
@@ -110,10 +109,10 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                             }
                         >
                             <Pagination.Ellipsis/>
-                        </Link>
+                        </span>
                     )}
                     {page + 7 <= pages && (
-                        <Link
+                        <span
                             key={pages}
                             href={
                                 !isAdmin
@@ -122,7 +121,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                             }
                         >
                             <Pagination.Last/>
-                        </Link>
+                        </span>
                     )}
 
 
@@ -133,7 +132,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                     {[...Array(pages).keys()].map((x) => {
                         if (x + 1 <= page + 5) {
                             return (
-                                <Link
+                                <NavLink
                                     key={x + 1}
                                     href={
                                         !isAdmin
@@ -148,13 +147,13 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                                     <Pagination.Item active={x + 1 === page}>
                                         {x + 1}
                                     </Pagination.Item>
-                                </Link>
+                                </NavLink>
                             );
                         }
                         return null;
                     })}
                     {page + 6 <= pages && (
-                        <Link
+                        <NavLink
                             key={page + 6}
                             href={
                                 !isAdmin
@@ -165,10 +164,10 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                             }
                         >
                             <Pagination.Ellipsis/>
-                        </Link>
+                        </NavLink>
                     )}
                     {page + 7 <= pages && (
-                        <Link
+                        <NavLink
                             key={pages}
                             href={
                                 !isAdmin
@@ -177,7 +176,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                             }
                         >
                             <Pagination.Last/>
-                        </Link>
+                        </NavLink>
                     )}
                 </Pagination>
             )}
