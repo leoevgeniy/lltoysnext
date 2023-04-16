@@ -83,26 +83,26 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'mysql.connector.django',
-        'NAME': 'leoevgrv_lltoys',
-        'USER': 'leoevgrv_lltoys',
-        'PASSWORD': 'QGaCFSUL801',
-        'HOST': 'leoevgrv.beget.tech',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES', innodb_strict_mode=1"
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'mysql.connector.django',
+#         'NAME': 'leoevgrv_lltoys',
+#         'USER': 'leoevgrv_lltoys',
+#         'PASSWORD': 'QGaCFSUL801',
+#         'HOST': 'leoevgrv.beget.tech',
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES', innodb_strict_mode=1"
+#         }
+#     }
+#
+# }
 
 
 # Password validation

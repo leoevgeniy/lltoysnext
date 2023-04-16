@@ -17,44 +17,69 @@ from baseresponse.serializers import ProductSerializer
 from rest_framework import status
 
 
-@api_view(['Get'])
-def getProducts(request):
-    query = request.query_params.get('keyword')
-    filterer = request.query_params.get('filter')
-    category = request.query_params.get('category')
-    sorts = request.query_params.get('sort')
-    vendor = request.query_params.get('vendor')
-    collection = request.query_params.get('collection')
-    material = request.query_params.get('material')
-    color = request.query_params.get('color')
-    size = request.query_params.get('size')
-    priceLow = request.query_params.get('priceLow')
-    priceUp = request.query_params.get('priceUp')
+# @api_view(['Get'])
+def getProducts(request, *args):
+    # query = request.query_params.get('keyword')
+    # filterer = request.query_params.get('filter')
+    # category = request.query_params.get('category')
+    # sorts = request.query_params.get('sort')
+    # vendor = request.query_params.get('vendor')
+    # collection = request.query_params.get('collection')
+    # material = request.query_params.get('material') || ''
+    # color = request.query_params.get('color')
+    # size = request.query_params.get('size')
+    # priceLow = request.query_params.get('priceLow')
+    # priceUp = request.query_params.get('priceUp')
+    print(args)
     sort = []
-    if filterer is None:
+    # print('filterer', args[0]['filterer'], 'category', args[0]['category'])
+    if 'filterer' not in args[0].keys():
         filterer = ''
-    if query is None:
+    else:
+        filterer = args[0]['filterer']
+    if 'query' not in args[0].keys():
         query = ''
-    if category is None:
+    else:
+        query = args[0]['query']
+
+    if 'category' not in args[0].keys():
         category = ''
-    if vendor is None:
+    else:
+        category = args[0]['category']
+
+    if 'vendor' not in args[0].keys():
         vendor = ''
-    if collection is None:
+    else:
+        vendor = args[0]['vendor']
+
+    if 'collection' not in args[0].keys():
         collection = ''
-    if material is None:
+    else:
+        collection = args[0]['collection']
+
+    if 'material' not in args[0].keys():
         material = ''
-    if color is None:
+    else:
+        material = args[0]['material']
+
+    if 'color' not in args[0].keys():
         color = ''
-    if size is None:
+    else:
+        color = args[0]['color']
+
+    if 'size' not in args[0].keys():
         size = ''
-    if priceLow == 'NaN' or priceLow == '':
+    else:
+        size = args[0]['size']
+
+    if 'priceLow' not in args[0].keys():
         priceLow = 1
     else:
-        priceLow = float(priceLow)
-    if priceUp == 'NaN' or priceUp == 0 or priceUp == '':
+        priceLow = float(args[0]['priceLow'])
+    if 'priceUp' not in args[0].keys() or args[0]['priceUp'] == 0 or args[0]['priceUp'] == '':
         priceUp = 100000000
     else:
-        priceUp = float(priceUp)
+        priceUp = float(args[0]['priceUp'])
 
     if filterer == '' and query == '' and category == '':
         products = Product.objects.filter(Q(isSuperSale=True) & Q(assortiment__countInStock__gt=0)).distinct().order_by(
@@ -85,73 +110,77 @@ def getProducts(request):
     sizeList = []
     priceUpApi = 0
     priceLowApi = 10000000
-    for product in products:
-        assortiment = {}
-        try:
-            assortiment = Assortiment.objects.filter(product_id=product._id)
-        except:
-            pass
-        if product.retailPrice > priceUpApi:
-            priceUpApi = product.retailPrice
-        if product.retailPrice < priceLowApi:
-            priceLowApi = product.retailPrice
-        if product.brand and product.brand not in vendorList:
-            vendorList.append(product.brand)
-        if product.CollectionName and product.CollectionName not in collectionList:
-            collectionList.append(product.CollectionName)
-        if product.material and product.material not in materialList:
-            materialList.append(product.material)
-        if assortiment:
-            for assort in assortiment:
-                if assort.color and assort.color not in colorList and 'цвет не указан' not in assort.color:
-                    colorList.append(assort.color)
-                if assort.colorUrl and assort.colorUrl not in colorUrlList:
-                    colorUrlList.append(assort.colorUrl)
-                if assort.size and assort.size not in sizeList:
-                    sizeList.append(assort.size)
-    if sorts:
-        sort = sorts.split(' ')
-    if sorts is None:
-        sort = ''
-        products = products.order_by('name')
-    elif sort:
-        if len(sort) > 1:
-            if sort[0] == 'PriceSortUp' and sort[1] == 'NameSortUp':
-                products = products.order_by('retailPrice', 'name')
-            elif sort[0] == 'PriceSortUp' and sort[1] == 'NameSortDown':
-                products = products.order_by('retailPrice', '-name')
-            elif sort[0] == 'PriceSortDown' and sort[1] == 'NameSortUp':
-                products = products.order_by('-retailPrice', 'name')
-            elif sort[0] == 'PriceSortDown' and sort[1] == 'NameSortDown':
-                products = products.order_by('-retailPrice', '-name')
-        elif sort[0] == 'PriceSortUp' and len(sort) == 1:
-            products = products.order_by('retailPrice')
-        elif sort[0] == 'PriceSortDown' and len(sort) == 1:
-            products = products.order_by('-retailPrice')
-        elif sort[0] == 'NameSortUp' and len(sort) == 1:
-            products = products.order_by('name')
-        elif sort[0] == 'NameSortDown' and len(sort) == 1:
-            products = products.order_by('-name')
+    # for product in products:
+    #     assortiment = {}
+    #     try:
+    #         assortiment = Assortiment.objects.filter(product_id=product._id)
+    #     except:
+    #         pass
+    #     if product.retailPrice > priceUpApi:
+    #         priceUpApi = product.retailPrice
+    #     if product.retailPrice < priceLowApi:
+    #         priceLowApi = product.retailPrice
+    #     if product.brand and product.brand not in vendorList:
+    #         vendorList.append(product.brand)
+    #     if product.CollectionName and product.CollectionName not in collectionList:
+    #         collectionList.append(product.CollectionName)
+    #     if product.material and product.material not in materialList:
+    #         materialList.append(product.material)
+    #     if assortiment:
+    #         for assort in assortiment:
+    #             if assort.color and assort.color not in colorList and 'цвет не указан' not in assort.color:
+    #                 colorList.append(assort.color)
+    #             if assort.colorUrl and assort.colorUrl not in colorUrlList:
+    #                 colorUrlList.append(assort.colorUrl)
+    #             if assort.size and assort.size not in sizeList:
+    #                 sizeList.append(assort.size)
+    # if 'sorts' in args[0].keys():
+    #     sort = args[0]['sorts'].split(' ')
+    # if 'sorts' not in args[0].keys():
+    #     sort = ''
+    #     products = products.order_by('name')
+    # elif sort:
+    #     if len(sort) > 1:
+    #         if sort[0] == 'PriceSortUp' and sort[1] == 'NameSortUp':
+    #             products = products.order_by('retailPrice', 'name')
+    #         elif sort[0] == 'PriceSortUp' and sort[1] == 'NameSortDown':
+    #             products = products.order_by('retailPrice', '-name')
+    #         elif sort[0] == 'PriceSortDown' and sort[1] == 'NameSortUp':
+    #             products = products.order_by('-retailPrice', 'name')
+    #         elif sort[0] == 'PriceSortDown' and sort[1] == 'NameSortDown':
+    #             products = products.order_by('-retailPrice', '-name')
+    #     elif sort[0] == 'PriceSortUp' and len(sort) == 1:
+    #         products = products.order_by('retailPrice')
+    #     elif sort[0] == 'PriceSortDown' and len(sort) == 1:
+    #         products = products.order_by('-retailPrice')
+    #     elif sort[0] == 'NameSortUp' and len(sort) == 1:
+    #         products = products.order_by('name')
+    #     elif sort[0] == 'NameSortDown' and len(sort) == 1:
+    #         products = products.order_by('-name')
 
-    page = request.query_params.get('page')
-    paginator = Paginator(products, 24)
-    allProducts = products
-    try:
-        products = paginator.page(page)
-    except PageNotAnInteger:
-        products = paginator.page(1)
-    except EmptyPage:
-        products = paginator.page(paginator.num_pages)
+    # page = request.query_params.get('page')
+    #
+    # paginator = Paginator(products, 24)
+    # try:
+    #     products = paginator.page(page)
+    # except PageNotAnInteger:
+    #     products = paginator.page(1)
+    # except EmptyPage:
+    #     products = paginator.page(paginator.num_pages)
+    #
+    # if page == None:
+    #     page = 1
+    #
+    # page = int(page)
 
-    if page == None:
-        page = 1
-
-    page = int(page)
-
-    serializer = ProductSerializer(products, many=True)
-    print(serializer.data)
-    return Response(
-        {'products': serializer.data, 'page': page, 'pages': paginator.num_pages, 'vendorList': vendorList,
+    # serializer = ProductSerializer(products, many=True)
+    # print(serializer.data)
+    return (
+        {
+         'products': products,
+         # 'products': serializer.data,
+         # 'page': page, 'pages': paginator.num_pages,
+         'vendorList': vendorList,
          'collectionList': collectionList, 'colorUrlList': colorUrlList, 'materialList': materialList,
          'colorList': colorList, 'sizeList': sizeList,
          'priceUpApi': priceUpApi, 'priceLowApi': priceLowApi, 'maxPrice': maxPrice})
@@ -159,18 +188,11 @@ def getProducts(request):
 
 @api_view(['GET'])
 def getCategotyProducts(request, pk):
-    print(request, pk)
-    products = Product.objects.filter(Q(category__category__icontains=pk)).distinct().order_by('name')
-    # maxPrice = Product.objects.filter(Q(name__icontains=query) & Q(category__category__icontains=category) & Q(
-    #     category__subCategory__icontains=filterer) &
-    #                                   Q(assortiment__countInStock__gt=0) & Q(brand__icontains=vendor) & Q(
-    #     CollectionName__contains=collection) &
-    #                                   Q(material__icontains=material) & Q(assortiment__color__icontains=color) &
-    #                                   Q(assortiment__size__icontains=size)).aggregate(Max('retailPrice'))[
-    #     'retailPrice__max']
+
+    products = Product.objects.filter(category__category__contains=pk).distinct().order_by('name')
+
     page = request.query_params.get('page')
     paginator = Paginator(products, 24)
-    allProducts = products
     try:
         products = paginator.page(page)
     except PageNotAnInteger:
@@ -184,9 +206,9 @@ def getCategotyProducts(request, pk):
     page = int(page)
 
     serializer = ProductSerializer(products, many=True)
-    print(serializer.data)
     return Response(
-        {'products': serializer.data, 'page': page, 'pages': paginator.num_pages
+        {'products': serializer.data
+            , 'page': page, 'pages': paginator.num_pages
          # 'vendorList': vendorList,
          # 'collectionList': collectionList, 'colorUrlList': colorUrlList, 'materialList': materialList,
          # 'colorList': colorList, 'sizeList': sizeList,
