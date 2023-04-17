@@ -133,12 +133,12 @@ const SubCategory = ({pageProps}) => {
                                     )
                                 )}
                             </Row>
-                            {/*<Paginate*/}
-                            {/*    className='mt-2'*/}
-                            {/*    page={page}*/}
-                            {/*    pages={pages}*/}
-                            {/*    keyword={keyword}*/}
-                            {/*/>*/}
+                            <Paginate
+                                className='mt-2'
+                                page={page}
+                                pages={pages}
+                                keyword={brSubCategory}
+                            />
                         </div>
                     </div>
                 </>
@@ -164,11 +164,10 @@ const SubCategory = ({pageProps}) => {
 }
 
 export const getServerSideProps = async (context) => {
-    const {category} = context.params
+    let {category, page} = context.query
     let subCategory = context.params.id
-
-    console.log(context)
-    const {data} = await axios.get(`${API_HOST}/api/products/category/${category}/${subCategory}`);
+    if (page) {page = '?page=' + page} else {page = ''}
+    const {data} = await axios.get(`${API_HOST}/api/products/category/${category}/${subCategory}${page}`);
     const topData = await axios.get(`${API_HOST}/api/products/top`);
     if (!data) {
         return {
