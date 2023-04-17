@@ -30,7 +30,6 @@ def getProducts(request, *args):
     # size = request.query_params.get('size')
     # priceLow = request.query_params.get('priceLow')
     # priceUp = request.query_params.get('priceUp')
-    print(args)
     sort = []
     # print('filterer', args[0]['filterer'], 'category', args[0]['category'])
     if 'filterer' not in args[0].keys():
@@ -187,16 +186,16 @@ def getProducts(request, *args):
 
 
 @api_view(['GET'])
-def getCategotyProducts(request, pk):
-    category = request.query_params.get('category')
-    if category is None:
-        category = pk
+def getCategotyProducts(request, **args):
+    category = args['pk']
+    try:
+        subcategory = args['pk1']
+    except:
         subcategory = ''
-    else:
-        subcategory = pk
-    products = Product.objects.filter(Q(category__subCategory__icontains=subcategory) & Q(category__category__icontains=category)).distinct().order_by('name')
-
+    products = Product.objects.filter(Q(category__subCategory__icontains=subcategory) & Q(
+        category__category__icontains=category)).distinct().order_by('name')
     page = request.query_params.get('page')
+    print(request.data)
     paginator = Paginator(products, 24)
     try:
         products = paginator.page(page)
@@ -204,12 +203,9 @@ def getCategotyProducts(request, pk):
         products = paginator.page(1)
     except EmptyPage:
         products = paginator.page(paginator.num_pages)
-
     if page is None:
         page = 1
-
     page = int(page)
-
     serializer = ProductSerializer(products, many=True)
     return Response(
         {'products': serializer.data
