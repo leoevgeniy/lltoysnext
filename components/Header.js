@@ -87,7 +87,7 @@ export default function Header(props) {
                                             <Link
                                                 key={i}
                                                 onClick={catalogFiltered}
-                                                href={`/subCategory/${subItem}?category=${item[0]}`}
+                                                href={`/category/${item[0]}/${subItem}`}
                                             >
                                                 {/*  */}
                                                 <span style={{color: '#1f2326'}} className='subTitle'>{subItem}</span>

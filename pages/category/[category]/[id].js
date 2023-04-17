@@ -24,13 +24,12 @@ import App, {AppContext} from "next/app";
 import axios from "axios";
 import {API_HOST} from "@/consts";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
+import Link from "next/link";
 
 
-const Category = ({pageProps}) => {
-    // const history = useRouter()
-    // const id = history.query.id
-    // const productList = useSelector((state) => state.categoryproduct);
-    const id = pageProps.id
+const SubCategory = ({pageProps}) => {
+    const subCategory = pageProps.subCategory
+    const category = pageProps.category
     const {error, loading, products, page, pages} = pageProps.data;
     const dispatch = useDispatch()
     // const [sort, setSort] = useState('')
@@ -56,7 +55,7 @@ const Category = ({pageProps}) => {
     // const [priceLow, setPriceLow] = useState(productList.priceLowApi)
     // const [priceUp, setPriceUp] = useState(productList.priceUpApi)
     const searchParams = useSearchParams();
-    let keyword = searchParams.get('keyword')
+    // let keyword = searchParams.get('keyword')
     useEffect(() => {
         if (localStorage.getItem('oppenedItems')) {
             setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))
@@ -74,7 +73,8 @@ const Category = ({pageProps}) => {
         }
 
     }, [dispatch, oppenedItems])
-    const brCategory = `/category/${id}`
+    const brCategory = `/category/${category}`
+    const brSubCategory = `/category/${category}/${subCategory}`
     return (
         <>
             {loading ? (
@@ -84,16 +84,17 @@ const Category = ({pageProps}) => {
                 ) :
                 <>
                     <Head>
-                        <title>{id}</title>
-                        <meta name='description' content={id}/>
-                        <meta name='keywords' content={id}/>
+                        <title>{subCategory}</title>
+                        <meta name='description' content={subCategory}/>
+                        <meta name='keywords' content={subCategory}/>
                         <meta name='keywords'
                               content='sexshop, сексшоп, магазин интимных товаров для взрослых, секс игрушки, sex toys, интимшоп, интим шоп, intimshop, секс, вибратор, фаллоимитатор, вагина, фаллос, клитор, стимулятор, мастурбатор, куклы, эротическое белье'/>
 
                     </Head>
                     <div className="content justify-content-center">
-                        <h1 className='text-center'>{id}</h1>
+                        {/*{(filter || category) ? (*/}
 
+                        <h1 className='text-center'>{subCategory}</h1>
                         <div>
                             <Breadcrumb>
                                 <Breadcrumb.Item
@@ -103,11 +104,15 @@ const Category = ({pageProps}) => {
                                 </Breadcrumb.Item>
                                 <Breadcrumb.Item
                                     href={brCategory}
+                                >
+                                    {category}
+                                </Breadcrumb.Item>
+                                <Breadcrumb.Item
+                                    href={brSubCategory}
                                     active
                                 >
-                                    {id}
+                                    {subCategory}
                                 </Breadcrumb.Item>
-
                             </Breadcrumb>
                             <Row className='mb-4 mx-0 w-100 justify-content-center text-center'>
                                 {Array.from(products).map(
@@ -128,12 +133,12 @@ const Category = ({pageProps}) => {
                                     )
                                 )}
                             </Row>
-                            <Paginate
-                                className='mt-2'
-                                page={page}
-                                pages={pages}
-                                keyword={brCategory}
-                            />
+                            {/*<Paginate*/}
+                            {/*    className='mt-2'*/}
+                            {/*    page={page}*/}
+                            {/*    pages={pages}*/}
+                            {/*    keyword={keyword}*/}
+                            {/*/>*/}
                         </div>
                     </div>
                 </>
@@ -159,18 +164,18 @@ const Category = ({pageProps}) => {
 }
 
 export const getServerSideProps = async (context) => {
+    const {category} = context.params
+    let subCategory = context.params.id
 
-    const {id} = context.params
-    const page = context.query['page']
     console.log(context)
-    const {data} = await axios.get(`${API_HOST}/api/products/category/${id}`);
+    const {data} = await axios.get(`${API_HOST}/api/products/category/${category}/${subCategory}`);
     const topData = await axios.get(`${API_HOST}/api/products/top`);
     if (!data) {
         return {
             notFound: true,
         }
     }
-    return {props: {data, topData: topData.data, id}}
+    return {props: {data, topData: topData.data, category, subCategory}}
 }
 
-export default Category
+export default SubCategory

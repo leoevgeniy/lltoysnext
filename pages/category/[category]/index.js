@@ -24,12 +24,13 @@ import App, {AppContext} from "next/app";
 import axios from "axios";
 import {API_HOST} from "@/consts";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
-import Link from "next/link";
 
 
 const Category = ({pageProps}) => {
-    const id = pageProps.id
-    const category = pageProps.category.split('=')[1]
+    // const history = useRouter()
+    // const id = history.query.id
+    // const productList = useSelector((state) => state.categoryproduct);
+    const category = pageProps.category
     const {error, loading, products, page, pages} = pageProps.data;
     const dispatch = useDispatch()
     // const [sort, setSort] = useState('')
@@ -55,7 +56,8 @@ const Category = ({pageProps}) => {
     // const [priceLow, setPriceLow] = useState(productList.priceLowApi)
     // const [priceUp, setPriceUp] = useState(productList.priceUpApi)
     const searchParams = useSearchParams();
-    // let keyword = searchParams.get('keyword')
+    let keyword = searchParams.get('keyword')
+
     useEffect(() => {
         if (localStorage.getItem('oppenedItems')) {
             setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))
@@ -74,7 +76,6 @@ const Category = ({pageProps}) => {
 
     }, [dispatch, oppenedItems])
     const brCategory = `/category/${category}`
-    const brSubCategory = `/subCategory/${id}?category=${category}`
     return (
         <>
             {loading ? (
@@ -84,17 +85,16 @@ const Category = ({pageProps}) => {
                 ) :
                 <>
                     <Head>
-                        <title>{id}</title>
-                        <meta name='description' content={id}/>
-                        <meta name='keywords' content={id}/>
+                        <title>{category}</title>
+                        <meta name='description' content={category}/>
+                        <meta name='keywords' content={category}/>
                         <meta name='keywords'
                               content='sexshop, сексшоп, магазин интимных товаров для взрослых, секс игрушки, sex toys, интимшоп, интим шоп, intimshop, секс, вибратор, фаллоимитатор, вагина, фаллос, клитор, стимулятор, мастурбатор, куклы, эротическое белье'/>
 
                     </Head>
                     <div className="content justify-content-center">
-                        {/*{(filter || category) ? (*/}
+                        <h1 className='text-center'>{category}</h1>
 
-                        <h1 className='text-center'>{id}</h1>
                         <div>
                             <Breadcrumb>
                                 <Breadcrumb.Item
@@ -104,15 +104,11 @@ const Category = ({pageProps}) => {
                                 </Breadcrumb.Item>
                                 <Breadcrumb.Item
                                     href={brCategory}
+                                    active
                                 >
                                     {category}
                                 </Breadcrumb.Item>
-                                <Breadcrumb.Item
-                                    href={brSubCategory}
-                                    active
-                                >
-                                    {id}
-                                </Breadcrumb.Item>
+
                             </Breadcrumb>
                             <Row className='mb-4 mx-0 w-100 justify-content-center text-center'>
                                 {Array.from(products).map(
@@ -133,12 +129,12 @@ const Category = ({pageProps}) => {
                                     )
                                 )}
                             </Row>
-                            {/*<Paginate*/}
-                            {/*    className='mt-2'*/}
-                            {/*    page={page}*/}
-                            {/*    pages={pages}*/}
-                            {/*    keyword={keyword}*/}
-                            {/*/>*/}
+                            <Paginate
+                                className='mt-2'
+                                page={page}
+                                pages={pages}
+                                keyword={brCategory}
+                            />
                         </div>
                     </div>
                 </>
@@ -164,20 +160,17 @@ const Category = ({pageProps}) => {
 }
 
 export const getServerSideProps = async (context) => {
-    const {id} = context.params
-    let category = context.query['category']
-    if (category) {
-        category = `?category=${category}`
-    }
-    console.log(category)
-    const {data} = await axios.get(`${API_HOST}/api/products/category/${id}${category}`);
+    let {category, page} = context.query
+    console.log(category, page)
+    page = '?page='+page
+    const {data} = await axios.get(`${API_HOST}/api/products/category/${category}${page}`);
     const topData = await axios.get(`${API_HOST}/api/products/top`);
     if (!data) {
         return {
             notFound: true,
         }
     }
-    return {props: {data, topData: topData.data, id, category}}
+    return {props: {data, topData: topData.data, category}}
 }
 
 export default Category
