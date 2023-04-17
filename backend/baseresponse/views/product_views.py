@@ -188,7 +188,13 @@ def getProducts(request, *args):
 
 @api_view(['GET'])
 def getCategotyProducts(request, pk):
-    products = Product.objects.filter(category__category__contains=pk).distinct().order_by('name')
+    category = request.query_params.get('category')
+    if category is None:
+        category = pk
+        subcategory = ''
+    else:
+        subcategory = pk
+    products = Product.objects.filter(Q(category__subCategory__icontains=subcategory) & Q(category__category__icontains=category)).distinct().order_by('name')
 
     page = request.query_params.get('page')
     paginator = Paginator(products, 24)
