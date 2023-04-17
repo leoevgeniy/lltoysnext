@@ -194,18 +194,19 @@ def getCategotyProducts(request, pk):
     page = request.query_params.get('page')
     paginator = Paginator(products, 24)
     try:
-        products = paginator.page(page)
+        productsfiltered = paginator.page(page)
     except PageNotAnInteger:
-        products = paginator.page(1)
+        productsfiltered = paginator.page(1)
     except EmptyPage:
-        products = paginator.page(paginator.num_pages)
+        productsfiltered = paginator.page(paginator.num_pages)
 
-    if page == None:
+    if page is None:
         page = 1
 
     page = int(page)
 
     serializer = ProductSerializer(products, many=True)
+    print(serializer.data, page, paginator.num_pages)
     return Response(
         {'products': serializer.data
             , 'page': page, 'pages': paginator.num_pages
