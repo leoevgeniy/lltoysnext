@@ -195,7 +195,6 @@ def getCategotyProducts(request, **args):
     products = Product.objects.filter(Q(category__subCategory__icontains=subcategory) & Q(
         category__category__icontains=category)).distinct().order_by('name')
     page = request.query_params.get('page')
-    print(request.data)
     paginator = Paginator(products, 24)
     try:
         products = paginator.page(page)
@@ -203,7 +202,7 @@ def getCategotyProducts(request, **args):
         products = paginator.page(1)
     except EmptyPage:
         products = paginator.page(paginator.num_pages)
-    if page is None:
+    if page is None or page == 'undefined':
         page = 1
     page = int(page)
     serializer = ProductSerializer(products, many=True)
