@@ -23,12 +23,6 @@ export default function ProductImageCarousel(products) {
         setModalShow(true)
         setSource(images[i].field)
     }
-    useEffect(() => {
-        const elm = document.getElementById('selectedImage')
-        console.log(elm)
-        // style.textAlign='center'
-
-    },[])
     return (
 
         <div className='carousel-wrapper float-end'>
