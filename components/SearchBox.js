@@ -74,7 +74,7 @@ function SearchBox(expanded) {
             ></FormControl>
 
             <Button type="submit" variant="outline-success" className='lupa'>
-                <FontAwesomeIcon icon={solid('magnifying-glass')}/>
+                <FontAwesomeIcon icon={solid("magnifying-glass")} />
                 {/*<span className='ml-4'> Найти</span>*/}
             </Button>
         </Form>

@@ -1,6 +1,5 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Carousel } from "react-responsive-carousel";
-import {Image} from "react-bootstrap";
 // import '../components/css/imageModal.css'
 // import '../components/css/ProductImageCarousel.css'
 import "react-responsive-carousel/lib/styles/carousel.min.css"
@@ -10,7 +9,7 @@ import ImageModal from "./ImageModal";
 export default function ProductImageCarousel(products) {
     const [modalShow, setModalShow] = React.useState(false);
     const [source, setSource] = React.useState(false);
-   const {product} = products
+    const {product} = products
     const images =[]
     for (let field in product) {
         if (field.indexOf('image') !== -1) {
@@ -24,10 +23,15 @@ export default function ProductImageCarousel(products) {
         setModalShow(true)
         setSource(images[i].field)
     }
+    useEffect(() => {
+        const elm = document.getElementById('selectedImage')
+        console.log(elm)
+        // style.textAlign='center'
 
+    },[])
     return (
 
-        <div className='carousel-wrapper'>
+        <div className='carousel-wrapper float-end'>
             <ImageModal
                 src = {source}
                 // backdrop="static"
@@ -37,10 +41,10 @@ export default function ProductImageCarousel(products) {
                 onHide={() => setModalShow(false)}
                 // backdropClassName=''
             />
-            <Carousel showArrows infiniteLoop autoFocus dynamicHeight onClickItem={imageHandler}>
+            <Carousel showArrows infiniteLoop autoFocus dynamicHeight onClickItem={imageHandler} className='float-end'>
                 {images.map((image, index) => {
                     return (
-                <div key={index} className='selectedImage'>
+                <div key={index} className='selectedImage d-inline-block justify-self-center' style={{'maxheight' : '400px'}}>
                     <img alt={product.name} src={image.field} className='centeredImage'/>
                 </div>)
                 })}

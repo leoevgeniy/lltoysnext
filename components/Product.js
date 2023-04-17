@@ -83,7 +83,9 @@ function Product({product}) {
                 <Card.Img
 
                     src={srcLink}
-                    alt={product.name}/>
+                    alt={product.name}
+
+                />
 
 
         </Link>

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useRouter} from 'next/router'
 import {useDispatch, useSelector} from "react-redux";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import {Navbar, Nav, Container, NavDropdown, NavLink} from "react-bootstrap";
+import {Navbar, Nav, Container, NavDropdown, NavLink, Badge} from "react-bootstrap";
 import Image from 'next/image'
 import Accordion from "react-bootstrap/Accordion";
 import Link from "next/link";
@@ -13,10 +13,12 @@ import {listCatalog} from "@/redux/actions/productAction";
 import SearchBox from "./SearchBox";
 import kuragi from '../public/Kuragi.png'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {icon} from '@fortawesome/fontawesome-svg-core/import.macro'
+import {icon, solid} from '@fortawesome/fontawesome-svg-core/import.macro'
 
 
 export default function Header(props) {
+    const cart = useSelector(state => state.cart)
+    const {cartItems} = cart
     const history = useRouter()
     const [expanded, setExpanded] = useState(false);
     const {expandedFilter, setExpandedFilter} = props;
@@ -126,11 +128,12 @@ export default function Header(props) {
                     <Navbar.Collapse id="navbarScroll" className='text-center'>
 
                         <Nav className='d-flex'>
-                            <Navbar.Brand className='align-self-center'>
-                                <Link href="/" onClick={() => setExpanded(false)}>
+                            <Navbar.Brand className='align-self-center' onClick={() => {
+                                setExpanded(false)
+                                history.push("/")
+                            }}>
                                     {/*    /!*<Navbar.Brand>МАГАЗИН РАДОСТИ</Navbar.Brand>*!/*/}
                                     <Image priority className='img-fluid logo' src={kuragi} alt='Магазин Куражи'/>
-                                </Link>
                             </Navbar.Brand>
                             <Nav.Link onClick={handleShow} className='align-self-center fs-2 catalog'>
                                 {/*<i className=" links fa-solid fa-list"></i> */}
@@ -141,11 +144,19 @@ export default function Header(props) {
                         </Nav>
 
                         <SearchBox/>
+
                         <div
-                            className="mr-0 my-2 my-lg-0 links d-flex"
+                            className="mr-0 my-2 my-lg-0 links d-flex align-content-center"
                             style={{maxHeight: "100px", 'color': 'white'}}
                             // navbarScroll
                         >
+                            <Nav className='d-flex mr-4 my-auto'>
+                                <Link href='cart/' className='ms-auto' style={{'color': 'white', 'width': '30px'}}>
+                                    <FontAwesomeIcon icon={solid("cart-shopping")} />
+                                    {cart && cartItems && cartItems.length>0 && <Badge className='cartBadge text-center' style={{}} bg='primary'>{cart.cartItems.length}</Badge>}
+                                </Link>
+
+                            </Nav>
                             {userInfo ? (
                                 <NavDropdown
                                     title={userInfo.name.split(' ')[0]}
