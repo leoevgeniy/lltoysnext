@@ -19,28 +19,31 @@ import axios from "axios";
 import {API_HOST} from "@/consts";
 
 export const getServerSideProps = async (context) => {
-    const id = context.params['id']
+    const {id} = context.params
     console.log(id)
-    let data = {}
-    try {
-        const {data} = await axios.get(`${API_HOST}/api/products/category/${id}`);
-        // data = await res.json()
+    // let data = {}
+    // try {
+        const data = await fetch(`${API_HOST}/api/products/category/${id}`);
+        // const data = await res.json();
+        console.log(data)
 
-    } catch {}
-    return{
-        props: {
-            data,
-            id
-        }
-    }
+    // } catch {}
+
+    // if (!data) {
+    //     return {
+    //         notFound: true,
+    //     }
+    // }
+    return{props:{}}
 }
 
 const Category = ({data}) => {
-    const history = useRouter()
-    const id = history.query.id
+    // const history = useRouter()
+    // const id = history.query.id
     const productList = useSelector((state) => state.categoryproduct);
     const { error, loading, products, page, pages} = productList;
-    const dispatch = useDispatch()
+    // const dispatch = useDispatch()
+    console.log('data', data)
     // const [sort, setSort] = useState('')
     // const [priceSortUp, setPriceSortUp] = useState(false);
     // const [priceSortDown, setPriceSortDown] = useState(false);
@@ -68,7 +71,7 @@ const Category = ({data}) => {
         // dispatch(listCategoryProducts(id))
 
 
-    },[id])
+    },[])
 
     return (
         <>
@@ -131,4 +134,4 @@ const Category = ({data}) => {
 }
 
 
-export default withRouter(Category)
+export default Category
