@@ -28,7 +28,6 @@ function LoginScreen() {
     const [isValidPhone, setIsValidPhone] = useState('')
     const dispatch = useDispatch()
     const searchParams = useSearchParams();
-    console.log(searchParams)
     const redirect = searchParams.get('redirect') || '/'
         // ? searchParams.split('=')[1] : '/'
     const userLogin = useSelector(state => state.userLogin)

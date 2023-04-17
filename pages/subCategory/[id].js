@@ -24,6 +24,7 @@ import App, {AppContext} from "next/app";
 import axios from "axios";
 import {API_HOST} from "@/consts";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
+import Link from "next/link";
 
 
 const Category = ({pageProps}) => {
@@ -31,6 +32,7 @@ const Category = ({pageProps}) => {
     // const id = history.query.id
     // const productList = useSelector((state) => state.categoryproduct);
     const id = pageProps.id
+    const category = pageProps.category.split('=')[1]
     const {error, loading, products, page, pages} = pageProps.data;
     const dispatch = useDispatch()
     // const [sort, setSort] = useState('')
@@ -74,7 +76,8 @@ const Category = ({pageProps}) => {
         }
 
     }, [dispatch, oppenedItems])
-    const brCategory = `/category/${id}`
+    const brCategory = `/category/${category}`
+    const brSubCategory = `/subCategory/${id}?category=${category}`
     return (
         <>
             {loading ? (
@@ -108,11 +111,17 @@ const Category = ({pageProps}) => {
                                     // linkAs={Link}
                                     // linkProps={{href: `/category/${category}`}}
                                     href={brCategory}
+                                >
+                                    {category}
+                                </Breadcrumb.Item>
+                                <Breadcrumb.Item
+                                    // linkAs={Link}
+                                    // linkProps={{to: `/subCategory/${id}?category=${id}`}}
+                                    href={brSubCategory}
                                     active
                                 >
                                     {id}
                                 </Breadcrumb.Item>
-
                             </Breadcrumb>
                             <Row className='mb-4 mx-0 w-100 justify-content-center text-center'>
                                 {Array.from(products).map(
@@ -165,14 +174,19 @@ const Category = ({pageProps}) => {
 
 export const getServerSideProps = async (context) => {
     const {id} = context.params
-    const {data} = await axios.get(`${API_HOST}/api/products/category/${id}`);
+    let category = context.query['category']
+    if (category) {
+        category = `?category=${category}`
+    }
+    console.log(category)
+    const {data} = await axios.get(`${API_HOST}/api/products/category/${id}${category}`);
     const topData = await axios.get(`${API_HOST}/api/products/top`);
     if (!data) {
         return {
             notFound: true,
         }
     }
-    return {props: {data, topData: topData.data, id}}
+    return {props: {data, topData: topData.data, id, category}}
 }
 
 export default Category
