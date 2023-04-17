@@ -177,28 +177,27 @@ def getProducts(request, *args):
     # print(serializer.data)
     return (
         {
-         'products': products,
-         # 'products': serializer.data,
-         # 'page': page, 'pages': paginator.num_pages,
-         'vendorList': vendorList,
-         'collectionList': collectionList, 'colorUrlList': colorUrlList, 'materialList': materialList,
-         'colorList': colorList, 'sizeList': sizeList,
-         'priceUpApi': priceUpApi, 'priceLowApi': priceLowApi, 'maxPrice': maxPrice})
+            'products': products,
+            # 'products': serializer.data,
+            # 'page': page, 'pages': paginator.num_pages,
+            'vendorList': vendorList,
+            'collectionList': collectionList, 'colorUrlList': colorUrlList, 'materialList': materialList,
+            'colorList': colorList, 'sizeList': sizeList,
+            'priceUpApi': priceUpApi, 'priceLowApi': priceLowApi, 'maxPrice': maxPrice})
 
 
 @api_view(['GET'])
 def getCategotyProducts(request, pk):
-
     products = Product.objects.filter(category__category__contains=pk).distinct().order_by('name')
 
     page = request.query_params.get('page')
     paginator = Paginator(products, 24)
     try:
-        productsfiltered = paginator.page(page)
+        products = paginator.page(page)
     except PageNotAnInteger:
-        productsfiltered = paginator.page(1)
+        products = paginator.page(1)
     except EmptyPage:
-        productsfiltered = paginator.page(paginator.num_pages)
+        products = paginator.page(paginator.num_pages)
 
     if page is None:
         page = 1
@@ -206,7 +205,6 @@ def getCategotyProducts(request, pk):
     page = int(page)
 
     serializer = ProductSerializer(products, many=True)
-    print(serializer.data, page, paginator.num_pages)
     return Response(
         {'products': serializer.data
             , 'page': page, 'pages': paginator.num_pages
@@ -214,7 +212,7 @@ def getCategotyProducts(request, pk):
          # 'collectionList': collectionList, 'colorUrlList': colorUrlList, 'materialList': materialList,
          # 'colorList': colorList, 'sizeList': sizeList,
          # 'priceUpApi': priceUpApi, 'priceLowApi': priceLowApi, 'maxPrice': maxPrice
-    }
+         }
     )
 
 
@@ -234,13 +232,9 @@ def getCatalog(request):
 
 @api_view(['GET'])
 def getTopProducts(request):
-    products = Product.objects.filter(Q(assortiment__countInStock__gt=0) & Q(isSuperSale__iexact=1))
-    # .order_by('?')[30]
-    #
-    # serializer = ProductSerializer(products, many=True)
+    products = Product.objects.filter(Q(assortiment__countInStock__gt=0) & Q(isSuperSale__iexact=1)).distinct()
     products = products.order_by('?')[:30]
     serializer = ProductSerializer(products, many=True)
-
     return Response(serializer.data)
 
 
@@ -253,6 +247,7 @@ def getSeenProducts(request):
 
     return Response(serializer.data)
     # return Response('')
+
 
 @api_view(['GET'])
 def getProduct(request, pk):

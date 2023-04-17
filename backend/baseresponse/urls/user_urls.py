@@ -5,6 +5,7 @@ from baseresponse.views import user_views as views
 urlpatterns = [
 
     path('login/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('login', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('register/', views.registerUser, name='register'),
     path('restore/', views.initiatePasswordReset, name='restore'),
     path('phone_register', views.phoneConfirmationRegister, name='phoneConfirmation'),

@@ -50,6 +50,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     # serializer_class = MyTokenObtainPairSerializer
+    print('логин')
     def get_serializer_class(self):
         if "phone_number" in self.request.data:
             return MyTokenObtainPairSerializerPhone
