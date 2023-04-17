@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { useRouter } from 'next/router'
+import {useRouter} from 'next/router'
 import {useDispatch, useSelector} from "react-redux";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import {Navbar, Nav, Container, NavDropdown, NavLink} from "react-bootstrap";
@@ -12,11 +12,8 @@ import Message from "../components/Message";
 import {listCatalog} from "@/redux/actions/productAction";
 import SearchBox from "./SearchBox";
 import kuragi from '../public/Kuragi.png'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
-
-
-
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {icon} from '@fortawesome/fontawesome-svg-core/import.macro'
 
 
 export default function Header(props) {
@@ -33,11 +30,12 @@ export default function Header(props) {
     // const [navShow, setNavShow] = useState(false);
     useEffect(() => {
         setShow(props.navShow)
-    },[props.navShow])
+    }, [props.navShow])
     const handleClose = () => {
         setShow(false)
         props.setNavShow(false)
-        setExpanded(false)};
+        setExpanded(false)
+    };
     const handleNavClose = () => props.setNavShow(false);
     const handleShow = () => {
         setShow(true);
@@ -55,7 +53,9 @@ export default function Header(props) {
     };
     let a = 0;
     let catalogItems = {}
-    if (catalog) {catalogItems = Object.entries(catalog)}
+    if (catalog) {
+        catalogItems = Object.entries(catalog)
+    }
     const catalogFiltered = () => {
         setExpanded(false)
         setShow(false);
@@ -63,7 +63,7 @@ export default function Header(props) {
     };
 
     return (
-        <header className='header' style={{'width':'100%'}}>
+        <header className='header' style={{'width': '100%'}}>
             <Offcanvas show={show} onHide={handleClose} className='catalog'>
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>Каталог</Offcanvas.Title>
@@ -78,7 +78,7 @@ export default function Header(props) {
                             {catalogItems.map((item, n) => (
                                 <Accordion.Item eventKey={n} key={n}>
                                     <Accordion.Header key={n}>
-                                        <p className='firstTitle' >{item[0]}</p>
+                                        <p className='firstTitle'>{item[0]}</p>
                                     </Accordion.Header>
                                     {item[1].map((subItem, i) => (
                                         <Accordion.Body key={i}>
@@ -99,7 +99,7 @@ export default function Header(props) {
                     </Offcanvas.Body>
                 )}
             </Offcanvas>
-                <Navbar
+            <Navbar
                 // bg="dark"
                 // variant="dark"
                 bg='#e5097f'
@@ -119,18 +119,20 @@ export default function Header(props) {
                             </Link>
                         </Navbar.Brand>
                     }
-                    <Navbar.Toggle style={expanded ? {'boxShadow': '0 0 0 var(--bs-navbar-toggler-focus-width)'}: {"boxShadow": "none"}} aria-controls="navbarScroll" onClick={() => setExpanded(expanded ? false : "expanded")}/>
+                    <Navbar.Toggle
+                        style={expanded ? {'boxShadow': '0 0 0 var(--bs-navbar-toggler-focus-width)'} : {"boxShadow": "none"}}
+                        aria-controls="navbarScroll" onClick={() => setExpanded(expanded ? false : "expanded")}/>
 
-                    <Navbar.Collapse  id="navbarScroll" className='text-center'>
+                    <Navbar.Collapse id="navbarScroll" className='text-center'>
 
                         <Nav className='d-flex'>
                             <Navbar.Brand className='align-self-center'>
-                                <Link href="/" onClick={() => setExpanded(false)} >
+                                <Link href="/" onClick={() => setExpanded(false)}>
                                     {/*    /!*<Navbar.Brand>МАГАЗИН РАДОСТИ</Navbar.Brand>*!/*/}
-                                    <Image  priority className='img-fluid logo' src={kuragi} alt='Магазин Куражи'/>
+                                    <Image priority className='img-fluid logo' src={kuragi} alt='Магазин Куражи'/>
                                 </Link>
                             </Navbar.Brand>
-                            <Nav.Link  onClick={handleShow} className='align-self-center fs-2 catalog'>
+                            <Nav.Link onClick={handleShow} className='align-self-center fs-2 catalog'>
                                 {/*<i className=" links fa-solid fa-list"></i> */}
 
                                 КАТАЛОГ
@@ -138,68 +140,82 @@ export default function Header(props) {
 
                         </Nav>
 
-                        <SearchBox />
-                        <Nav
-                            className="mr-0 my-2 my-lg-0 links "
-                            style={{maxHeight: "100px"}}
-                            navbarScroll
+                        <SearchBox/>
+                        <div
+                            className="mr-0 my-2 my-lg-0 links d-flex"
+                            style={{maxHeight: "100px", 'color': 'white'}}
+                            // navbarScroll
                         >
                             {userInfo ? (
                                 <NavDropdown
-                                    title={userInfo.name .split(' ')[0]}
+                                    title={userInfo.name.split(' ')[0]}
                                     id="username"
-                                    className='text-center'
+                                    className='text-center px-3 ms-auto'
                                 >
-                                    <Link href="/profile" onClick={() => setExpanded(false)}>
-                                        <NavDropdown.Item>
+
+                                    <NavDropdown.Item onClick={() => {
+                                        setExpanded(false)
+                                        history.push('/profile')
+                                    }}
+                                    className='text-center'>
+                                        {/*<Link href="" >*/}
                                             Профиль
-                                        </NavDropdown.Item>
-                                    </Link>
-                                    <NavDropdown.Item onClick={logoutHendler}>
+                                        {/*</Link>*/}
+                                    </NavDropdown.Item>
+
+                                    <NavDropdown.Item onClick={logoutHendler} className='text-center'>
                                         Выйти
                                     </NavDropdown.Item>
                                 </NavDropdown>
                             ) : (
-                                <Link href="/login">
-                                        {/*<FontAwesomeIcon icon={icon({name: 'user'})} />*/}
-                                        Логин
+                                <Link href="/login" className='mx-auto' style={{'color': 'white', 'width': '30px'}}>
+                                    <FontAwesomeIcon icon={icon({name: 'user'})} />
+
                                 </Link>
                             )}
 
                             {userInfo && userInfo.isAdmin && (
-                                <NavDropdown title="Админ" id="adminmenu" className='text-center'>
-                                    <Link href="/admin/userlist">
-                                        <NavDropdown.Item>
+                                <NavDropdown title="Админ" id="adminmenu" className='text-center d-block'>
+
+                                    <NavDropdown.Item onClick={() => history.push("/admin/userlist")}>
+                                    {/*    <Link href="/admin/userlist">*/}
                                             Пользователи
-                                        </NavDropdown.Item>
-                                    </Link>
-                                    <Link href="/admin/productlist">
-                                        <NavDropdown.Item>
+                                        {/*</Link>*/}
+                                    </NavDropdown.Item>
+
+
+                                    <NavDropdown.Item onClick={() => history.push("/admin/productlist")}>
+                                        {/*<Link href="/admin/productlist">*/}
                                             Товары
-                                        </NavDropdown.Item>
-                                    </Link>
-                                    <Link href="/admin/orderlist">
-                                        <NavDropdown.Item>
+                                        {/*</Link>*/}
+                                    </NavDropdown.Item>
+
+
+                                    <NavDropdown.Item onClick={() => {
+                                        history.push("/admin/orderlist")
+                                    }}>
+                                    {/*    <Link href="/admin/orderlist">*/}
                                             Заказы
-                                        </NavDropdown.Item>
-                                    </Link>
+                                        {/*</Link>*/}
+                                    </NavDropdown.Item>
+
                                 </NavDropdown>
                             )}
-                        </Nav>
+                        </div>
 
 
                     </Navbar.Collapse>
 
                 </Container>
-            {/*</Navbar>*/}
-            {/*<Navbar*/}
-            {/*    bg='#e5097f'*/}
-            {/*    expand="md"*/}
-            {/*    datatype='filter'*/}
-            {/*    collapseOnSelect*/}
-            {/*    expanded={expanded}*/}
-            {/*    className='navbar-custom w-100 d-block'>*/}
-            {/*    <Navbar.Toggle style={expanded ? {'boxShadow': '0 0 0 var(--bs-navbar-toggler-focus-width)'}: {"boxShadow": "none"}} aria-controls="filterNav" onClick={() => setExpandedFilter(expandedFilter ? false : "expandedFilter")}/>*/}
+                {/*</Navbar>*/}
+                {/*<Navbar*/}
+                {/*    bg='#e5097f'*/}
+                {/*    expand="md"*/}
+                {/*    datatype='filter'*/}
+                {/*    collapseOnSelect*/}
+                {/*    expanded={expanded}*/}
+                {/*    className='navbar-custom w-100 d-block'>*/}
+                {/*    <Navbar.Toggle style={expanded ? {'boxShadow': '0 0 0 var(--bs-navbar-toggler-focus-width)'}: {"boxShadow": "none"}} aria-controls="filterNav" onClick={() => setExpandedFilter(expandedFilter ? false : "expandedFilter")}/>*/}
             </Navbar>
 
         </header>

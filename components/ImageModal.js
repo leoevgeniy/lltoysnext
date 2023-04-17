@@ -1,13 +1,8 @@
 import React from "react";
 import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import '../components/css/imageModal.css'
-import {Image} from "react-bootstrap";
+// import '../components/css/imageModal.css'
 
 export default function ImageModal(props, history) {
-    const denided = () => {
-        window.location.assign('http://yandex.ru')
-    }
 
     return (
 

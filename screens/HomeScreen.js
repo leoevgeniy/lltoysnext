@@ -5,7 +5,7 @@ import {Badge} from "react-bootstrap";
 import home from '@/public/home.png'
 import cartImg from '@/public/cart.png'
 import user from '@/public/user.png'
-import logo from '@/public/logo.png'
+import logo from '../public/logo.png'
 import {useDispatch, useSelector} from "react-redux";
 import BannersCarousel from '@/components/BannersCarousel'
 import erotic from '@/public/erotic.jpg'
@@ -31,26 +31,26 @@ const HomeScreen = () => {
     return (
         <div className='homescreen'>
             <div className='mainlady'>
-                <Link href='/'>
-                    <Image className='home' src={home} alt='home' />
-                </Link>
-                <Link href='/cart'>
-                    <div>
-                        <Image className='cart' src={cartImg} alt='cart'/>
+                {/*<Link href='/'>*/}
+                {/*    <Image className='home' src={home} alt='home' />*/}
+                {/*</Link>*/}
+                {/*<Link href='/cart'>*/}
+                {/*    <div>*/}
+                {/*        <Image className='cart' src={cartImg} alt='cart'/>*/}
 
-                        {cart && cartItems && cartItems.length>0 && <Badge className='cartBadge text-center' style={{}} bg='primary'>{cart.cartItems.length}</Badge>}
+                {/*        {cart && cartItems && cartItems.length>0 && <Badge className='cartBadge text-center' style={{}} bg='primary'>{cart.cartItems.length}</Badge>}*/}
 
-                    </div>
-                </Link>
-                {!userInfo &&
-                    <Link href='/login'>
-                        <Image className='user' src={user} alt='user' />
-                    </Link>
-                }
+                {/*    </div>*/}
+                {/*</Link>*/}
+                {/*{!userInfo &&*/}
+                {/*    <Link href='/login'>*/}
+                {/*        <Image className='user' src={user} placeholder='blur' alt='user' />*/}
+                {/*    </Link>*/}
+                {/*}*/}
 
-                <Link href='/'>
-                    <Image priority className='logo' src={logo} alt='logo' />
-                </Link>
+                {/*<Link href='/'>*/}
+                {/*    <Image priority src={logo} alt='logo' />*/}
+                {/*</Link>*/}
             </div>
             <div className="w-100 pt-1">
                     <div className='categories'>

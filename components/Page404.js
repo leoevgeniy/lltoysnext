@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import './css/page404.css'
+// import './css/page404.css'
 import {Link} from "react-router-dom";
 
 function Page404() {

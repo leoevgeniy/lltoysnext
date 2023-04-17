@@ -20,7 +20,7 @@ export default function RestorePasswordModal(props) {
             </Modal.Header>
             <Modal.Body>
                 <p>
-                    Мы отправили Вам письмо с инструкцией по сбросу пароля (не забудьте проверить в папке "спам")
+                    Мы отправили Вам письмо с инструкцией по сбросу пароля (не забудьте проверить в папке &quotспам&quot)
                 </p>
             </Modal.Body>
             <Modal.Footer>

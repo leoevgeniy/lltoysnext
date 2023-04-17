@@ -1,6 +1,7 @@
 import axios from "axios";
 import * as t from "../typesUsers";
 import { ORDER_LIST_MY_RESET } from "../typesOrders";
+import {API_HOST} from "@/consts";
 
 export const phoneLogin = (phone, password) => async (dispatch) => {
     try {
@@ -15,7 +16,7 @@ export const phoneLogin = (phone, password) => async (dispatch) => {
         };
 
         const { data } = await axios.post(
-            "/api/users/login/",
+            `${API_HOST}/api/users/login/`,
             { phone_number: phone},
             config
         );
@@ -58,7 +59,7 @@ export const login = (email, password) => async (dispatch) => {
         };
 
         const { data } = await axios.post(
-            "/api/users/login/",
+            `${API_HOST}/api/users/login/`,
             { username: email, password: password },
             config
         );
@@ -100,7 +101,7 @@ export const register = (name, email, password, phone_number) => async (dispatch
         };
 
         const { data } = await axios.post(
-            "/api/users/register/",
+            `${API_HOST}/api/users/register/`,
             { name: name, email: email, password: password, phone_number: phone_number },
             config
         );
@@ -142,7 +143,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.get(`/api/users/${id}/`, config);
+        const { data } = await axios.get(`${API_HOST}/api/users/${id}/`, config);
 
         dispatch({
             type: t.USER_DETAILS_SUCCESS,
@@ -178,7 +179,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
         };
 
         const { data } = await axios.put(
-            `/api/users/profile/update/`,
+            `${API_HOST}/api/users/profile/update/`,
             user,
             config
         );
@@ -221,7 +222,7 @@ export const listUsers = () => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.get(`/api/users/`, config);
+        const { data } = await axios.get(`${API_HOST}/api/users/`, config);
 
         dispatch({
             type: t.USER_LIST_SUCCESS,
@@ -255,7 +256,7 @@ export const deleteUser = (id) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.delete(`/api/users/delete/${id}`, config);
+        const { data } = await axios.delete(`${API_HOST}/api/users/delete/${id}`, config);
 
         dispatch({
             type: t.USER_DELETE_SUCCESS,
@@ -290,7 +291,7 @@ export const updateUser = (user) => async (dispatch, getState) => {
         };
 
         const { data } = await axios.put(
-            `/api/users/update/${user._id}/`,
+            `${API_HOST}/api/users/update/${user._id}/`,
             user,
             config
         );

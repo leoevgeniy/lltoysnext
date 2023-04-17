@@ -2,7 +2,7 @@ import '@/styles/globals.css'
 import {Provider} from "react-redux";
 import App from "next/app";
 import {createWrapper} from 'next-redux-wrapper';
-import React from "react";
+import React, {useEffect} from "react";
 import store from "@/redux/store";
 import Layout from '@/components/layout'
 import '@/styles/header.css'
@@ -26,16 +26,18 @@ const MyApp = ({Component, ...rest}) => {
     // static async getInitialProps({Component, ctx}) {
     //     const appProps = Component.getInitialProps ? await Component.getInitialProps(ctx): {};
     //
-    //     console.log(appProps)
     //     return { appProps: appProps };
     //
     // }
+    useEffect(() => {
+        typeof document !== undefined ? require("bootstrap/dist/js/bootstrap") : null;
+    }, []);
     const wrapper = createWrapper(() => store);
     const {appProps} = wrapper.useWrappedStore(rest);
     return (
         <Provider store={store}>
             <Layout>
-                <Component {...appProps} />
+                <Component {...rest} />
             </Layout>
         </Provider>
     )

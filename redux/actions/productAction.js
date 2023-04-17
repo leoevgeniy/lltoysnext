@@ -84,11 +84,10 @@ export const listTopProducts = (keyword = '') =>
     async (dispatch) => {
         try {
             dispatch({type: t.PRODUCT_TOP_REQUEST});
-            const {data} = await axios.get(`${API_HOST}/api/products/top`);
-
+            const data = await axios.get(`${API_HOST}/api/products/top`);
             dispatch({
                 type: t.PRODUCT_TOP_SUCCESS,
-                payload: data,
+                payload: data.data,
             });
         } catch (error) {
             dispatch({

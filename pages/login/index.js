@@ -29,7 +29,7 @@ function LoginScreen() {
     const dispatch = useDispatch()
     const searchParams = useSearchParams();
     console.log(searchParams)
-    const redirect = searchParams
+    const redirect = searchParams.get('redirect') || '/'
         // ? searchParams.split('=')[1] : '/'
     const userLogin = useSelector(state => state.userLogin)
     const {loading, userInfo, error} = userLogin
@@ -64,7 +64,7 @@ function LoginScreen() {
         //     document.getElementById('root').style.height = String(window.innerHeight - document.querySelector('.footer').scrollHeight) + 'px'
         // }
 
-    }, [history, userInfo, redirect])
+    }, [userInfo, redirect])
 
     const submitHandler = (e) => {
         e.preventDefault()

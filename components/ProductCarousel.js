@@ -5,13 +5,16 @@ import ItemsCarousel from "react-items-carousel";
 import Link from "next/link";
 import Loader from "./Loader";
 import Message from "./Message";
+import axios from "axios";
+import {API_HOST} from "@/consts";
 
 
 
 
-function ProductCarousel() {
-    const { loading, error, products } = useSelector(
-        (state) => state.productsTopRated
+function ProductCarousel({data}) {
+    const products = data
+    const {error, loading} =
+        useSelector((state) => state.productsTopRated
     );
     let numberOfCards = 0
     const chevronWidth = 60;
@@ -50,10 +53,10 @@ function ProductCarousel() {
 
 
     return (
-        loading? 
-        <Loader/>
-        : error ?
-        <Message/> :
+        // loading?
+        // <Loader/>
+        // : error ?
+        // <Message/> :
         <div style={{ padding: `0 `, width: '100%' }}>
             <ItemsCarousel
                 infiniteLoop
@@ -62,13 +65,15 @@ function ProductCarousel() {
                 activeItemIndex={state.activeItemIndex}
                 requestToChangeActive={onChange}
                 chevronWidth={chevronWidth}
-                children={products.map((product, i) => (
-                    <Link key={product._id} to={`/products/${product._id}`}>
-                        <Image src={product.imageSmall} alt={product.name} />
+            >
+                {products.map((product, i) => (
+                    <Link key={product._id} href={`/products/${product._id}`}>
+                        <img loading="lazy"  src={product.imageSmall} alt={product.name} />
                     </Link>
                 ))}
-            />
+            </ItemsCarousel>
         </div>
     );
 }
+
 export default ProductCarousel;

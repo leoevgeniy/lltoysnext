@@ -15,7 +15,6 @@ function Index() {
 
     const router = useRouter()
     const productId = router.query
-    console.log(productId)
     const [amount, setAmount] = useState(0)
     const [totalPrice, setTotalPrice] = useState(0)
     const query = useSearchParams();

@@ -1,10 +1,10 @@
 import React from "react";
 import { Carousel } from "react-responsive-carousel";
 import {Image} from "react-bootstrap";
-import '../components/css/imageModal.css'
-import '../components/css/ProductImageCarousel.css'
+// import '../components/css/imageModal.css'
+// import '../components/css/ProductImageCarousel.css'
 import "react-responsive-carousel/lib/styles/carousel.min.css"
-import image from "react-native-web/dist/exports/Image";
+// import image from "react-native-web/dist/exports/Image";
 import ImageModal from "./ImageModal";
 
 export default function ProductImageCarousel(products) {
@@ -41,7 +41,7 @@ export default function ProductImageCarousel(products) {
                 {images.map((image, index) => {
                     return (
                 <div key={index} className='selectedImage'>
-                    <img alt={product.name} src={image.field} itemProp="image" className='centeredImage'/>
+                    <img alt={product.name} src={image.field} className='centeredImage'/>
                 </div>)
                 })}
 

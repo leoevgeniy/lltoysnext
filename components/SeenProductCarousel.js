@@ -57,12 +57,14 @@ function ProductCarousel() {
                     activeItemIndex={state.activeItemIndex}
                     requestToChangeActive={onChange}
                     chevronWidth={chevronWidth}
-                    children={products.map((product, i) => (
-                        <Link key={product._id} to={`/products/${product._id}`}>
-                            <Image src={product.imageSmall} alt={product.name} />
+
+                >
+                    {products.map((product, i) => (
+                        <Link key={product._id} href={`/products/${product._id}`}>
+                            <img src={product.imageSmall} alt={product.name} />
                         </Link>
                     ))}
-                />
+                </ItemsCarousel>
             </div> : '  '
                 )
     );
