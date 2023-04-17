@@ -28,9 +28,6 @@ import Link from "next/link";
 
 
 const Category = ({pageProps}) => {
-    // const history = useRouter()
-    // const id = history.query.id
-    // const productList = useSelector((state) => state.categoryproduct);
     const id = pageProps.id
     const category = pageProps.category.split('=')[1]
     const {error, loading, products, page, pages} = pageProps.data;
@@ -58,7 +55,7 @@ const Category = ({pageProps}) => {
     // const [priceLow, setPriceLow] = useState(productList.priceLowApi)
     // const [priceUp, setPriceUp] = useState(productList.priceUpApi)
     const searchParams = useSearchParams();
-    let keyword = searchParams.get('keyword')
+    // let keyword = searchParams.get('keyword')
     useEffect(() => {
         if (localStorage.getItem('oppenedItems')) {
             setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))
@@ -97,26 +94,20 @@ const Category = ({pageProps}) => {
                     <div className="content justify-content-center">
                         {/*{(filter || category) ? (*/}
 
-
+                        <h1 className='text-center'>{id}</h1>
                         <div>
                             <Breadcrumb>
                                 <Breadcrumb.Item
-                                    // linkAs={Link}
-                                    // linkProps={{to: '/'}}
                                     href='/'
                                 >
                                     Главная
                                 </Breadcrumb.Item>
                                 <Breadcrumb.Item
-                                    // linkAs={Link}
-                                    // linkProps={{href: `/category/${category}`}}
                                     href={brCategory}
                                 >
                                     {category}
                                 </Breadcrumb.Item>
                                 <Breadcrumb.Item
-                                    // linkAs={Link}
-                                    // linkProps={{to: `/subCategory/${id}?category=${id}`}}
                                     href={brSubCategory}
                                     active
                                 >

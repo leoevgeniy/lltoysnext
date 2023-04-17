@@ -92,21 +92,16 @@ const Category = ({pageProps}) => {
 
                     </Head>
                     <div className="content justify-content-center">
-                        {/*{(filter || category) ? (*/}
-
+                        <h1 className='text-center'>{id}</h1>
 
                         <div>
                             <Breadcrumb>
                                 <Breadcrumb.Item
-                                    // linkAs={Link}
-                                    // linkProps={{to: '/'}}
                                     href='/'
                                 >
                                     Главная
                                 </Breadcrumb.Item>
                                 <Breadcrumb.Item
-                                    // linkAs={Link}
-                                    // linkProps={{href: `/category/${category}`}}
                                     href={brCategory}
                                     active
                                 >
@@ -133,12 +128,12 @@ const Category = ({pageProps}) => {
                                     )
                                 )}
                             </Row>
-                            {/*<Paginate*/}
-                            {/*    className='mt-2'*/}
-                            {/*    page={page}*/}
-                            {/*    pages={pages}*/}
-                            {/*    keyword={keyword}*/}
-                            {/*/>*/}
+                            <Paginate
+                                className='mt-2'
+                                page={page}
+                                pages={pages}
+                                keyword={brCategory}
+                            />
                         </div>
                     </div>
                 </>
@@ -164,7 +159,10 @@ const Category = ({pageProps}) => {
 }
 
 export const getServerSideProps = async (context) => {
+
     const {id} = context.params
+    const page = context.query['page']
+    console.log(context)
     const {data} = await axios.get(`${API_HOST}/api/products/category/${id}`);
     const topData = await axios.get(`${API_HOST}/api/products/top`);
     if (!data) {
