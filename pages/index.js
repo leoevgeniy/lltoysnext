@@ -3,8 +3,11 @@ import {useState} from "react";
 import Head from "next/head";
 import HomeScreen from '../screens/HomeScreen'
 import MyVerticallyCenteredModal from '../components/MyVerticallyCenteredModal'
+import axios from "axios";
+import {API_HOST} from "@/consts";
+import {useSelector} from "react-redux";
 
-const Home = () => {
+const Home = ({pageProps}) => {
     return (
         <>
             <Head>
@@ -20,7 +23,7 @@ const Home = () => {
                 />
 
             </Head>
-            <HomeScreen/>
+            <HomeScreen data={pageProps.topData}/>
         </>
 
 
@@ -38,6 +41,16 @@ const Home = () => {
 //         listProducts: listProducts
 //     }
 // }
+export const getServerSideProps = async (context) => {
+    const {data} = await axios.get(`${API_HOST}/api/products/top`);
+    // const {userInfo} = useSelector(state => state.userLogin)
 
+    if (!data) {
+        return {
+            notFound: true,
+        }
+    }
+    return {props: {topData: data}}
+}
 // export default connect(mapStateToProps, mapDispatchToProps)(Home)
 export default Home

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from 'next/link'
 import Carousel from 'react-bootstrap/Carousel';
-import deliveryFree from '@/public/freeship.jpg'
-import cardDiscount from '@/public/discount10.jpg'
+import deliveryFree from '@/public/freeship.webp'
+import cardDiscount from '@/public/discount10.webp'
 
 
 function BannersCarousel(props) {
@@ -16,7 +16,7 @@ function BannersCarousel(props) {
                     <Carousel.Item key={i}>
                         <Image
                             className="d-block w-100 my-3"
-                            style={{'height': '35vh'}}
+                            // style={{'height': '30vh'}}
                             src={slide}
                             alt={alts[i]}
                         />

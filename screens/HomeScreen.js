@@ -1,73 +1,51 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Link from "next/link";
-import Image from "next/image";
-import {Badge} from "react-bootstrap";
-import home from '@/public/home.png'
-import cartImg from '@/public/cart.png'
-import user from '@/public/user.png'
-import logo from '../public/logo.png'
+import {Badge, Container} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
 import BannersCarousel from '@/components/BannersCarousel'
-import erotic from '@/public/erotic.jpg'
-import bdsm from '@/public/bdsm.png'
-import lubricants from '@/public/lubricants.png'
-import toys from '@/public/toys.png'
-import things from '@/public/things.png'
-import sexmebel from '@/public/sexmebel.jpg'
-import women from '@/public/women.jpg'
-import womenSmall from '@/public/womenSmall.jpg'
-import men from '@/public/men.jpg'
-import nignee from '@/public/nignee.jpg'
-import kupalniki from '@/public/kupalniki.jpg'
+import SeenProductCarousel from "@/components/SeenProductCarousel";
+import ProductCarousel from "@/components/ProductCarousel";
+import {listSeenProducts, listTopProducts} from "@/redux/actions/productAction";
 
 
 
-const HomeScreen = () => {
+const HomeScreen = ({data}) => {
+    const {products: seenProducts} = useSelector((state) => state.productsSeen)
+    const [oppenedItems, setOppenedItems] = useState([])
     const dispatch = useDispatch()
-    const userLogin = useSelector((state) => state.userLogin);
-    const {userInfo} = userLogin;
-    const cart = useSelector(state => state.cart)
-    const {cartItems} = cart
+
+    useEffect(() => {
+        if (oppenedItems) {
+            dispatch(listSeenProducts(oppenedItems))
+        }
+    },[oppenedItems])
+    useEffect(() => {
+        // dispatch(listCategoryProducts(id))
+        if (localStorage.getItem('oppenedItems')) {
+            setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))
+        }
+    }, [])
     return (
-        <div className='homescreen'>
-            <div className='mainlady'>
-                {/*<Link href='/'>*/}
-                {/*    <Image className='home' src={home} alt='home' />*/}
-                {/*</Link>*/}
-                {/*<Link href='/cart'>*/}
-                {/*    <div>*/}
-                {/*        <Image className='cart' src={cartImg} alt='cart'/>*/}
-
-                {/*        {cart && cartItems && cartItems.length>0 && <Badge className='cartBadge text-center' style={{}} bg='primary'>{cart.cartItems.length}</Badge>}*/}
-
-                {/*    </div>*/}
-                {/*</Link>*/}
-                {/*{!userInfo &&*/}
-                {/*    <Link href='/login'>*/}
-                {/*        <Image className='user' src={user} placeholder='blur' alt='user' />*/}
-                {/*    </Link>*/}
-                {/*}*/}
-
-                {/*<Link href='/'>*/}
-                {/*    <Image priority src={logo} alt='logo' />*/}
-                {/*</Link>*/}
+        <Container className='homescreen'>
+            <div className='mainlady w-100'>
+                {/*<Image src={mainlady} alt='Эротическая одежда'/>*/}
             </div>
             <div className="w-100 pt-1">
                     <div className='categories'>
                         <Link className='category category1' href='/category/Эротическая одежда'>
-                            <Image placeholder='blur' loading="lazy" src={erotic} alt='Эротическая одежда'/>
+                            {/*<Image placeholder='blur' loading="lazy" src={erotic} alt='Эротическая одежда'/>*/}
                         </Link>
                         <Link className='category category2' href='/category/BDSM, садо-мазо товары'>
-                            <Image placeholder='blur' loading="lazy" src={bdsm} alt='BDSM, садо-мазо товары'/>
+                            {/*<Image placeholder='blur' loading="lazy" src={bdsm} alt='BDSM, садо-мазо товары'/>*/}
                         </Link>
                         <Link className='category category3' href='/category/Смазки, лубриканты'>
-                            <Image placeholder='blur' loading="lazy" src={lubricants} alt='Смазки, лубриканты'/>
+                            {/*<Image placeholder='blur' loading="lazy" src={lubricants} alt='Смазки, лубриканты'/>*/}
                         </Link>
                         <Link className='category category4' href='/category/Анальные игрушки'>
-                            <Image placeholder='blur' loading="lazy" src={toys} alt='Анальные игрушки'/>
+                            {/*<Image placeholder='blur' loading="lazy" src={toys} alt='Анальные игрушки'/>*/}
                         </Link>
                         <Link className='category category5' href='/category/Приятные мелочи'>
-                            <Image placeholder='blur' loading="lazy" src={things} alt='Приятные мелочи'/>
+                            {/*<Image placeholder='blur' loading="lazy" src={things} alt='Приятные мелочи'/>*/}
                         </Link>
                     </div>
             </div>
@@ -75,28 +53,43 @@ const HomeScreen = () => {
             <div className="w-100">
                 <div className='categories2'>
                     <Link className='category category6' href='/category/Секс-мебель и качели'>
-                        <Image placeholder='blur' loading="lazy" src={sexmebel} alt='Секс-мебель и качели' className='h-auto'/>
+                        {/*<Image placeholder='blur' loading="lazy" src={sexmebel} alt='Секс-мебель и качели' className='h-auto'/>*/}
                     </Link>
                     <Link className='category category7' href='/category/Секс-товары для женщин'>
-                        <Image placeholder='blur' loading="lazy" src={women} alt='Секс-товары для женщин'/>
+                        {/*<Image placeholder='blur' loading="lazy" src={women} alt='Секс-товары для женщин'/>*/}
                     </Link>
                     <Link className='category category11' href='/category/Секс-товары для женщин'>
-                        <Image placeholder='blur' loading="lazy" src={womenSmall} alt='Секс-товары для женщин'/>
+                        {/*<Image placeholder='blur' loading="lazy" src={womenSmall} alt='Секс-товары для женщин'/>*/}
                     </Link>
                     <Link className='category category8' href='/category/Секс-товары для мужчин'>
-                        <Image placeholder='blur' loading="lazy" src={men} alt='Секс-товары для мужчин'/>
+                        {/*<Image placeholder='blur' loading="lazy" src={men} alt='Секс-товары для мужчин'/>*/}
                     </Link>
                     <Link className='category category9' href='/category/Нижнее белье'>
-                        <Image placeholder='blur' loading="lazy" src={nignee} alt='Нижнее белье'/>
+                        {/*<Image placeholder='blur' loading="lazy" src={nignee} alt='Нижнее белье'/>*/}
                     </Link>
                     <Link className='category category10' href='/category/Купальники'>
-                        <Image placeholder='blur' loading="lazy" src={kupalniki} alt='Купальники'/>
+                        {/*<Image placeholder='blur' loading="lazy" src={kupalniki} alt='Купальники'/>*/}
                     </Link>
                 </div>
             </div>
+            {(oppenedItems && oppenedItems.length > 0 && seenProducts) &&
+                <>
+                    <div className='popular my-3'>
+                        <span className='mx-3 fs-4'>Вы смотрели</span>
+                        <div className='line'></div>
+                    </div>
+                    <SeenProductCarousel/>
+                </>
+            }
+            <div className='popular my-3'>
+                <span className='mx-3 fs-4'>Популярное</span>
+                <div className='line'></div>
+            </div>
+            <ProductCarousel data={data}/>
 
-        </div>
+        </Container>
     )
 }
+
 
 export default HomeScreen

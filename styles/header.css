@@ -10,7 +10,12 @@
 .logo {
     height: 75%;
 }
+.catalogSVG {
 
+}
+.bi-telephone-fill {
+    color: white;
+}
 @media (max-width: 991px) {
     .header .navbar-nav a {
         font-size: small;

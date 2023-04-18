@@ -3,7 +3,8 @@ import Footer from "@/components/Footer";
 import React, {useState} from "react";
 import MyVerticallyCenteredModal from "@/components/MyVerticallyCenteredModal";
 
-const Layout = ({children}) => {
+const Layout = ({children, pageProps}) => {
+    console.log(pageProps)
     const [navShow, setNavShow] = useState(false);
     const [expandedFilter, setExpandedFilter] = useState(false)
     const [modalShow, setModalShow] = useState(true);

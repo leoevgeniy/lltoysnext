@@ -7,8 +7,6 @@ import Message from '../../components/Message'
 import FormContainer from '../../components/FormContainer'
 import {login, phoneLogin, register} from '../../redux/actions/userActions'
 
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import Modal from "react-bootstrap/Modal";
 import validator from "validator";
 import axios from "axios";

@@ -3,14 +3,11 @@ import {useDispatch, useSelector} from "react-redux";
 import Loader from "@/components/Loader";
 import PageNotFound from "@/components/PageNotFound";
 import Modal from "react-bootstrap/Modal";
-import {Button, Col, Form, ListGroup, Row} from "react-bootstrap";
-import Breadcrumb from "react-bootstrap/Breadcrumb";
+import {Breadcrumb, Button, Col, Form, ListGroup, Row} from "react-bootstrap";
 import ProductImageCarousel from "@/components/ProductImageCarousel";
 import Rating from "@/components/Rating";
 import SeenProductCarousel from "@/components/SeenProductCarousel";
 import Head from "next/head";
-import Link from "next/link";
-import {useSearchParams} from "next/navigation";
 import {listProductDetails, listSeenProducts} from "@/redux/actions/productAction";
 import axios from "axios";
 import {API_HOST} from "@/consts";
@@ -25,10 +22,9 @@ export const getServerSideProps = async (context) => {
 function ProductScreen({pageProps}) {
     const [qty, setQty] = useState(1);
     const dispatch = useDispatch();
-    const {loading, error, product} = useSelector((state) => state.productDetails);
+    const product = pageProps.data
+    const {error, loading} = useSelector((state) => state.productDetails);
     const {products} = useSelector((state) => state.productsSeen)
-    const [brCategory, setBrCategory] = useState('')
-    const [brSubCategory, setBrSubCategory] = useState('')
     const id = pageProps.id;
     const [color, setColor] = useState('')
     const [size, setSize] = useState('')
@@ -36,6 +32,11 @@ function ProductScreen({pageProps}) {
     const [sizesArray, setSizesArray] = useState([])
     const [modalShow, setModalShow] = React.useState(false);
     const [oppenedItems, setOppenedItems] = useState([])
+    const category = product.categories[0].category || ''
+    const subCategory = product.categories[0].subCategory || ''
+    const brCategory = `/category/${category}` || ''
+    const brSubCategory = `/category/${category}/${subCategory}` || ''
+
     const history = useRouter()
     useEffect(() => {
         if (localStorage.getItem('oppenedItems')) {
@@ -48,12 +49,6 @@ function ProductScreen({pageProps}) {
     },[dispatch, oppenedItems])
     useEffect(() => {
         dispatch(listProductDetails(id))
-        try {
-            setBrCategory(product.categories[0].category)
-            setBrSubCategory(product.categories[0].subCategory)
-        } catch {
-
-        }
         try {
             setColorsArray(product.colors)
             if (!color && product.colors.length > 0) {
@@ -98,6 +93,7 @@ function ProductScreen({pageProps}) {
     const onBack = () => {
         history.back()
     }
+
     return (
         <>
 
@@ -143,16 +139,15 @@ function ProductScreen({pageProps}) {
                         <Button onClick={onBack} className="btn btn-light my-3">
                             Назад
                         </Button>
-                        {/*<Breadcrumb>*/}
-                        {/*    <Breadcrumb.Item linkAs={Link} linkProps={{href: '/'}}>Главная</Breadcrumb.Item>*/}
-                        {/*    <Breadcrumb.Item linkAs={Link} linkProps={{href: `/?category=${brCategory}`}}>*/}
-                        {/*        {brCategory}*/}
-                        {/*    </Breadcrumb.Item>*/}
-                        {/*    <Breadcrumb.Item linkAs={Link}*/}
-                        {/*                     linkProps={{href: `/?filter=${brSubCategory}`}}>*/}
-                        {/*        {brSubCategory}*/}
-                        {/*    </Breadcrumb.Item>*/}
-                        {/*</Breadcrumb>*/}
+                        <Breadcrumb>
+                            <Breadcrumb.Item href='/'>Главная</Breadcrumb.Item>
+                            <Breadcrumb.Item href={brCategory}>
+                                {category}
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item href={brSubCategory}>
+                                {subCategory}
+                            </Breadcrumb.Item>
+                        </Breadcrumb>
                         <div>
                             <Row itemScope itemType="http://schema.org/Product" className='w-100'>
                                 <Col xs={12} md={6}>

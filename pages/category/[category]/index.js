@@ -161,7 +161,6 @@ const Category = ({pageProps}) => {
 
 export const getServerSideProps = async (context) => {
     let {category, page} = context.query
-    console.log(category, page)
     page = '?page='+page
     const {data} = await axios.get(`${API_HOST}/api/products/category/${category}${page}`);
     const topData = await axios.get(`${API_HOST}/api/products/top`);

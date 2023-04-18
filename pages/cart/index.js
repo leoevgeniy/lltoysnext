@@ -5,7 +5,7 @@ import {Row, Col, ListGroup, Image, Form, Button, Card, ListGroupItem, Container
 import Message from '../../components/Message'
 import {addToCart, removeFromCart} from '@/redux/actions/cartActions'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {solid} from '@fortawesome/fontawesome-svg-core/import.macro';
+// import {solid} from '@fortawesome/fontawesome-svg-core/import.macro';
 import {useRouter} from "next/router";
 import {useSearchParams} from "next/navigation";
 
