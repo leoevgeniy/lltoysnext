@@ -4,9 +4,11 @@ from baseresponse.views import order_views as views
 urlpatterns = [
     path('', views.getOrders, name='orders'),
     path('add/', views.addOrderItems, name='orders-add'),
+    path('add', views.addOrderItems, name='orders-add'),
     path('p5s/', views.addP5sOrder, name='p5s-orders-add'),
     path('p5sdetails/<str:pk>', views.getP5sOrderDetails, name='p5s-orders-details'),
     path('myorders/', views.getMyOrders, name='myorders'),
+    path('myorders', views.getMyOrders, name='myorders'),
 
     path('<str:pk>/pay/', views.updateOrderToPaid, name='pay'),
     path('<str:pk>/deliver/', views.updateOrderToDelivered, name='order-delivered'),

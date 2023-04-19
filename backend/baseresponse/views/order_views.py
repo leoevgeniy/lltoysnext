@@ -20,6 +20,7 @@ from baseresponse.serializers import OrderSerializer, ProfileSerializer, Payment
 @permission_classes([IsAuthenticated])
 def addOrderItems(request):
     user = request.user
+    print(user)
     data = request.data
     orderItems = data['orderItems']
 
