@@ -5,6 +5,8 @@ import HomeScreen from '../screens/HomeScreen'
 import MyVerticallyCenteredModal from '../components/MyVerticallyCenteredModal'
 import axios from "axios";
 import {API_HOST} from "@/consts";
+import {connect} from "react-redux";
+import {wrapper} from "@/pages/_app";
 
 const Home = ({pageProps}) => {
     return (
@@ -27,12 +29,19 @@ const Home = ({pageProps}) => {
 
 
     )
-        ;
+
 }
 
 
-// const mapStateToProps = state => ({
-//     productlist: state.productlist
+// const mapStateToProps = state => {
+//     console.log(state)
+//
+// }
+// const getStaticProps = wrapper.getStaticProps(({state}) => {
+//     console.log(state.userLogin)
+// })
+// ({
+//     userInfo: state.userLogin.userInfo
 // })
 //
 // const mapDispatchToProps = (dispatch) => {
@@ -40,7 +49,8 @@ const Home = ({pageProps}) => {
 //         listProducts: listProducts
 //     }
 // }
-export const getServerSideProps = async (context) => {
+
+const getServerSideProps = async (context) => {
     const {data} = await axios.get(`${API_HOST}/api/products/top`);
 
     if (!data) {

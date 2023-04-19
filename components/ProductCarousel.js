@@ -66,7 +66,7 @@ function ProductCarousel({data}) {
                 requestToChangeActive={onChange}
                 chevronWidth={chevronWidth}
             >
-                {products.map((product, i) => (
+                {products && products.map((product, i) => (
                     <Link key={product._id} href={`/products/${product._id}`}>
                         <img loading="lazy"  src={product.imageSmall} alt={product.name} />
                     </Link>

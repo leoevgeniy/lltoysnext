@@ -1,6 +1,5 @@
 import '@/styles/globals.css'
 import {Provider} from "react-redux";
-import App from "next/app";
 import {createWrapper} from 'next-redux-wrapper';
 import React, {useEffect, useState} from "react";
 import store from "@/redux/store";
@@ -21,21 +20,24 @@ import '@/styles/imageModal.css'
 import '@/styles/inputPD.css'
 import '@/styles/PageNotFound.css'
 import '@/styles/product.css'
-import {useRouter} from "next/router";
+import {userAgent} from "next/server";
+// import {useRouter} from "next/router";
 
 const MyApp = ({Component, ...rest}) => {
     const [isLoading, setIsLoading] = useState(true)
-    const router = useRouter()
-    // static async getInitialProps({Component, ctx}) {
+    // const router = useRouter()
+    // const getInitialProps = async ({Component, ctx}) => {
     //     const appProps = Component.getInitialProps ? await Component.getInitialProps(ctx): {};
-    //
+    // //
     //     return { appProps: appProps };
-    //
+    // //
     // }
-    useEffect(() => {
-        typeof document !== undefined ? require("bootstrap/dist/js/bootstrap") : null;
-        router.isReady && setIsLoading(false)
-    }, []);
+    // useEffect(() => {
+        // typeof document !== undefined ? require("bootstrap/dist/js/bootstrap") : null;
+        // const userInfo = localStorage.getItem("userInfo")
+        // console.log(userInfo)
+        // router.isReady && setIsLoading(false)
+    // }, []);
     const wrapper = createWrapper(() => store);
     const {appProps} = wrapper.useWrappedStore(rest);
     return (
