@@ -40,13 +40,13 @@ const MyApp = ({Component, ...rest}) => {
     const {appProps} = wrapper.useWrappedStore(rest);
     return (
         <>
-            {isLoading ? <>loading...</> :
+            {/*{!isLoading &&*/}
                 <Provider store={store}>
                     <Layout>
                         <Component {...rest} />
                     </Layout>
                 </Provider>
-            }
+            {/*}*/}
         </>
     )
 

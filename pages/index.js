@@ -5,7 +5,6 @@ import HomeScreen from '../screens/HomeScreen'
 import MyVerticallyCenteredModal from '../components/MyVerticallyCenteredModal'
 import axios from "axios";
 import {API_HOST} from "@/consts";
-import {useSelector} from "react-redux";
 
 const Home = ({pageProps}) => {
     return (
@@ -43,7 +42,6 @@ const Home = ({pageProps}) => {
 // }
 export const getServerSideProps = async (context) => {
     const {data} = await axios.get(`${API_HOST}/api/products/top`);
-    // const {userInfo} = useSelector(state => state.userLogin)
 
     if (!data) {
         return {

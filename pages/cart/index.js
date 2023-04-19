@@ -8,7 +8,11 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 // import {solid} from '@fortawesome/fontawesome-svg-core/import.macro';
 import {useRouter} from "next/router";
 import {useSearchParams} from "next/navigation";
+import {faTrashCan} from "@fortawesome/free-solid-svg-icons";
 
+const getServerSideProps = (context) => {
+    console.log(context)
+}
 
 function Index() {
     const [sizeChange, setSizeChange] = useState('')
@@ -31,15 +35,14 @@ function Index() {
     // const color = location.search.indexOf('color') !== -1 ? decodeURI(location.search.split('color')[1].split('=')[1]) :''
     // const size = location.search.indexOf('size') !== -1 ? decodeURI(location.search.split('size')[1].split('=')[1]) :''
     const dispatch = useDispatch()
-
     const cart = useSelector(state => state.cart)
     const {cartItems} = cart
-    useEffect(() => {
-        if (productId) {
-            dispatch(addToCart(productId, qty, color, size, 'undefined', 0.1))
-            router.push('/cart')
-        }
-    }, [dispatch, productId, qty, size, color])
+    // useEffect(() => {
+    //     if (productId) {
+    //         dispatch(addToCart(productId, qty, color, size, 'undefined', 0.1))
+    //         router.push('/cart')
+    //     }
+    // }, [dispatch, productId, qty, size, color])
     // useEffect(() => {
     //     // shippmentCostCalculation();
     //     // if (query.get('color')) {setColor(}
@@ -59,7 +62,7 @@ function Index() {
             // router.push('/login?redirect=shipping')
             router.push('/shipping')
         } else {
-            router.push('/inputpd')
+            router.push('/login?redirect=shipping')
         }
     }
 
@@ -150,7 +153,7 @@ function Index() {
                                                     variant='light'
                                                     onClick={() => removeFromCartHandler(ind)}
                                                 >
-                                                    <FontAwesomeIcon icon={solid('trash')}/>
+                                                    <FontAwesomeIcon icon={faTrashCan} />
                                                 </Button>
                                             </Col>
                                         </Row>

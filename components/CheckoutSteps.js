@@ -1,46 +1,45 @@
 import React from 'react'
-import { Nav } from 'react-bootstrap'
-import { LinkContainer } from 'react-router-bootstrap'
+import {Nav} from 'react-bootstrap'
+import {LinkContainer} from 'react-router-bootstrap'
+import Link from "next/link";
 
 function CheckoutSteps({step1, step2, step3, step4}) {
     return (
         <Nav className='justify-content-center mb-4 px-0'>
             <Nav.Item>
                 {step1 ? (
-                    <LinkContainer to='/login'>
-                    <Nav.Link>Логин</Nav.Link>
-                    </LinkContainer>
+                    <Link href='/login'>
+                        Логин
+                    </Link>
                 ) : (
-                    <Nav.Link disabled>Логин</Nav.Link>
+                    <span>Логин</span>
                 )}
 
             </Nav.Item>
             <Nav.Item>
                 {step2 ? (
-                    <LinkContainer to='/shipping'>
-                    <Nav.Link>Доставка</Nav.Link>
-                    </LinkContainer>
+                    <Link href='/shipping'>
+                        Доставка
+                    </Link>
                 ) : (
-                    <Nav.Link disabled>Доставка</Nav.Link>
+                    <span>Доставка</span>
                 )}
 
             </Nav.Item>
             <Nav.Item>
                 {step3 ? (
-                    <LinkContainer to='/payment'>
-                    <Nav.Link>Оплата</Nav.Link>
-                    </LinkContainer>
+                    <Link href='/payment'>Оплата</Link>
                 ) : (
-                    <Nav.Link disabled>Оплата</Nav.Link>
+                    <span>Оплата</span>
                 )}
             </Nav.Item>
             <Nav.Item>
                 {step4 ? (
-                    <LinkContainer to='/placeorder'>
-                    <Nav.Link>Заказ</Nav.Link>
-                    </LinkContainer>
+                    <Link href='/placeorder'>
+                        Заказ
+                    </Link>
                 ) : (
-                    <Nav.Link disabled>Заказ</Nav.Link>
+                    <span>Заказ</span>
                 )}
 
             </Nav.Item>

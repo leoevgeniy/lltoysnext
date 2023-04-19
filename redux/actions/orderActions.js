@@ -32,9 +32,10 @@ import {
     ORDER_DELIVER_FAIL,
     P5S_ORDER_CREATE_RESET,
 
-} from "../constants/orderContants";
+} from "@/redux/typesOrders";
 
-import {CART_CLEAR_ITEMS} from "../constants/cartConstants";
+import {CART_CLEAR_ITEMS} from "@/redux/typesCart";
+import {API_HOST} from "@/consts";
 
 export const createOrder = (order) => async (dispatch, getState) => {
     try {
@@ -45,7 +46,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
         const {
             userLogin: {userInfo},
         } = getState();
-
+        console.log(userInfo.token)
         const config = {
             headers: {
                 "Content-type": "application/json",
@@ -53,7 +54,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
             },
         };
 
-        const {data} = await axios.post(`/api/order/add/`, order, config);
+        const {data} = await axios.post(`${API_HOST}/api/order/add/`, order, config);
         dispatch({
             type: ORDER_CREATE_SUCCESS,
             payload: data,
@@ -90,7 +91,7 @@ export const p5sCreateOrder = (order) => async (dispatch, getState) => {
                 Authorization: `Bearer ${userInfo.token}`,
             },
         };
-        const {data} = await axios.post(`/api/order/p5s/`, order, config);
+        const {data} = await axios.post(`${API_HOST}/api/order/p5s/`, order, config);
 
         dispatch({
             type: P5S_ORDER_CREATE_SUCCESS,
@@ -125,7 +126,7 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
             },
         };
 
-        const {data} = await axios.get(`/api/order/${id}/`, config);
+        const {data} = await axios.get(`${API_HOST}/api/order/${id}/`, config);
 
         // const {deliveryData} = await axios.get(`/api/order/p5sdetails/${id}`, config)
         // Object.assign(data, deliveryData)
@@ -159,7 +160,7 @@ export const p5sgetOrderDetails = (id) => async (dispatch, getState) => {
                 Authorization: `Bearer ${userInfo.token}`,
             },
         };
-        const {data} = await axios.get(`/api/order/p5sdetails/${id}`, config)
+        const {data} = await axios.get(`${API_HOST}/api/order/p5sdetails/${id}`, config)
 
         dispatch({
             type: P5S_DETAILS_SUCCESS,
@@ -198,7 +199,7 @@ export const payOrderRequest = (order, userDetails, url, callback) => async (dis
             url
         }
         const {data} = await axios.post(
-            `/api/order/${id}/paymentrequest/`,
+            `${API_HOST}/api/order/${id}/paymentrequest/`,
             body,
             config
         );
@@ -240,7 +241,7 @@ export const payOrderDetails = (order, userDetails) => async (dispatch, getState
             userDetails,
         }
         const {data} = await axios.post(
-            `/api/order/${id}/paymentdetails/`,
+            `${API_HOST}/api/order/${id}/paymentdetails/`,
             body,
             config
         );
@@ -276,7 +277,7 @@ export const payOrder = (id, paymentResult) => async (dispatch, getState) => {
         };
 
         const {data} = await axios.put(
-            `/api/order/${id}/pay/`,
+            `${API_HOST}/api/order/${id}/pay/`,
             paymentResult,
             config
         );
@@ -314,7 +315,7 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
         };
 
         const {data} = await axios.put(
-            `/api/order/${order._id}/deliver/`,
+            `${API_HOST}/api/order/${order._id}/deliver/`,
             {},
             config
         );
@@ -351,7 +352,7 @@ export const listMyOrders = () => async (dispatch, getState) => {
             },
         };
 
-        const {data} = await axios.get(`/api/order/myorders/`, config);
+        const {data} = await axios.get(`${API_HOST}/api/order/myorders/`, config);
 
         dispatch({
             type: ORDER_LIST_MY_SUCCESS,
@@ -385,7 +386,7 @@ export const listOrders = () => async (dispatch, getState) => {
             },
         };
 
-        const {data} = await axios.get(`/api/order/`, config);
+        const {data} = await axios.get(`${API_HOST}/api/order/`, config);
 
         dispatch({
             type: ORDER_LIST_SUCCESS,

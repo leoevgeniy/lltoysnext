@@ -26,7 +26,7 @@ function LoginScreen() {
     const [isValidPhone, setIsValidPhone] = useState('')
     const dispatch = useDispatch()
     const searchParams = useSearchParams();
-    const redirect = searchParams.get('redirect') || '/'
+    const redirect = '/' + searchParams.get('redirect') || '/'
         // ? searchParams.split('=')[1] : '/'
     const userLogin = useSelector(state => state.userLogin)
     const {loading, userInfo, error} = userLogin
@@ -45,12 +45,12 @@ function LoginScreen() {
     }
     const handleShow = () => setShow(true);
 
-    try {
-        const loginPT = document.querySelector('.inRoute').scrollHeight * 0.5
-        document.querySelector('.inRoute').style['justifyContent'] = 'center'
-        let loginHeight = document.querySelector('.login').style.getCalculatedOffset()
-    } catch {
-    }
+    // try {
+    //     const loginPT = document.querySelector('.inRoute').scrollHeight * 0.5
+    //     document.querySelector('.inRoute').style['justifyContent'] = 'center'
+    //     let loginHeight = document.querySelector('.login').style.getCalculatedOffset()
+    // } catch {
+    // }
 
     useEffect(() => {
         if (userInfo) {

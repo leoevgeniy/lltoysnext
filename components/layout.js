@@ -1,14 +1,13 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import MyVerticallyCenteredModal from "@/components/MyVerticallyCenteredModal";
+import {userAgent} from "next/server";
 
-const Layout = ({children, pageProps}) => {
-    console.log(pageProps)
+const Layout = ({children}) => {
     const [navShow, setNavShow] = useState(false);
     const [expandedFilter, setExpandedFilter] = useState(false)
     const [modalShow, setModalShow] = useState(true);
-
     return (
         <>
             {/*<MyVerticallyCenteredModal*/}

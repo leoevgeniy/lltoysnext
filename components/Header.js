@@ -12,18 +12,11 @@ import Message from "../components/Message";
 import {listCatalog} from "@/redux/actions/productAction";
 import SearchBox from "./SearchBox";
 import kuragi from '@/public/Kuragi.png'
-// import catalogSVG from '@/public/catalog.svg'
 import phone from '@/public/telephone-fill.svg'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {icon} from "@fortawesome/fontawesome-svg-core";
 import {faCartShopping} from "@fortawesome/free-solid-svg-icons";
 
-const getServerSideProps = (context) => {
-    console.log(context)
-}
-
-export default function Header(props, {pageProps}) {
-    console.log(pageProps)
+export default function Header(props) {
     const cart = useSelector(state => state.cart)
     const {cartItems} = cart
     const history = useRouter()
@@ -33,10 +26,9 @@ export default function Header(props, {pageProps}) {
     const {catalog, error, loading} = useSelector(
         (state) => state.catalogList
     );
-    const {userInfo} = userLogin;
+    let {userInfo} = userLogin;
     const dispatch = useDispatch();
     const [show, setShow] = useState(props.navShow);
-    // const [navShow, setNavShow] = useState(false);
     useEffect(() => {
         setShow(props.navShow)
     }, [props.navShow])
@@ -222,9 +214,9 @@ export default function Header(props, {pageProps}) {
                                 </Container >
                                 <Container
                                     className='d-flex position-relative '>
-                                    <Link href='/cart' className='text-decoration-none fs-5 text-white'>{cart.cartItems.length} товаров | {cart.cartItems
+                                    <Link href='/cart' className='text-decoration-none fs-5 text-white'>{(cart && cart.cartItems) ? cart.cartItems.length : 0} товаров | {(cart && cart.cartItems) ? cart.cartItems
                                         .reduce((acc, item) => acc + item.price * item.qty, 0)
-                                        .toFixed(0)} руб.</Link>
+                                        .toFixed(0) : 0} руб.</Link>
 
 
 
@@ -234,14 +226,14 @@ export default function Header(props, {pageProps}) {
 
 
                     </Navbar.Collapse>
-                        <Nav className='position-relative float-end'>
+                        <Link href={'/cart'} className='position-relative float-end'>
                             <FontAwesomeIcon icon={faCartShopping} className='h2 text-white'/>
 
                             <Badge pill bg='success' className='position-absolute'
                                    style={{'top': '-5px', 'right': '-5px', 'fontSize': '13px'}}>
                                 {cart && cart.cartItems ? cart.cartItems.length : '0'}
                             </Badge>
-                        </Nav>
+                        </Link>
 
                 </Container>
             </Navbar>

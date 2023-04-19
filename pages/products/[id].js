@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import Loader from "@/components/Loader";
 import PageNotFound from "@/components/PageNotFound";
 import Modal from "react-bootstrap/Modal";
-import {Breadcrumb, Button, Col, Form, ListGroup, Row} from "react-bootstrap";
+import {Breadcrumb, Button, Col, Container, Form, ListGroup, Row} from "react-bootstrap";
 import ProductImageCarousel from "@/components/ProductImageCarousel";
 import Rating from "@/components/Rating";
 import SeenProductCarousel from "@/components/SeenProductCarousel";
@@ -13,6 +13,7 @@ import axios from "axios";
 import {API_HOST} from "@/consts";
 import {PRODUCT_DETAILS_RESET} from "@/redux/types";
 import {useRouter} from "next/router";
+import {addToCart} from "@/redux/actions/cartActions";
 
 export const getServerSideProps = async (context) => {
     const {id} = context.params
@@ -38,22 +39,24 @@ function ProductScreen({pageProps}) {
     const brSubCategory = `/category/${category}/${subCategory}` || ''
 
     const history = useRouter()
-    useEffect(() => {
+    useEffect( () => {
         if (localStorage.getItem('oppenedItems')) {
             setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))}
-
+        const disp = async () => {await dispatch(listProductDetails(id))}
+        disp().then(r => {})
     },[])
     useEffect(() => {
         if (oppenedItems) {dispatch(listSeenProducts(oppenedItems))}
 
     },[dispatch, oppenedItems])
+
     useEffect(() => {
-        dispatch(listProductDetails(id))
+        const setData = async () => {
         try {
-            setColorsArray(product.colors)
+            await setColorsArray(product.colors)
             if (!color && product.colors.length > 0) {
                 if (Object.keys(product.colors[0])[0]) {
-                    setColor(Object.keys(product.colors[0])[0])
+                    await setColor(Object.keys(product.colors[0])[0])
                 }
             }
         } catch {
@@ -61,9 +64,9 @@ function ProductScreen({pageProps}) {
         }
 
         if (color && colorsArray) {
-            colorsArray.forEach(item => {
+            await colorsArray.forEach(item => {
                 if (Object.keys(item)[0] === color) {
-                    setSizesArray(item[color])
+                     setSizesArray(item[color])
 
                 }
             })
@@ -71,22 +74,23 @@ function ProductScreen({pageProps}) {
         }
 
         if (!size && sizesArray.length > 0) {
-            setSize(sizesArray[0])
-        }
-    }, [dispatch, id, loading, color, size, colorsArray, sizesArray])
+            await setSize(sizesArray[0])
+        }}
+        setData().then(r => {})
+    }, [dispatch, id, loading, color, size, colorsArray, sizesArray, product.colors])
 
     const addToCardHandler = async () => {
-        let colorStr = ''
-        let sizeStr = ''
+        let colorStr = color || ''
+        let sizeStr = size || ''
         dispatch({type: PRODUCT_DETAILS_RESET})
-        if (color) {
-            colorStr = '&color=' + color
-        }
-        if (size) {
-            sizeStr = '&size=' + size
-        }
-
-        history.push(`/cart/${id}?qty=${qty}${colorStr}${sizeStr}`);
+        // if (color) {
+        //     colorStr = '&color=' + color
+        // }
+        // if (size) {
+        //     sizeStr = '&size=' + size
+        // }
+        dispatch(addToCart(id, qty, color, size, 'undefined', 0.1))
+        await history.push(`/cart`);
     };
     const onHide=() => setModalShow(false)
     const showDesc = () => setModalShow(true)
@@ -104,17 +108,12 @@ function ProductScreen({pageProps}) {
                     <PageNotFound/>
                 ) : (
                     product &&
-                    <>
+                    <Container>
                         <Modal
-                            // backdrop
-                            // keyboard={false}
                             show={modalShow}
                             onHide={onHide}
-                            // backdropClassName=''
                             size="lg"
                             aria-labelledby="contained-modal-title-vcenter"
-                            // centered
-                            // fullscreen
                         >
                             <Modal.Header closeButton>
                                 <Modal.Title id="contained-modal-title-vcenter">
@@ -146,6 +145,9 @@ function ProductScreen({pageProps}) {
                             </Breadcrumb.Item>
                             <Breadcrumb.Item href={brSubCategory}>
                                 {subCategory}
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item active>
+                                {product.name}
                             </Breadcrumb.Item>
                         </Breadcrumb>
                         <div>
@@ -460,7 +462,7 @@ function ProductScreen({pageProps}) {
                         }
 
 
-                    </>
+                    </Container>
 
 
                 )

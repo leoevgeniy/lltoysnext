@@ -4,6 +4,7 @@ import {useRouter} from "next/router";
 import {useSearchParams} from "next/navigation";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 // import {useHistory} from "react-router-dom";
 
@@ -60,7 +61,8 @@ function SearchBox(expanded) {
         //     setKeyword('')
         // }
     };
-    const [showA, setShowA] = useState(true);
+    const [showA, setShowA] = useState(false);
+
     function toggleShowA() {
         setShowA(!showA)
     }
@@ -69,19 +71,23 @@ function SearchBox(expanded) {
         <div className='ms-auto'>
 
             {/*<Button onClick={toggleShowA} className="mb-2 text-white" variant="outline-success">*/}
-                <FontAwesomeIcon onClick={toggleShowA}
-                                 className={showA ? 'text-gray pr-3 pe-auto' : 'text-white pr-3 pe-auto'}
-                                 style={{'pointer-event': 'auto'}}
-                                 icon={faMagnifyingGlass}/>
-
+            <Link href='#' onClick={(e) => {
+                e.preventDefault();
+                toggleShowA()
+            }}>
+                <FontAwesomeIcon
+                    className={showA ? 'text-gray pr-3 pe-auto' : 'text-white pr-3 pe-auto'}
+                    style={{'pointerEvent': 'auto'}}
+                    icon={faMagnifyingGlass}/>
+            </Link>
             {/*</Button>*/}
             <Toast show={showA} onClose={toggleShowA} className='position-absolute ' style={{'zIndex': '1'}}>
                 <Toast.Header>
-                    <img
-                        src="holder.js/20x20?text=%20"
-                        className="rounded me-2"
-                        alt=""
-                    />
+                    {/*<img*/}
+                    {/*    src="holder.js/20x20?text=%20"*/}
+                    {/*    className="rounded me-2"*/}
+                    {/*    alt=""*/}
+                    {/*/>*/}
                     <strong className="me-auto">Поиск</strong>
                 </Toast.Header>
                 <Toast.Body>
@@ -92,12 +98,14 @@ function SearchBox(expanded) {
                             value={keyword}
                             onChange={(e) => {
                                 setKeyword(e.target.value)
-                                expanded=false
+                                expanded = false
                             }}
                             // className="mr-sm-2 ml-sm-5"
                         ></FormControl>
 
-                        <span type='submit' className='position-relative' style={{'top': '8px', 'right': '30px', 'fontSize': '13px'}}><FontAwesomeIcon icon={faMagnifyingGlass}  /></span>
+                        <span type='submit' className='position-relative'
+                              style={{'top': '8px', 'right': '30px', 'fontSize': '13px'}}><FontAwesomeIcon
+                            icon={faMagnifyingGlass}/></span>
                     </Form>
 
                 </Toast.Body>

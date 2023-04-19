@@ -6,9 +6,11 @@ import {
     CART_SAVE_SHIPPING_COST,
     CART_SAVE_PAYMENT_METHOD, CART_SAVE_SHIPPING_COST_RESET
 } from '@/redux/typesCart'
+import {API_HOST} from "@/consts";
 
 export const addToCart = (id, qty, color, size, ind, discount) => async (dispatch, getState) => {
-    const {data} = await axios.get(`/api/products/${id}`)
+    const {data} = await axios.get(`${API_HOST}/api/products/${id}`)
+    console.log(data)
     let countInStock = 0
     let aID = 0
     if (data.assortiment.length === 1 && !data.assortiment[0].color && !data.assortiment[0].size) {
