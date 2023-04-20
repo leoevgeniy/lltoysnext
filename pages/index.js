@@ -6,7 +6,8 @@ import MyVerticallyCenteredModal from '../components/MyVerticallyCenteredModal'
 import axios from "axios";
 import {API_HOST} from "@/consts";
 import {connect} from "react-redux";
-import {wrapper} from "@/pages/_app";
+import {wrapper} from "@/redux/store";
+
 
 const Home = ({pageProps}) => {
     return (
@@ -24,7 +25,9 @@ const Home = ({pageProps}) => {
                 />
 
             </Head>
-            <HomeScreen data={pageProps.topData}/>
+            <HomeScreen
+                data={pageProps.topData}
+            />
         </>
 
 
@@ -50,15 +53,14 @@ const Home = ({pageProps}) => {
 //     }
 // }
 
-const getServerSideProps = async (context) => {
+export const getServerSideProps = wrapper.getServerSideProps(store => async (ctx) => {
     const {data} = await axios.get(`${API_HOST}/api/products/top`);
-
     if (!data) {
         return {
             notFound: true,
         }
     }
     return {props: {topData: data}}
-}
+})
 // export default connect(mapStateToProps, mapDispatchToProps)(Home)
 export default Home

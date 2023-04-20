@@ -1,8 +1,9 @@
 import {applyMiddleware, createStore} from 'redux';
 import rootReducer from "@/redux/reducers/rootReducer";
-import { MakeStore, createWrapper, Context } from "next-redux-wrapper";
+import {createWrapper, Context } from "next-redux-wrapper";
 import {composeWithDevTools} from "redux-devtools-extension";
 import thunk from "redux-thunk";
+import {configureStore} from "@reduxjs/toolkit";
 
 const getStoreLocal = (item) => {
     if (typeof localStorage !== 'undefined') {
@@ -10,7 +11,14 @@ const getStoreLocal = (item) => {
     }
     return null;
 }
-const initialState = {
+const makeStore = () => configureStore({
+    reducer: {rootReducer},
+    devTools: true
+})
+
+export const wrapper = createWrapper(makeStore)
+
+export const initialState = {
     cart: {
         cartItems: JSON.parse(getStoreLocal("cartItems")),
         shippingAddress: JSON.parse(getStoreLocal("shippingAddress")),

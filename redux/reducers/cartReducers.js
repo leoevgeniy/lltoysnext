@@ -6,7 +6,7 @@ import {
     CART_CLEAR_ITEMS,
     CART_SAVE_SHIPPING_COST,
     CART_SAVE_SHIPPING_COST_RESET,
-} from '../../../../lltoys.ru/frontend/src/constants/cartConstants'
+} from '@/redux/typesCart'
 
 
 export const cartReducer = (state={cartItems:[], shippingAddress : {}}, action) => {

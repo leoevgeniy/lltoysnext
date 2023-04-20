@@ -14,7 +14,7 @@ import SearchBox from "./SearchBox";
 import kuragi from '@/public/Kuragi.png'
 import phone from '@/public/telephone-fill.svg'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCartShopping} from "@fortawesome/free-solid-svg-icons";
+import {faBarsStaggered, faCartShopping, faListUl} from "@fortawesome/free-solid-svg-icons";
 
 export default function Header(props) {
     const cart = useSelector(state => state.cart)
@@ -29,8 +29,12 @@ export default function Header(props) {
     let {userInfo} = userLogin;
     const dispatch = useDispatch();
     const [show, setShow] = useState(props.navShow);
+    const router = useRouter()
+    const [isLoading, setIsLoading] = useState(true)
+
     useEffect(() => {
         setShow(props.navShow)
+        router.isReady && setIsLoading(false)
     }, [props.navShow])
     const handleClose = () => {
         setShow(false)
@@ -38,7 +42,8 @@ export default function Header(props) {
         setExpanded(false)
     };
     const handleNavClose = () => props.setNavShow(false);
-    const handleShow = () => {
+    const handleShow = (e) => {
+        e.preventDefault()
         setShow(true);
         dispatch(listCatalog());
     };
@@ -107,12 +112,12 @@ export default function Header(props) {
             >
                 <Container className='justify-content-start'>
                     <Navbar.Text className style={{'color': 'white', 'fontSize': '15px', 'display': 'flex'}}>
-                        <Image src={phone} alt='телефон'/>
+                        <Image src={phone} alt='телефон' style={{'width': 'auto', 'height':'auto'}}/>
                         <i className='pl-1'> | +7 (995) 131-08-12</i>
                     </Navbar.Text>
                 </Container>
                 <Container className='justify-content-end text-white fs-6'>
-                    {userInfo ? (
+                    {!isLoading && userInfo ? (
                         <NavDropdown
                             title={userInfo.name.split(' ')[0]}
                             id="username"
@@ -138,7 +143,7 @@ export default function Header(props) {
                         >Войти</Link>
                     )}
 
-                    {userInfo && userInfo.isAdmin && (
+                    {!isLoading && userInfo && userInfo.isAdmin && (
                         <NavDropdown title="Админ" id="adminmenu" className='text-center d-block'>
 
                             <NavDropdown.Item onClick={() => history.push("/admin/userlist")}>
@@ -164,44 +169,44 @@ export default function Header(props) {
                 </Container>
             </Navbar>
             <Navbar
-                // bg="dark"
-                // variant="dark"
                 bg='#e5097f'
                 expand="md"
                 collapseOnSelect
                 expanded={expanded}
                 className='navbar-custom w-100'
-                // bsPrefix='main_bar'
-                // fixed='top'
+                style={expanded ? {'height': 'auto'} : {'height': '80px'}}
+
             >
                 <Container className={expanded ? "d-flex justify-content-end" : "d-flex"}>
-                    {!expanded &&
-                        <Navbar.Brand className='d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none logo w-50'>
-                            <Link href="/" onClick={() => setExpanded(false)} className='ms-auto'>
-                                {/*    /!*<Navbar.Brand>МАГАЗИН РАДОСТИ</Navbar.Brand>*!/*/}
-                                <Image priority className='logo' src={kuragi} alt='Магазин Куражи'/>
-                            </Link>
-                        </Navbar.Brand>
-                    }
+                    {/*{!expanded &&*/}
+                    {/*    <Navbar.Brand className='d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none' style={{'height': '50px', 'width': '80px'}} >*/}
+                    {/*        <Link href="/" onClick={() => setExpanded(false)} className='ms-auto' >*/}
+                    {/*            /!*    /!*<Navbar.Brand>МАГАЗИН РАДОСТИ</Navbar.Brand>*!/*!/*/}
+                    {/*            <Image className='logo' src={kuragi} alt='Магазин Куражи' />*/}
+                    {/*        </Link>*/}
+                    {/*    </Navbar.Brand>*/}
+                    {/*}*/}
                     <Navbar.Toggle
                         style={expanded ? {'boxShadow': '0 0 0 var(--bs-navbar-toggler-focus-width)'} : {"boxShadow": "none"}}
                         aria-controls="navbarScroll" onClick={() => setExpanded(expanded ? false : "expanded")}/>
 
-                    <Navbar.Collapse id="navbarScroll">
+                    <Navbar.Collapse id="navbarScroll" className='d-flex'>
 
                         <Nav className='d-flex s'>
-                            <Navbar.Brand className='align-self-center' onClick={() => {
+                            <Navbar.Brand className='align-self-center' style={{'height': '70px', 'width': '100px'}} onClick={() => {
                                 setExpanded(false)
                                 history.push("/")
                             }}>
-                                {/*    /!*<Navbar.Brand>МАГАЗИН РАДОСТИ</Navbar.Brand>*!/*/}
-                                <Image priority className='img-fluid logo' src={kuragi} alt='Магазин Куражи'/>
-                            </Navbar.Brand>
-                            <Nav.Link onClick={handleShow} className='align-self-center'>
-                                {/*<i className=" links fa-solid fa-list"></i>*/}
 
-                                <i className="bi bi-card-list"></i>
-                            </Nav.Link>
+
+                                {/*    /!*<Navbar.Brand>МАГАЗИН РАДОСТИ</Navbar.Brand>*!/*/}
+                                <Image priority className='logo' src={kuragi} alt='Магазин Куражи'/>
+                            </Navbar.Brand>
+
+                            <Link href='#' onClick={handleShow} className='align-self-center align-items-center text-white pl-3'>
+                                <FontAwesomeIcon icon={faBarsStaggered} />
+                                <span className='pl-3'>Каталог</span>
+                            </Link>
 
                         </Nav>
 
@@ -226,11 +231,19 @@ export default function Header(props) {
 
 
                     </Navbar.Collapse>
+                    {!expanded &&
+                        <Navbar.Brand className='d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none' style={{'height': '70px', 'width': '100px'}} >
+                            <Link href="/" onClick={() => setExpanded(false)} className='ms-auto' >
+                                <Image className='logo' src={kuragi} alt='Магазин Куражи' />
+                            </Link>
+                        </Navbar.Brand>
+                    }
                         <Link href={'/cart'} className='position-relative float-end'>
-                            <FontAwesomeIcon icon={faCartShopping} className='h2 text-white'/>
+                            <FontAwesomeIcon icon={faCartShopping} className='text-white'/>
+
 
                             <Badge pill bg='success' className='position-absolute'
-                                   style={{'top': '-5px', 'right': '-5px', 'fontSize': '13px'}}>
+                                   style={{'top': '-5px', 'right': '-12px', 'fontSize': '13px'}}>
                                 {cart && cart.cartItems ? cart.cartItems.length : '0'}
                             </Badge>
                         </Link>

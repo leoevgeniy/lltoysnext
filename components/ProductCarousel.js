@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Image from "next/image";
 import ItemsCarousel from "react-items-carousel";
 import Link from "next/link";
-import Loader from "./Loader";
-import Message from "./Message";
-import axios from "axios";
-import {API_HOST} from "@/consts";
+import {Container} from "react-bootstrap";
 
 
 
@@ -57,7 +53,7 @@ function ProductCarousel({data}) {
         // <Loader/>
         // : error ?
         // <Message/> :
-        <div style={{ padding: `0 `, width: '100%' }}>
+        <Container style={{ padding: `0 `, width: '100%' }}>
             <ItemsCarousel
                 infiniteLoop
                 gutter={20}
@@ -72,7 +68,7 @@ function ProductCarousel({data}) {
                     </Link>
                 ))}
             </ItemsCarousel>
-        </div>
+        </Container>
     );
 }
 

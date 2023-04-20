@@ -6,6 +6,7 @@ import Link from "next/link";
 import Loader from "./Loader";
 import Message from "./Message";
 import {listSeenProducts} from "@/redux/actions/productAction";
+import {Container} from "react-bootstrap";
 
 let pageWidth = 0
 if (typeof document !== 'undefined') {
@@ -49,7 +50,7 @@ function ProductCarousel() {
         <Loader/>
         : error ?
         <Message/> : (products ?
-            <div style={{ padding: `0 `, width: '100%' }}>
+            <Container style={{ padding: `0 `, width: '100%' }}>
                 <ItemsCarousel
                     infiniteLoop
                     gutter={20}
@@ -65,7 +66,7 @@ function ProductCarousel() {
                         </Link>
                     ))}
                 </ItemsCarousel>
-            </div> : '  '
+            </Container> : '  '
                 )
     );
 }

@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import React from "react";
-import {Row, Col} from 'react-bootstrap'
+import {Row, Col, Container} from 'react-bootstrap'
 import {useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Product from '@/components/Product'
@@ -76,13 +76,13 @@ const SubCategory = ({pageProps}) => {
     const brCategory = `/category/${category}`
     const brSubCategory = `/category/${category}/${subCategory}`
     return (
-        <>
+        <Container>
             {loading ? (
                 <Loader/>
             ) : error ? (
                     <Message variant="danger">{error}</Message>
                 ) :
-                <>
+                <div>
                     <Head>
                         <title>{subCategory}</title>
                         <meta name='description' content={subCategory}/>
@@ -141,7 +141,7 @@ const SubCategory = ({pageProps}) => {
                             />
                         </div>
                     </div>
-                </>
+                </div>
             }
 
             {(oppenedItems && oppenedItems.length > 0 && seenProducts) &&
@@ -158,7 +158,7 @@ const SubCategory = ({pageProps}) => {
                 <div className='line'></div>
             </div>
             <ProductCarousel data={pageProps.topData}/>
-        </>
+        </Container>
 
     )
 }

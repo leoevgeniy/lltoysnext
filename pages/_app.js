@@ -1,7 +1,6 @@
 import '@/styles/globals.css'
 import {Provider} from "react-redux";
-import {createWrapper} from 'next-redux-wrapper';
-import React, {useEffect, useState} from "react";
+import React from "react";
 import store from "@/redux/store";
 import Layout from '@/components/layout'
 import '@/styles/header.css'
@@ -20,11 +19,11 @@ import '@/styles/imageModal.css'
 import '@/styles/inputPD.css'
 import '@/styles/PageNotFound.css'
 import '@/styles/product.css'
-import {userAgent} from "next/server";
-// import {useRouter} from "next/router";
+import '@fortawesome/fontawesome-svg-core/styles.css'
+import {wrapper} from "@/redux/store";
 
 const MyApp = ({Component, ...rest}) => {
-    const [isLoading, setIsLoading] = useState(true)
+    // const [isLoading, setIsLoading] = useState(true)
     // const router = useRouter()
     // const getInitialProps = async ({Component, ctx}) => {
     //     const appProps = Component.getInitialProps ? await Component.getInitialProps(ctx): {};
@@ -38,8 +37,8 @@ const MyApp = ({Component, ...rest}) => {
         // console.log(userInfo)
         // router.isReady && setIsLoading(false)
     // }, []);
-    const wrapper = createWrapper(() => store);
-    const {appProps} = wrapper.useWrappedStore(rest);
+    // const wrapper = createWrapper(() => store);
+    // const {appProps} = wrapper.useWrappedStore(rest);
     return (
         <>
             {/*{!isLoading &&*/}
@@ -56,5 +55,4 @@ const MyApp = ({Component, ...rest}) => {
 // const makeStore = () => store;
 // const wrapper = createWrapper(makeStore);
 
-
-export default MyApp
+export default wrapper.withRedux(MyApp)

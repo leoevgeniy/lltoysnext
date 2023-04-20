@@ -1,12 +1,10 @@
-import React, {useState} from "react";
-import {Button, Form, FormControl, Toast} from "react-bootstrap";
+import React, {useEffect, useRef, useState} from "react";
+import {Form, FormControl, Toast} from "react-bootstrap";
 import {useRouter} from "next/router";
 import {useSearchParams} from "next/navigation";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
-
-// import {useHistory} from "react-router-dom";
 
 function SearchBox(expanded) {
     const [keyword, setKeyword] = useState("");
@@ -63,10 +61,28 @@ function SearchBox(expanded) {
     };
     const [showA, setShowA] = useState(false);
 
+    function useComponentVisible(showA) {
+        const ref = useRef(null);
+        const handleClickOutside = (event) => {
+            if (ref.current && !ref.current.contains(event.target)) {
+                setShowA(false);
+            }
+        };
+
+        useEffect(() => {
+            document.addEventListener('click', handleClickOutside, true);
+            return () => {
+                document.removeEventListener('click', handleClickOutside, true);
+            };
+        }, [])
+        return {ref, showA, setShowA};
+    }
+
     function toggleShowA() {
         setShowA(!showA)
     }
 
+    const {ref} = useComponentVisible(true);
     return (
         <div className='ms-auto'>
 
@@ -81,7 +97,7 @@ function SearchBox(expanded) {
                     icon={faMagnifyingGlass}/>
             </Link>
             {/*</Button>*/}
-            <Toast show={showA} onClose={toggleShowA} className='position-absolute ' style={{'zIndex': '1'}}>
+            <Toast ref={ref} show={showA} onClose={toggleShowA} className='position-absolute ' style={{'zIndex': '1'}}>
                 <Toast.Header>
                     {/*<img*/}
                     {/*    src="holder.js/20x20?text=%20"*/}

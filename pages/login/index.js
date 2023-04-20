@@ -4,8 +4,7 @@ import {Form, Button, Row, Col, Container, ListGroupItem, ButtonGroup} from 'rea
 import {useDispatch, useSelector} from 'react-redux'
 import Loader from '../../components/Loader'
 import Message from '../../components/Message'
-import FormContainer from '../../components/FormContainer'
-import {login, phoneLogin, register} from '../../redux/actions/userActions'
+import {login, phoneLogin, register} from '@/redux/actions/userActions'
 
 import Modal from "react-bootstrap/Modal";
 import validator from "validator";
@@ -26,7 +25,7 @@ function LoginScreen() {
     const [isValidPhone, setIsValidPhone] = useState('')
     const dispatch = useDispatch()
     const searchParams = useSearchParams();
-    const redirect = '/' + searchParams.get('redirect') || '/'
+    const redirect = (searchParams.get('redirect') ? '/'+searchParams.get('redirect') : '/')
         // ? searchParams.split('=')[1] : '/'
     const userLogin = useSelector(state => state.userLogin)
     const {loading, userInfo, error} = userLogin
