@@ -21,6 +21,7 @@ export default function Header(props) {
     // const [navShow, setNavShow] = useState(false);
 
     const {cartItems} = cart
+
     const history = useRouter()
     const [expanded, setExpanded] = useState(false);
     const userLogin = useSelector((state) => state.userLogin);
@@ -35,9 +36,8 @@ export default function Header(props) {
     const [expandedFilter, setExpandedFilter] = useState(false)
 
 
-
     useEffect(() => {
-        router.isReady && setIsLoading(false)
+        router.isReady ? setIsLoading(false) : ''
     }, [show])
     const handleClose = () => {
         setShow(false)
@@ -109,7 +109,7 @@ export default function Header(props) {
             >
                 <Container className='justify-content-start'>
                     <Navbar.Text className style={{'color': 'white', 'fontSize': '15px', 'display': 'flex'}}>
-                        <Image src={phone} alt='телефон' style={{'width': 'auto', 'height':'auto'}}/>
+                        <Image src={phone} alt='телефон' style={{'width': 'auto', 'height': 'auto'}}/>
                         <i className='pl-1'> | +7 (995) 131-08-12</i>
                     </Navbar.Text>
                 </Container>
@@ -171,79 +171,71 @@ export default function Header(props) {
                 collapseOnSelect
                 expanded={expanded}
                 className='navbar-custom w-100'
-                style={expanded ? {'height': 'auto'} : {'height': '80px'}}
+                style={expanded ? {'height': 'auto'} : {'height': 'auto'}}
 
             >
-                <Container className={expanded ? "d-flex justify-content-end" : "d-flex"}>
-                    {/*{!expanded &&*/}
-                    {/*    <Navbar.Brand className='d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none' style={{'height': '50px', 'width': '80px'}} >*/}
-                    {/*        <Link href="/" onClick={() => setExpanded(false)} className='ms-auto' >*/}
-                    {/*            /!*    /!*<Navbar.Brand>МАГАЗИН РАДОСТИ</Navbar.Brand>*!/*!/*/}
-                    {/*            <Image className='logo' src={kuragi} alt='Магазин Куражи' />*/}
-                    {/*        </Link>*/}
-                    {/*    </Navbar.Brand>*/}
-                    {/*}*/}
+                <Container className={expanded ? "d-flex justify-content-start" : "d-flex"}>
+
                     <Navbar.Toggle
                         style={expanded ? {'boxShadow': '0 0 0 var(--bs-navbar-toggler-focus-width)'} : {"boxShadow": "none"}}
                         aria-controls="navbarScroll" onClick={() => setExpanded(expanded ? false : "expanded")}/>
 
-                    <Navbar.Collapse id="navbarScroll" className='d-flex'>
+                    <Navbar.Collapse id="navbarScroll">
 
-                        <Nav className='d-flex s'>
-                            <Navbar.Brand className='align-self-center' style={{'height': '70px', 'width': '100px'}} onClick={() => {
-                                setExpanded(false)
-                                history.push("/")
-                            }}>
+                        <Nav className='d-none justify-content-around d-md-flex'>
+                            <Navbar.Brand className='align-self-center' style={{'height': '70px', 'width': '100px'}}
+                                          onClick={() => {
+                                              setExpanded(false)
+                                              history.push("/")
+                                          }}>
 
 
                                 {/*    /!*<Navbar.Brand>МАГАЗИН РАДОСТИ</Navbar.Brand>*!/*/}
                                 <Image priority className='logo' src={kuragi} alt='Магазин Куражи'/>
                             </Navbar.Brand>
 
-                            <Link href='#' onClick={handleShow} className='align-self-center align-items-center text-white pl-3'>
-                                <FontAwesomeIcon icon={faBarsStaggered} />
+                            <Link href='#' onClick={handleShow}
+                                  className='align-self-center align-items-center text-white pl-3'>
+                                <FontAwesomeIcon icon={faBarsStaggered}/>
                                 <span className='pl-3'>Каталог</span>
                             </Link>
 
                         </Nav>
 
-                        <SearchBox/>
-                        <Nav className='pr-5'>
-
-                            <Nav.Item>
-                                <Container className='justify-content-end text-white fs-6'>
-
-                                </Container >
-                                <Container
-                                    className='d-flex position-relative '>
-                                    <Link href='/cart' className='text-decoration-none fs-5 text-white'>{(cart && cart.cartItems) ? cart.cartItems.length : 0} товаров | {(cart && cart.cartItems) ? cart.cartItems
-                                        .reduce((acc, item) => acc + item.price * item.qty, 0)
-                                        .toFixed(0) : 0} руб.</Link>
-
-
-
-                                </Container>
-                            </Nav.Item>
-                        </Nav>
 
 
                     </Navbar.Collapse>
-                    {!expanded &&
-                        <Navbar.Brand className='d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none' style={{'height': '70px', 'width': '100px'}} >
-                            <Link href="/" onClick={() => setExpanded(false)} className='ms-auto' >
-                                <Image className='logo' src={kuragi} alt='Магазин Куражи' />
-                            </Link>
-                        </Navbar.Brand>
-                    }
-                        <Link href={'/cart'} className='position-relative float-end'>
-                            <FontAwesomeIcon icon={faCartShopping} className='text-white'/>
-
-
-                            <Badge pill bg='success' className='position-absolute'
-                                   style={{'top': '-5px', 'right': '-12px', 'fontSize': '13px'}}>
-                                {cart && cart.cartItems ? cart.cartItems.length : '0'}
-                            </Badge>
+                    <Navbar.Brand className='d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none'
+                                  style={{'height': '70px', 'width': '100px'}}>
+                        <Link href="/" onClick={() => setExpanded(false)} className='ms-auto'>
+                            <Image className='logo' src={kuragi} alt='Магазин Куражи'/>
                         </Link>
+                    </Navbar.Brand>
+                    {<Link href='#' onClick={handleShow}
+                           className='align-self-center align-items-center text-white pl-3 d-flex d-md-none'>
+                        <FontAwesomeIcon icon={faBarsStaggered}/>
+                        <span className='pl-3'>Каталог</span>
+                    </Link>}
+                    <SearchBox/>
+                    <Nav
+                        className='d-flex position-relative d-none d-lg-flex '>
+                        {!isLoading && <Link href='/cart'
+                                             className='text-decoration-none fs-5 text-white '>{(cart && cart.cartItems) ? cart.cartItems.length : 0} товаров
+                            | {(cart && cart.cartItems) ? cart.cartItems
+                                .reduce((acc, item) => acc + item.price * item.qty, 0)
+                                .toFixed(0) : 0} руб.</Link>}
+
+
+                    </Nav>
+                    <Link href={'/cart'} className='position-relative float-end'>
+                        <FontAwesomeIcon icon={faCartShopping} className='text-white'/>
+
+
+                        {!isLoading && <Badge pill bg='success' className='position-absolute'
+                                              style={{'top': '-5px', 'right': '-12px', 'fontSize': '13px'}}>
+                            {cart && cart.cartItems ? cart.cartItems.length : '0'}
+                        </Badge>}
+                    </Link>
 
                 </Container>
             </Navbar>

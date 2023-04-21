@@ -23,6 +23,8 @@ import '@fortawesome/fontawesome-svg-core/styles.css'
 import {wrapper} from "@/redux/store";
 
 const MyApp = ({Component, ...rest}) => {
+    const { store, props } = wrapper.useWrappedStore(rest);
+    // const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
     // const [isLoading, setIsLoading] = useState(true)
     // const router = useRouter()
     // const getInitialProps = async ({Component, ctx}) => {
@@ -55,4 +57,4 @@ const MyApp = ({Component, ...rest}) => {
 // const makeStore = () => store;
 // const wrapper = createWrapper(makeStore);
 
-export default wrapper.withRedux(MyApp)
+export default MyApp

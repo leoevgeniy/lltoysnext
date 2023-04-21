@@ -45,7 +45,24 @@ export const phoneLogin = (phone, password) => async (dispatch) => {
     }
 
 }
-
+export const reduxLogin = () => (dispatch) => {
+    try{
+        console.log('asfa')
+        const data = JSON.parse(localStorage.getItem('userInfo'))
+        dispatch({
+            type: t.USER_REDUX_LOGIN_SUCCESS,
+            payload: data,
+        });
+    }catch (error) {
+        dispatch({
+            type: t.USER_REDUX_LOGIN_FAIL,
+            payload:
+                error.response && error.response.data.detail
+                    ? error.response.data.detail
+                    : error.message,
+        });
+    }
+}
 export const login = (email, password) => async (dispatch) => {
     try {
         dispatch({

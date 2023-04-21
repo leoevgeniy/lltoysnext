@@ -5,11 +5,18 @@ import HomeScreen from '../screens/HomeScreen'
 import MyVerticallyCenteredModal from '../components/MyVerticallyCenteredModal'
 import axios from "axios";
 import {API_HOST} from "@/consts";
-import {connect} from "react-redux";
+import {connect, useDispatch} from "react-redux";
 import {wrapper} from "@/redux/store";
+import {useAppSelector} from "@/Hook";
+import {reduxLogin} from "@/redux/actions/userActions";
 
 
 const Home = ({pageProps}) => {
+    // const isServer = typeof window === "undefined";
+    // let {userInfo} = useAppSelector(state=> state.userLogin)
+    // if (!isServer) {
+    //     userInfo = localStorage.getItem('userInfo')
+    // }
     return (
         <>
             <Head>

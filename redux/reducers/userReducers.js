@@ -1,5 +1,11 @@
 import * as t from '../typesUsers'
 
+export const reduxLogin = (state = {}, action) => {
+    switch (action.type) {
+        case t.USER_LOGIN_SUCCESS:
+            return { loading: false, userInfo: action.payload };
+    }
+}
 export const userLoginReducer = (state = {}, action) => {
     switch (action.type) {
         case t.USER_LOGIN_REQUEST:
