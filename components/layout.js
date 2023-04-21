@@ -5,8 +5,6 @@ import MyVerticallyCenteredModal from "@/components/MyVerticallyCenteredModal";
 import {userAgent} from "next/server";
 
 const Layout = ({children}) => {
-    const [navShow, setNavShow] = useState(false);
-    const [expandedFilter, setExpandedFilter] = useState(false)
     const [modalShow, setModalShow] = useState(true);
     return (
         <>
@@ -17,13 +15,7 @@ const Layout = ({children}) => {
             {/*    onHide={() => setModalShow(false)}*/}
             {/*    backdropClassName=''*/}
             {/*/>*/}
-            <Header
-                expadedFilter={expandedFilter}
-                setExpandedFilter={setExpandedFilter}
-                setNavShow={setNavShow}
-                navShow={navShow}
-
-            />
+            <Header/>
             {children}
             <Footer/>
         </>

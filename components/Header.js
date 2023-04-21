@@ -18,37 +18,35 @@ import {faBarsStaggered, faCartShopping, faListUl} from "@fortawesome/free-solid
 
 export default function Header(props) {
     const cart = useSelector(state => state.cart)
+    // const [navShow, setNavShow] = useState(false);
+
     const {cartItems} = cart
     const history = useRouter()
     const [expanded, setExpanded] = useState(false);
-    const {expandedFilter, setExpandedFilter} = props;
     const userLogin = useSelector((state) => state.userLogin);
     const {catalog, error, loading} = useSelector(
         (state) => state.catalogList
     );
     let {userInfo} = userLogin;
     const dispatch = useDispatch();
-    const [show, setShow] = useState(props.navShow);
+    const [show, setShow] = useState(false);
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(true)
+    const [expandedFilter, setExpandedFilter] = useState(false)
+
+
 
     useEffect(() => {
-        setShow(props.navShow)
         router.isReady && setIsLoading(false)
-    }, [props.navShow])
+    }, [show])
     const handleClose = () => {
         setShow(false)
-        props.setNavShow(false)
+        // props.setNavShow(false)
         setExpanded(false)
     };
-    const handleNavClose = () => props.setNavShow(false);
     const handleShow = (e) => {
         e.preventDefault()
         setShow(true);
-        dispatch(listCatalog());
-    };
-    const handleNavShow = () => {
-        props.setNavShow(true);
         dispatch(listCatalog());
     };
     const logoutHendler = () => {
@@ -65,7 +63,6 @@ export default function Header(props) {
     const catalogFiltered = () => {
         setExpanded(false)
         setShow(false);
-        // props.setNavShow(true)
     };
 
     return (
