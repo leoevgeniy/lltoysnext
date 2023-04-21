@@ -193,7 +193,7 @@ def getCategotyProducts(request, **args):
     except:
         subcategory = ''
     products = Product.objects.filter(Q(category__subCategory__icontains=subcategory) & Q(
-        category__category__icontains=category)).distinct().order_by('name')
+        category__category__icontains=category) & Q(assortiment__countInStock__gt=0)).distinct().order_by('name')
     page = request.query_params.get('page')
     paginator = Paginator(products, 24)
     try:
