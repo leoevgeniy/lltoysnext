@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import {
     Row,
     Col,
@@ -10,7 +10,8 @@ import {
     Form,
 } from "react-bootstrap";
 import Link from 'next/link'
-import { useDispatch, useSelector, getState } from "react-redux";
+import Head from 'next/head'
+import {useDispatch, useSelector, getState} from "react-redux";
 import Message from "@/components/Message";
 import Loader from "@/components/Loader";
 import {
@@ -27,11 +28,12 @@ import {
     ORDER_DELIVER_RESET,
 } from "@/redux/typesOrders";
 import {useRouter} from "next/router";
+import Script from "next/script";
 
 const getServerSideProps = (context) => {
     console.log(context)
     const id = context.params.id
-    return {props:  {id}}
+    return {props: {id}}
 }
 
 function OrderScreen({pageProps}) {
@@ -41,7 +43,7 @@ function OrderScreen({pageProps}) {
 
     const [sdkReady, setSdkReady] = useState(false);
     const orderDetails = useSelector((state) => state.orderDetails);
-    const { order, error, loading } = orderDetails;
+    const {order, error, loading} = orderDetails;
     const paymentRequest = useSelector((state) => state.paymentRequest);
     const {
         response,
@@ -50,10 +52,10 @@ function OrderScreen({pageProps}) {
         success: paymentSuccess,
     } = paymentRequest;
     const orderPay = useSelector((state) => state.orderPay);
-    const { loading: loadingPay, success: successPay } = orderPay;
+    const {loading: loadingPay, success: successPay} = orderPay;
 
     const orderDeliver = useSelector((state) => state.orderDeliver);
-    const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
+    const {loading: loadingDeliver, success: successDeliver} = orderDeliver;
 
     const p5sDetails = useSelector((state) => state.p5sDetails);
     const {
@@ -63,7 +65,7 @@ function OrderScreen({pageProps}) {
     } = p5sDetails;
 
     const userLogin = useSelector((state) => state.userLogin);
-    const { userInfo } = userLogin;
+    const {userInfo} = userLogin;
 
     const userDetails = useSelector((state) => state.userDetails);
     const [cururl, setCururl] = useState("");
@@ -74,17 +76,17 @@ function OrderScreen({pageProps}) {
             .toFixed(0);
     }
 
-    function yookassaaddScript() {
-        const script = document.createElement("script");
-        script.src =
-            "https://yookassa.ru/checkout-widget/v1/checkout-widget.js";
-        script.async = true; // чтобы гарантировать порядок
-        document.body.appendChild(script);
-    }
-
-    yookassaaddScript();
-
+    // function yookassaaddScript() {
+    //     const script = document.createElement("script");
+    //     script.src =
+    //         "https://yookassa.ru/checkout-widget/v1/checkout-widget.js";
+    //     script.async = true; // чтобы гарантировать порядок
+    //     document.body.appendChild(script);
+    // }
     //
+    // yookassaaddScript();
+    //
+    // //
 
     useEffect(() => {
         if (!userInfo) {
@@ -96,8 +98,8 @@ function OrderScreen({pageProps}) {
             order._id !== Number(orderId) ||
             successDeliver
         ) {
-            dispatch({ type: ORDER_PAY_RESET });
-            dispatch({ type: ORDER_DELIVER_RESET });
+            dispatch({type: ORDER_PAY_RESET});
+            dispatch({type: ORDER_DELIVER_RESET});
             dispatch(getOrderDetails(orderId));
             dispatch(p5sgetOrderDetails(orderId));
         }
@@ -194,213 +196,218 @@ function OrderScreen({pageProps}) {
     };
 
     return loading ? (
-        <Loader />
+        <Loader/>
     ) : error ? (
         <Message variant="danger">{error}</Message>
     ) : (
-        <div>
-            <h1>Заказ: {order._id}</h1>
-            <Row>
-                <Col md={8}>
-                    <ListGroup variant="flush">
-                        <ListGroupItem>
-                            <h2>Доставка</h2>
-                            <p>
-                                <strong>Имя: </strong>
-                                {order.user.name}
-                            </p>
-                            <p>
-                                <strong>E-mail: </strong>
-                                <a href={`mailto:${order.user.email}`}>
-                                    {order.user.email}
-                                </a>
-                            </p>
-                            <p>
-                                <strong>Адрес: </strong>
-                                {order.shippingAddress.postalcode},{" "}
-                                {order.shippingAddress.country}
-                                {"  "}
-                                {order.shippingAddress.city},{"  "}
-                                {order.shippingAddress.address}
-                            </p>
-                            {order.isDelivered && (
-                                <Message variant="success">
-                                    Заказ доставлен {order.deliveredAt}
-                                </Message>
-                            )}
-
-                            {p5sOrder && p5sOrder.status && (
-                                <Message variant="warning">
-                                    Статус: {p5sOrder.status}
-                                </Message>
-                            )}
-                            {order.paymentMethod === 'bankCard' && !order.isPaid &&
-                                <Message variant="warning">
-                                    Статус: Заказ будет обработан после произведения оплаты
-                                </Message>
-                            }
-                        </ListGroupItem>
-                        <ListGroupItem>
-                            <h2>Способ оплаты</h2>
-                            <p>
-                                {/* <strong>Способ оплаты: </strong> */}
-                                {order.paymentMethod === "bankCard"
-                                    ? "Банковсковской картой онлайн"
-                                    : order.paymentMethod === "deliveryCard"
-                                    ? "Банковской картой при получении"
-                                    : "Наличными при получении"}
-                            </p>
-                            {order.isPaid ? (
-                                <Message variant="success">
-                                    Оплата прошла{" "}
-                                    {order.paidAt.substring(0, 10)}
-                                </Message>
-                            ) : (
-                                <Message variant="warning">Не оплачен</Message>
-                            )}
-                        </ListGroupItem>
-                        <ListGroupItem>
-                            <h2>Заказанный товар:</h2>
-                            {order.orderItems.length === 0 ? (
-                                <Message variant="info">
-                                    Ваш заказ пуста !
-                                </Message>
-                            ) : (
-                                <ListGroup variant="flush">
-                                    {order.orderItems.map((item, index) => (
-                                        <ListGroupItem key={index}>
-                                            <Row>
-                                                <Col md={1}>
-                                                    <Image
-                                                        src={item.image}
-                                                        alt={item.name}
-                                                        fluid
-                                                        rounded
-                                                    />
-                                                </Col>
-                                                <Col>
-                                                    <Link
-                                                        to={`/products/${item.product}`}
-                                                    >
-                                                        {item.name}
-                                                    </Link>
-                                                </Col>
-                                                <Col
-                                                    md={4}
-                                                    className="text-end"
-                                                >
-                                                    {item.qty} x {item.price} ₽
-                                                    ={" "}
-                                                    <strong>
-                                                        ₽{" "}
-                                                        {(
-                                                            item.qty *
-                                                            item.price
-                                                        ).toFixed(2)}
-                                                    </strong>
-                                                    {(item.color !== "" && item.color !== 'цвет не указан') &&
-                                                        <div>
-                                                        <Row className="text-end">
-                                                            <strong>
-                                                                Цвет:{" "}
-                                                                {item.color}{" "}
-                                                            </strong>
-                                                        </Row>
-                                                        {item.size !== '' &&
-                                                                <Row className="text-end">
-                                                                    <strong>
-                                                                        Размер:{" "}
-                                                                        {item.size}{" "}
-                                                                    </strong>
-                                                                </Row>
-                                                        }
-                                                        </div>
-                                                    }
-                                                </Col>
-                                            </Row>
-                                        </ListGroupItem>
-                                    ))}
-                                </ListGroup>
-                            )}
-                        </ListGroupItem>
-                    </ListGroup>
-                </Col>
-                <Col md={4}>
-                    <Card>
+        <>
+            {/*<Head>*/}
+                <Script src = "https://yookassa.ru/checkout-widget/v1/checkout-widget.js"/>
+            {/*</Head>*/}
+            <div>
+                <h1>Заказ: {order._id}</h1>
+                <Row>
+                    <Col md={8}>
                         <ListGroup variant="flush">
                             <ListGroupItem>
-                                <h2>Заказ</h2>
-                            </ListGroupItem>
-                            <ListGroupItem>
-                                <Row>
-                                    <Col>Товар</Col>
-                                    <Col>₽ {order.itemsPrice}</Col>
-                                </Row>
-                            </ListGroupItem>
-                            {/*{order.paymentMethod === 'bankCard' &&*/}
-                            {/*    <ListGroupItem>*/}
-                            {/*        <Row>*/}
-                            {/*            <Col>Скидка 10%</Col>*/}
-                            {/*            <Col>₽ {(order.itemsPrice * 0.1).toFixed(0)}</Col>*/}
-                            {/*        </Row>*/}
-                            {/*    </ListGroupItem>*/}
-                            {/*}*/}
-                            <ListGroupItem>
-                                <Row>
-                                    <Col>Всего:</Col>
-                                    <Col>₽ {Number(order.totalPrice).toFixed(0)}</Col>
-                                </Row>
-                            </ListGroupItem>
-
-                            {!order.isPaid &&
-                                order.paymentMethod === "bankCard" && (
-                                    <>
-                                        <ListGroupItem>
-                                            {paymentLoading && <Loader />}
-                                            <ListGroupItem>
-                                                <Button
-                                                    type="button"
-                                                    className="btn w-100"
-                                                    onClick={
-                                                        paymentInitialization
-                                                    }
-                                                >
-                                                    Оплатить
-                                                </Button>
-                                            </ListGroupItem>
-                                        </ListGroupItem>
-                                    </>
+                                <h2>Доставка</h2>
+                                <p>
+                                    <strong>Имя: </strong>
+                                    {order.user.name}
+                                </p>
+                                <p>
+                                    <strong>E-mail: </strong>
+                                    <a href={`mailto:${order.user.email}`}>
+                                        {order.user.email}
+                                    </a>
+                                </p>
+                                <p>
+                                    <strong>Адрес: </strong>
+                                    {order.shippingAddress.postalcode},{" "}
+                                    {order.shippingAddress.country}
+                                    {"  "}
+                                    {order.shippingAddress.city},{"  "}
+                                    {order.shippingAddress.address}
+                                </p>
+                                {order.isDelivered && (
+                                    <Message variant="success">
+                                        Заказ доставлен {order.deliveredAt}
+                                    </Message>
                                 )}
-                        </ListGroup>
-                        {loadingDeliver && <Loader />}
-                        {userInfo &&
-                            userInfo.isAdmin &&
-                            order.isPaid &&
-                            !order.isDelivered && (
-                                <ListGroupItem>
-                                    <Button
-                                        type="button"
-                                        className="btn w-100"
-                                        onClick={deliverHandler}
-                                    >
-                                        Пометить как доставлен
-                                    </Button>
-                                </ListGroupItem>
-                            )}
 
-                        {/*<ListGroupItem>*/}
-                        {/*    <Button*/}
-                        {/*        type="button"*/}
-                        {/*        className="btn"*/}
-                        {/*        onClick={testp5s}*/}
-                        {/*    >*/}
-                        {/*        Тест p5s*/}
-                        {/*    </Button>*/}
-                        {/*</ListGroupItem>*/}
-                    </Card>
-                </Col>
-            </Row>
-        </div>
+                                {p5sOrder && p5sOrder.status && (
+                                    <Message variant="warning">
+                                        Статус: {p5sOrder.status}
+                                    </Message>
+                                )}
+                                {order.paymentMethod === 'bankCard' && !order.isPaid &&
+                                    <Message variant="warning">
+                                        Статус: Заказ будет обработан после произведения оплаты
+                                    </Message>
+                                }
+                            </ListGroupItem>
+                            <ListGroupItem>
+                                <h2>Способ оплаты</h2>
+                                <p>
+                                    {/* <strong>Способ оплаты: </strong> */}
+                                    {order.paymentMethod === "bankCard"
+                                        ? "Банковсковской картой онлайн"
+                                        : order.paymentMethod === "deliveryCard"
+                                            ? "Банковской картой при получении"
+                                            : "Наличными при получении"}
+                                </p>
+                                {order.isPaid ? (
+                                    <Message variant="success">
+                                        Оплата прошла{" "}
+                                        {order.paidAt.substring(0, 10)}
+                                    </Message>
+                                ) : (
+                                    <Message variant="warning">Не оплачен</Message>
+                                )}
+                            </ListGroupItem>
+                            <ListGroupItem>
+                                <h2>Заказанный товар:</h2>
+                                {order.orderItems.length === 0 ? (
+                                    <Message variant="info">
+                                        Ваш заказ пуста !
+                                    </Message>
+                                ) : (
+                                    <ListGroup variant="flush">
+                                        {order.orderItems.map((item, index) => (
+                                            <ListGroupItem key={index}>
+                                                <Row>
+                                                    <Col md={1}>
+                                                        <Image
+                                                            src={item.image}
+                                                            alt={item.name}
+                                                            fluid
+                                                            rounded
+                                                        />
+                                                    </Col>
+                                                    <Col>
+                                                        <Link
+                                                            to={`/products/${item.product}`}
+                                                        >
+                                                            {item.name}
+                                                        </Link>
+                                                    </Col>
+                                                    <Col
+                                                        md={4}
+                                                        className="text-end"
+                                                    >
+                                                        {item.qty} x {item.price} ₽
+                                                        ={" "}
+                                                        <strong>
+                                                            ₽{" "}
+                                                            {(
+                                                                item.qty *
+                                                                item.price
+                                                            ).toFixed(2)}
+                                                        </strong>
+                                                        {(item.color !== "" && item.color !== 'цвет не указан') &&
+                                                            <div>
+                                                                <Row className="text-end">
+                                                                    <strong>
+                                                                        Цвет:{" "}
+                                                                        {item.color}{" "}
+                                                                    </strong>
+                                                                </Row>
+                                                                {item.size !== '' &&
+                                                                    <Row className="text-end">
+                                                                        <strong>
+                                                                            Размер:{" "}
+                                                                            {item.size}{" "}
+                                                                        </strong>
+                                                                    </Row>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </Col>
+                                                </Row>
+                                            </ListGroupItem>
+                                        ))}
+                                    </ListGroup>
+                                )}
+                            </ListGroupItem>
+                        </ListGroup>
+                    </Col>
+                    <Col md={4}>
+                        <Card>
+                            <ListGroup variant="flush">
+                                <ListGroupItem>
+                                    <h2>Заказ</h2>
+                                </ListGroupItem>
+                                <ListGroupItem>
+                                    <Row>
+                                        <Col>Товар</Col>
+                                        <Col>₽ {order.itemsPrice}</Col>
+                                    </Row>
+                                </ListGroupItem>
+                                {/*{order.paymentMethod === 'bankCard' &&*/}
+                                {/*    <ListGroupItem>*/}
+                                {/*        <Row>*/}
+                                {/*            <Col>Скидка 10%</Col>*/}
+                                {/*            <Col>₽ {(order.itemsPrice * 0.1).toFixed(0)}</Col>*/}
+                                {/*        </Row>*/}
+                                {/*    </ListGroupItem>*/}
+                                {/*}*/}
+                                <ListGroupItem>
+                                    <Row>
+                                        <Col>Всего:</Col>
+                                        <Col>₽ {Number(order.totalPrice).toFixed(0)}</Col>
+                                    </Row>
+                                </ListGroupItem>
+
+                                {!order.isPaid &&
+                                    order.paymentMethod === "bankCard" && (
+                                        <>
+                                            <ListGroupItem>
+                                                {paymentLoading && <Loader/>}
+                                                <ListGroupItem>
+                                                    <Button
+                                                        type="button"
+                                                        className="btn w-100"
+                                                        onClick={
+                                                            paymentInitialization
+                                                        }
+                                                    >
+                                                        Оплатить
+                                                    </Button>
+                                                </ListGroupItem>
+                                            </ListGroupItem>
+                                        </>
+                                    )}
+                            </ListGroup>
+                            {loadingDeliver && <Loader/>}
+                            {userInfo &&
+                                userInfo.isAdmin &&
+                                order.isPaid &&
+                                !order.isDelivered && (
+                                    <ListGroupItem>
+                                        <Button
+                                            type="button"
+                                            className="btn w-100"
+                                            onClick={deliverHandler}
+                                        >
+                                            Пометить как доставлен
+                                        </Button>
+                                    </ListGroupItem>
+                                )}
+
+                            {/*<ListGroupItem>*/}
+                            {/*    <Button*/}
+                            {/*        type="button"*/}
+                            {/*        className="btn"*/}
+                            {/*        onClick={testp5s}*/}
+                            {/*    >*/}
+                            {/*        Тест p5s*/}
+                            {/*    </Button>*/}
+                            {/*</ListGroupItem>*/}
+                        </Card>
+                    </Col>
+                </Row>
+            </div>
+        </>
     );
 }
 

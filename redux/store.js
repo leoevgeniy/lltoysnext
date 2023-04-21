@@ -28,7 +28,6 @@ if (!isServer) {
             userInfo: JSON.parse(localStorage.getItem('userInfo')),
         }
     }
-    console.log('init', initialState)
 }
 
 const reducer = (state = initialState, action) => {

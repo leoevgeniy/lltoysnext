@@ -38,7 +38,7 @@ export default function Header(props) {
 
     useEffect(() => {
         router.isReady ? setIsLoading(false) : ''
-    }, [show])
+    }, [])
     const handleClose = () => {
         setShow(false)
         // props.setNavShow(false)
@@ -66,7 +66,7 @@ export default function Header(props) {
     };
 
     return (
-        <Container className='header' style={{'width': '100%'}}>
+        <Container className='header position-sticky' style={{'width': '100%'}}>
             <Offcanvas show={show} onHide={handleClose} className='catalog'>
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>Каталог</Offcanvas.Title>
@@ -228,7 +228,7 @@ export default function Header(props) {
 
                     </Nav>
                     <Link href={'/cart'} className='position-relative float-end'>
-                        <FontAwesomeIcon icon={faCartShopping} className='text-white'/>
+                        <FontAwesomeIcon id='cart' icon={faCartShopping} className='text-white'/>
 
 
                         {!isLoading && <Badge pill bg='success' className='position-absolute'

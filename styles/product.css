@@ -1,4 +1,30 @@
-
+.card .price{
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 26px;
+    margin: 0 4px 2px 0;
+    padding: 0 6px;
+    white-space: nowrap;
+}
+.card .old-price{
+    color: #707f8d;
+    font-size: 14px;
+    line-height: 18px;
+    position: relative;
+    white-space: nowrap;
+}
+.card .old-price::before{
+    background: var(--bs-red);
+    content: "";
+    display: block;
+    height: 1px;
+    left: 0;
+    position: absolute;
+    top: 50%;
+    transform: rotate(-3deg);
+    width: 100%;
+}
     .
     .rating,
     .card-title {
