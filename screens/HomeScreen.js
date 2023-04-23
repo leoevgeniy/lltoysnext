@@ -6,7 +6,6 @@ import BannersCarousel from '@/components/BannersCarousel'
 import SeenProductCarousel from "@/components/SeenProductCarousel";
 import ProductCarousel from "@/components/ProductCarousel";
 import {listSeenProducts, listTopProducts} from "@/redux/actions/productAction";
-import {reduxLogin} from "@/redux/actions/userActions";
 
 
 
@@ -16,19 +15,17 @@ const HomeScreen = ({data}) => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        // dispatch(reduxLogin)
         if (oppenedItems) {
             dispatch(listSeenProducts(oppenedItems))
         }
     },[oppenedItems])
-    useEffect(() => {
-        // dispatch(listCategoryProducts(id))
+    const componentDidMount = (() => {
         if (localStorage.getItem('oppenedItems')) {
             setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))
         }
 
 
-    }, [])
+    })
     return (
         <Container className='homescreen'>
             <div className='mainlady w-100'>

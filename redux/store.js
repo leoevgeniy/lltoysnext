@@ -20,9 +20,8 @@ let initialState = {}
 if (!isServer) {
     initialState = {
         cart: {
-            cartItems: JSON.parse(getStoreLocal('cartItems')),
-            shippingAddress: JSON.parse(localStorage.getItem('shippingAddress')),
-
+            cartItems: JSON.parse(getStoreLocal('cartItems')) || [],
+            shippingAddress: JSON.parse(localStorage.getItem('shippingAddress')) || {},
         },
         userLogin: {
             userInfo: JSON.parse(localStorage.getItem('userInfo')),

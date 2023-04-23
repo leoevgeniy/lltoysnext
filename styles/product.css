@@ -54,7 +54,7 @@
         "Liberation Sans",
         sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-        align-items: flex-end;
+        /*align-items: flex-end;*/
         flex-direction: column;
         display: flex;
         align-content: flex-start;

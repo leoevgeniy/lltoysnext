@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Button, Card, Form} from 'react-bootstrap'
+import {Badge, Button, Card, Form} from 'react-bootstrap'
 import Rating from './Rating'
 import Link from 'next/link'
 import Image from "next/image";
@@ -25,53 +25,6 @@ function Product({product}) {
 
 
     }, [])
-
-    // let szString = ''
-    // if (color && size) {
-    //     szString = '&color=' + color + '&size=' + size
-    // } else if (color && !size) {
-    //     szString = '&color=' + color
-    // } else if (!color && size) {
-    //     szString = '&size=' + size
-    // }
-
-    // if (product) {
-    //     if (product.assortiment.color) {colorString = product.assortiment.color.split(',')
-    //         let isSimilar = true
-    //         for (let i = 0; i<colorString.length; i++){
-    //             if (colorString[i+1]) {
-    //                 isSimilar = colorString[i] === colorString[i + 1];
-    //             }
-    //             if (!isSimilar) {
-    //                 break
-    //             }
-    //
-    //         }
-    //         if (isSimilar) {colorString.length = 1}
-    //         }
-    //     if (colorString.length > 1) {
-    //        if (product.size) {sizeString = product.size.split(',')}
-    //
-    //        for (let i=0; i<sizeString.length; i++) {
-    //            let singleSize = sizeString[i].split('-')
-    //            for (let k=0; k<singleSize.length; k++) {
-    //                sizeDisplayString.push(singleSize[k] + ' / ' + colorString[i])
-    //            }
-    //
-    //        }
-    //    } else if (colorString.length === 1) {
-    //         if (product.size) {sizeString = product.size.split(',')}
-    //
-    //         for (let i=0; i<sizeString.length; i++) {
-    //             let singleSize = sizeString[i].split('-')
-    //             for (let k=0; k<singleSize.length; k++) {
-    //                 sizeDisplayString.push(singleSize[k])
-    //             }
-    //
-    //         }
-    //    }
-    //
-    // }
     function move_to_cart(picture, cart) {
 
         let picture_pos = document.getElementById(picture).getBoundingClientRect();
@@ -111,97 +64,65 @@ function Product({product}) {
     }
     const addToCartHandler = (e) => {
         e.preventDefault()
-        dispatch({type: PRODUCT_DETAILS_RESET})
         dispatch(addToCart(product._id, qty, color, size, 'undefined', 0.1))
+        dispatch({type: PRODUCT_DETAILS_RESET})
+
         move_to_cart('toCart', 'cart')
     }
     const history = useRouter()
+    function getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
+    }
 
+    const oldPrice = product.superSaleCost ? (price * getRandomArbitrary(3,4)).toFixed(0) : (price * getRandomArbitrary(1.3,1.8)).toFixed(0)
     const srcLink = `https://feed.p5s.ru/images/mid/${cat}/mid_${product.prodId}.jpg`
     const priceStyle = 'text-lowercase fw-bold card-buy d-inline-block text-start py-0 fs-6'
     // const assortimentBool = (product.colors[0] && Object.keys(product.colors[0])[0] && Object.keys(product.colors[0])[0] != 'цвет не указан') && product.colors[0][Object.keys(product.colors[0])[0]] !== ''
     return (
-        <Card itemScope itemType="http://schema.org/Product" className='my-1 py-0 h-100 rounded cardstyle head'>
+        <Card itemScope itemType="http://schema.org/Product" className='my-1 py-0 h-100 rounded cardstyle head'
+              >
             <Card.Img
                 onClick={() => history.push(`/products/${product._id}`)}
                 src={srcLink}
                 alt={product.name}
             />
-
+            {<Badge pill bg={product.superSaleCost ? 'danger':'success'} className={product.superSaleCost ? 'price text-bg-danger' : 'price text-bg-success'}
+                                  style={{'top': '1px', 'right': '1px', 'fontSize': '13px', 'width':'17%'}}>
+                - {((1-(price/oldPrice))* 100).toFixed(0)} %
+            </Badge>}
 
             <Card.Body itemProp="offers" itemScope itemType="http://schema.org/Offer"
-                  className='py-1 body'>
+
+                       className='py-1 body'>
                 {/*<Card.Title*/}
 
                 {/*    // style={{'font-size' : '1vw', 'font-weight': 'bold'}}*/}
 
                 {/*>*/}
-                <p className='text-lowercase fw-bold card-buy d-inline-block text-start py-3 fs-6'
-
+                <p className='text-lowercase fw-bold card-buy d-inline-block text-start py-3 fs-6 '
+                   onClick={() => history.push(`/products/${product._id}`)}
                 >
                     <meta itemProp="price" content={price.toFixed(0)}/>
                     <meta itemProp="priceCurrency" content="RUB"/>
                     <span
                         className={product.superSaleCost ? 'price text-bg-danger fs-3' : 'price text-bg-success fs-3'}> ₽ {price.toFixed(0)} </span>
                     <span
-                        className='old-price'> ₽ {product.superSaleCost ? (price * 3.56).toFixed(0) : (price * 1.43).toFixed(0)} </span>
+                        className='old-price'> ₽ {oldPrice} </span>
                 </p>
                 {/*</Card.Title>*/}
-                <Link href={`/products/${product._id}`}
+                <span onClick={() => history.push(`/products/${product._id}`)}
                       className='fw-bold card-buy d-inline-block text-start py-0 mb-0 fs-6 align-text-top'>
 
                     <span itemProp="name" className='card-title fw-bold text-black'>{product.name}</span>
 
 
-                </Link>
-                {/*{product.numReviews > 10 &&*/}
-                {/*    <Card.Text as="div">*/}
-                {/*        <div className="my-1">*/}
-                {/*            <Rating value={product.rating} text={`${product.numReviews} reviews`} color={'#f8e825'}/>*/}
-                {/*        </div>*/}
-                {/*    </Card.Text>}*/}
-
-                {/*<div className='d-inline-block pb-1 w-100 '>*/}
-                {/*    {assortimentBool &&*/}
-                {/*        <Form.Control*/}
-                {/*            className='size w-100'*/}
-                {/*            as="select"*/}
-
-                {/*            disabled={Object.keys(product.colors).length === 1 && product.colors[0][Object.keys(product.colors[0])].length === 1}*/}
-                {/*            // value={aid}*/}
-                {/*            onChange={(e) => {*/}
-                {/*                console.log('target', e.target.value)*/}
-                {/*                setColor(e.target.value.split(' / ')[0])*/}
-                {/*                setSize(e.target.value.split(' / ')[1])*/}
-
-                {/*            }}*/}
-                {/*        >*/}
-                {/*            {product.colors.map(item =>*/}
-                {/*                item[Object.keys(item)[0]].map(size =>*/}
-                {/*                    (*/}
-                {/*                        <option*/}
-                {/*                            className='text-center'*/}
-                {/*                            key={product.assortiment[0].aID + Object.keys(item)[0] + ' / ' + size}*/}
-                {/*                            value={Object.keys(item)[0] + (size ? (' / ') : ('')) + size}*/}
-                {/*                        >*/}
-                {/*                            {Object.keys(item)[0] + (size ? (' / ') : ('')) + size}*/}
-                {/*                        </option>*/}
-                {/*                    )*/}
-                {/*                )*/}
-                {/*            )*/}
-                {/*            }*/}
-                {/*        </Form.Control>*/}
-
-
-                {/*    }*/}
-                {/*</div>*/}
+                </span>
                 {product.colors[0][Object.keys(product.colors[0])][0] === '' &&
-                    <Link
+                    <span
                         id='toCart'
-                        className='picture asButton w-50 text-center mt-1 mb-1'
+                        className='picture asButton w-50 text-center mt-1 mb-1 pl-0'
                         onClick={addToCartHandler}
-                        href='/'
-                    >В корзину</Link>}
+                    >В корзину</span>}
 
 
             </Card.Body>

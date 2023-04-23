@@ -12,9 +12,8 @@ import Message from "../components/Message";
 import {listCatalog} from "@/redux/actions/productAction";
 import SearchBox from "./SearchBox";
 import kuragi from '@/public/Kuragi.png'
-import phone from '@/public/telephone-fill.svg'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBarsStaggered, faCartShopping, faListUl} from "@fortawesome/free-solid-svg-icons";
+import {faBarsStaggered, faCartShopping, faListUl, faPhone} from "@fortawesome/free-solid-svg-icons";
 
 export default function Header(props) {
     const cart = useSelector(state => state.cart)
@@ -107,9 +106,10 @@ export default function Header(props) {
                 style={{'height': '30px'}}
                 className=''
             >
-                <Container className='justify-content-start'>
-                    <Navbar.Text className style={{'color': 'white', 'fontSize': '15px', 'display': 'flex'}}>
-                        <Image src={phone} alt='телефон' style={{'width': 'auto', 'height': 'auto'}}/>
+                <Container className='justify-content-start align-content-center'>
+                    <Navbar.Text style={{'color': 'white', 'fontSize': '15px', 'display': 'flex'}}>
+                        {/*<Image src={phone} alt='телефон' style={{'width': 'auto', 'height': 'auto'}}/>*/}
+                        <FontAwesomeIcon icon={faPhone} className='text-center'/>
                         <i className='pl-1'> | +7 (995) 131-08-12</i>
                     </Navbar.Text>
                 </Container>
