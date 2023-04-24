@@ -1,6 +1,6 @@
 import '@/styles/globals.css'
 import {Provider} from "react-redux";
-import React from "react";
+import React, {useEffect} from "react";
 import Layout from '@/components/layout'
 import '@/styles/header.css'
 import '@/styles/catalog.css'
@@ -23,10 +23,16 @@ import {wrapper} from "@/redux/store";
 
 const MyApp = ({Component, ...rest}) => {
     const {store, props} = wrapper.useWrappedStore(rest);
+    let height = 0
+    useEffect(()=> {
+        height = innerHeight
+        document.getElementById('root').style.minHeight = String(height)
+        console.log(document.getElementById('root').style.minHeight, String(height))
+    },[])
     return (
         <>
             <Provider store={store}>
-                <Layout>
+                <Layout height>
                     <Component {...rest} />
                 </Layout>
             </Provider>
