@@ -64,7 +64,7 @@ function Index({pageProps}) {
         }
     })
     const totalQty = (cartItems.reduce((acc, item) => acc + Number(item.qty), 0))
-    const totalOldPrice = cartItems.reduce((acc, item) => acc + Number(item.qty) * item.oldPrice, 0).toFixed(0)
+    const totalOldPrice = cartItems.reduce((acc, item) => acc + Number(item.qty) * ((Number(item.oldPrice) > Number(item.price)) ? Number(item.oldPrice) : Number(item.price)), 0).toFixed(0)
     const totalPrice = cartItems.reduce((acc, item) => acc + Number(item.qty) * item.price, 0).toFixed(0)
     const disc = cart.cartItems
         .reduce((acc, item) => acc + item.price * item.qty, 0)
@@ -174,7 +174,7 @@ function Index({pageProps}) {
                                                 </Col>
                                                 <Col md={3} className='d-inline-block flex-column'>
                                                     <p className='mb-0 fw-bolder'>₽ {item.price * item.qty}</p>
-                                                    {(item.oldPrice > item.price) &&
+                                                    {(Number(item.oldPrice) > Number(item.price)) &&
                                                         <span
                                                             className='old-price'> ₽ {item.oldPrice * item.qty}
 
@@ -263,10 +263,10 @@ function Index({pageProps}) {
                                             // 'color': '#808d9a',
                                             'fontWeight': '700'
                                         }}>
-                                            {cartItems.reduce((acc, item) => acc + Number(item.qty) * item.oldPrice, 0).toFixed(0)}
+                                            {cartItems.reduce((acc, item) => acc + Number(item.qty) * ((Number(item.oldPrice) > Number(item.price)) ? Number(item.oldPrice) : Number(item.price)), 0).toFixed(0)}
                                         </span>
                                     </div>
-                                    {(totalOldPrice > totalPrice) &&
+                                    { totalOldPrice > totalPrice &&
                                         <div className='d-flex justify-content-between'>
                                             <span className='fs-6'>Скидка</span>
                                             <span style={{

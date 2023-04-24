@@ -49,13 +49,13 @@ function CheckoutSteps({step1, step2, step3, step4}) {
                 {step3 ? (
                         <div className='px-2 py-3'>
                             <Badge onClick={() => history.push('/placeorder')} bg='primary'>
-                                Оформление заказа
+                                Оплата
                             </Badge>
                         </div>
                 ) : (
                     <div className='px-2 py-3'>
                         <Badge bg='secondary'>
-                            Оформление заказа
+                            Оплата
 
                         </Badge>
                     </div>                )}

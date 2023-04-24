@@ -7,7 +7,7 @@ import kuragi from "../public/Kuragi.png";
 
 function Footer() {
     return (
-        <footer className='d-flex justify-content-lg-around '>
+        <footer className='d-flex justify-content-lg-around' >
             <Container className='d-flex justify-content-center footer'>
                 <Row className='d-flex py-3 justify-content-md-center text-white text-center' md='auto'>
                     <Link href="/"

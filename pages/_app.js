@@ -1,6 +1,6 @@
 import '@/styles/globals.css'
 import {Provider} from "react-redux";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import Layout from '@/components/layout'
 import '@/styles/header.css'
 import '@/styles/catalog.css'
@@ -20,19 +20,24 @@ import '@/styles/PageNotFound.css'
 import '@/styles/product.css'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import {wrapper} from "@/redux/store";
+import Head from "next/head";
 
 const MyApp = ({Component, ...rest}) => {
     const {store, props} = wrapper.useWrappedStore(rest);
-    let height = 0
-    useEffect(()=> {
-        height = innerHeight
-        document.getElementById('root').style.minHeight = String(height)
-        console.log(document.getElementById('root').style.minHeight, String(height))
-    },[])
     return (
         <>
+            <Head>
+                <meta
+                    name="viewport"
+                    content="initial-scale=1.0, width=device-width"
+                />
+                <link
+                    rel="stylesheet"
+                    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+                />
+            </Head>
             <Provider store={store}>
-                <Layout height>
+                <Layout>
                     <Component {...rest} />
                 </Layout>
             </Provider>
