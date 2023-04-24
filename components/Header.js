@@ -222,7 +222,7 @@ export default function Header(props) {
                     <Nav
                         className='d-flex position-relative d-none d-lg-flex '>
                         {!isLoading && <Link href='/cart'
-                                             className='text-decoration-none fs-5 text-white '>{(cart && cart.cartItems) ? cart.cartItems.length : 0} товаров
+                                             className='text-decoration-none fs-5 text-white '>{(cart && cart.cartItems) ? cartItems.reduce((acc, item) => acc + Number(item.qty), 0) : 0} товаров
                             | {(cart && cart.cartItems) ? cart.cartItems
                                 .reduce((acc, item) => acc + item.price * item.qty, 0)
                                 .toFixed(0) : 0} руб.</Link>}
@@ -235,7 +235,7 @@ export default function Header(props) {
 
                         {!isLoading && <Badge pill bg='success' className='position-absolute'
                                               style={{'top': '-5px', 'right': '-12px', 'fontSize': '13px'}}>
-                            {cart && cart.cartItems ? cart.cartItems.length : '0'}
+                            {cart && cart.cartItems ? cartItems.reduce((acc, item) => acc + Number(item.qty), 0) : '0'}
                         </Badge>}
                     </Link>
 

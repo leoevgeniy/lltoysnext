@@ -4,7 +4,8 @@
 .popular .line {
     height: 40px;
     width: 100%;
-    background-color: #e5097f;
+    background-color: #1281e3;
+    /*background-color: #e5097f;*/
 }
 .popular span {
     width: 15%;

@@ -313,7 +313,7 @@ function Index({pageProps}) {
                     </Col>
                 }
             </Row>
-            {seenProducts &&
+            {seenProducts && seenProducts.length >0 &&
                 <>
                     <div className='popular my-3'>
                         <span className='mx-3 fs-4'>Вы смотрели</span>

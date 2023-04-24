@@ -11,7 +11,7 @@ function CheckoutSteps({step1, step2, step3, step4}) {
             <Nav.Item>
                 {step1 ? (
                     <div className='px-2 py-3'>
-                        <Badge onClick={() => history.push('/login')} bg='primary'>
+                        <Badge bg='primary'>
                             Авторизация
                         </Badge>
                         {/*<Link href='/login'>*/}
@@ -32,13 +32,13 @@ function CheckoutSteps({step1, step2, step3, step4}) {
                 {step2 ? (
                     <div className='px-2 py-3'>
                         <Badge onClick={() => history.push('/shipping')} bg='primary'>
-                            Доставка
+                            Оформление заказа
                         </Badge>
                     </div>
                 ) : (
                     <div className='px-2 py-3'>
                         <Badge bg='secondary'>
-                            Доставка
+                            Оформление заказа
 
                         </Badge>
                     </div>
@@ -47,23 +47,6 @@ function CheckoutSteps({step1, step2, step3, step4}) {
             </Nav.Item>
             <Nav.Item>
                 {step3 ? (
-                    <div className='px-2 py-3'>
-                        <Badge onClick={() => history.push('/payment')} bg='primary'>
-                            Оплата
-                        </Badge>
-                    </div>
-                ) : (
-                    <div className='px-2 py-3'>
-                        <Badge bg='secondary'>
-                            Оплата
-
-                        </Badge>
-                    </div>
-
-                )}
-            </Nav.Item>
-            <Nav.Item>
-                {step4 ? (
                         <div className='px-2 py-3'>
                             <Badge onClick={() => history.push('/placeorder')} bg='primary'>
                                 Оформление заказа

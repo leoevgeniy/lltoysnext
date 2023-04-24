@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { AddressSuggestions } from "react-dadata";
+import React, {useState, useEffect} from "react";
+import {AddressSuggestions} from "react-dadata";
 import "react-dadata/dist/react-dadata.css";
 import {
     Form,
@@ -9,20 +9,32 @@ import {
     Container,
     FormGroup,
     FormLabel,
-    FormCheck,
+    FormCheck, ListGroup, ListGroupItem, Badge,
 } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import CheckoutSteps from "@/components/CheckoutSteps";
-import { saveShippingAddress, saveShippingCost} from "@/redux/actions/cartActions";
+import {saveShippingAddress, saveShippingCost} from "@/redux/actions/cartActions";
 import {useRouter} from "next/router";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import {DADATA_TOKEN} from "@/consts";
+import Head from "next/head";
+import Link from "next/link";
+import Image from "next/image";
+import cards from '@/public/cards.webp'
+import cash from '@/public/payment_cash.webp'
+import deliveryCard from '@/public/deliveryCard.webp'
+import {faRub} from "@fortawesome/free-solid-svg-icons/faRub";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCreditCard} from "@fortawesome/free-solid-svg-icons";
 
 function ShippingScreen() {
+    const router = useRouter()
+    const [isLoading, setIsLoading] = useState(true)
+
     const history = useRouter()
     // const TOKEN = "c626ed218daca90f04edd627891ee1c035e86387";
     const cart = useSelector((state) => state.cart);
-    const { shippingAddress } = cart;
+    const {shippingAddress} = cart;
 
     const dispatch = useDispatch();
 
@@ -32,6 +44,10 @@ function ShippingScreen() {
     const [shippmentMethod, setShippmentMethod] = useState(
         shippingAddress.shippmentMethod
     );
+    useEffect(() => {
+        router.isReady ? setIsLoading(false) : ''
+    }, [])
+
     // function placeInCenter( str, substr ){
     //     let index = str.toString().length - 2;
     //     const finallStr = str.toString().substring(0 , index) + substr + str.toString().substring( index );
@@ -85,7 +101,6 @@ function ShippingScreen() {
     //           ]
 
 
-
     //       }
     //       const myInit = {
     //           method: 'POST',
@@ -132,17 +147,18 @@ function ShippingScreen() {
                 })
             );
         } else if (shippmentMethod === 'mskCur') {
-        dispatch(saveShippingCost(300))
-        dispatch(
-            saveShippingAddress({
-                city: address.value.split(',')[0],
-                address: address.value,
-                daAddress: address,
-                postalcode,
-                country,
-                shippmentMethod,
-            })
-        )} else if (shippmentMethod === 'mskSelf') {
+            dispatch(saveShippingCost(300))
+            dispatch(
+                saveShippingAddress({
+                    city: address.value.split(',')[0],
+                    address: address.value,
+                    daAddress: address,
+                    postalcode,
+                    country,
+                    shippmentMethod,
+                })
+            )
+        } else if (shippmentMethod === 'mskSelf') {
             dispatch(saveShippingCost(0))
             dispatch(
                 saveShippingAddress({
@@ -167,126 +183,222 @@ function ShippingScreen() {
                 })
             )
         }
-        history.push("/payment").then(r => {});
+        history.push("/payment").then(r => {
+        });
     };
     useEffect(() => {
-        if (typeof address === "object") {setPostalcode(address.data.postal_code)}
-    },[address])
+        if (typeof address === "object") {
+            setPostalcode(address.data.postal_code)
+        }
+    }, [address])
+    const [paymentMethod, setPaymentMethod] = useState();
+    const disc = cart.cartItems
+        .reduce((acc, item) => acc + item.price * item.qty, 0)
+        .toFixed(0) - cart.cartItems
+        .reduce((acc, item) => acc + item.discountPrice * item.qty, 0)
+        .toFixed(0);
     return (
-        <Container md="auto" className='w-100'>
-            <CheckoutSteps step1 step2 />
-            <h1 md="auto" className="text-center">
-                Доставка
-            </h1>
-            <Form onSubmit={submitHandler} className="text-center">
-                <Row className='w-100'>
-                    <Col className='col-12 col-sm-6 pe-0'>
-                        <FormLabel className="my-3 mb-3 d-flex justify-content-center">
-                            <h4>Адрес доставки</h4>
-                        </FormLabel>
-                        <Form.Group>
-                            <Form.Label>Страна</Form.Label>
-                            <Form.Control
-                                disabled
-                                readOnly
-                                type="text"
-                                placeholder="Введите страну"
-                                value={country ? country : ""}
-                            ></Form.Control>
-                        </Form.Group>
-                        <Form.Group >
-                            <Form.Label>Город, улица ....</Form.Label>
-                            <AddressSuggestions
 
-                                token={DADATA_TOKEN}
-                                count={4}
-                                autoload={true}
-                                value={shippingAddress.daAddress}
-                                onChange={setAddress}
-                                filterFromBound="city"
-                                filterToBound="flat"
-                                filterLocations={[{country}]}
-                            />
+        <>
+            {!isLoading &&
+                <>
+                <Head>
 
-                        </Form.Group>
+                    <title>Куражи - Оформление заказа </title></Head>
+                <Container md="auto" className='w-100'>
+                <CheckoutSteps step1 step2/>
+                <Link href='/cart'>Вернуться в корзину</Link>
+                <h1 md="auto" className='fw-bolder'>
+                Оформление заказа
+                </h1>
+                <Row>
+                <Col ms={8}>
+                <span className='fw-bolder fs-5'>Способ оплаты</span>
 
-                        <Form.Group controlId="postalcode">
-                            <Form.Label>Индекс<span style={{'fontSize': '10px'}}> Заполняется автоматически</span></Form.Label>
-                            <Form.Control
-                                onChange={setPostalcode}
-                                type="text"
-                                disabled
-                                value={postalcode ? postalcode : ""}
-                            ></Form.Control>
-                        </Form.Group>
-                    </Col>
-                    <Col className="text-end ">
-                        <FormGroup>
-                            <FormLabel className="my-3 mb-5 d-flex justify-content-center">
-                                <h4>Способ доставки</h4>
-                            </FormLabel>
-                            {/*<Row>*/}
-                                <FormCheck
-                                    className="mb-1 mx-3 d-flex float-start"
-                                    defaultChecked={shippingAddress.shippmentMethod==='mskCur'}
-                                    // as='button'
-                                    type="radio"
-                                    label="По Москве - курьером"
-                                    id="mskCur"
-                                    name="shipmentMethod"
-                                    onChange={(e) =>
-                                        setShippmentMethod(e.target.id)
-                                    }
-                                ></FormCheck>
-                            {/*</Row>*/}
-                            {/*<Row className="justify-content-right">*/}
-                                <FormCheck
-                                    className="my-3 mb-1 mx-3 d-flex justify-content-center"
-                                    defaultChecked={shippingAddress.shippmentMethod==='mskSelf'}
-                                    type="radio"
-                                    label="По Москве - самовывоз"
-                                    id="mskSelf"
-                                    name="shipmentMethod"
-                                    onChange={(e) =>
-                                        setShippmentMethod(e.target.id)
-                                    }
-                                ></FormCheck>
-                            {/*</Row>*/}
-                            {/*<Row className="justify-content-right">*/}
-                                <FormCheck
-                                    className="my-3 mb-1 mx-3 d-flex float-start"
-                                    type="radio"
-                                    defaultChecked={shippingAddress.shippmentMethod==='pochtaRf'}
-                                    label="Почта России"
-                                    id="pochtaRf"
-                                    name="shipmentMethod"
-                                    onChange={(e) =>
-                                        setShippmentMethod(e.target.id)
-                                    }
-                                ></FormCheck>
-                            {/*</Row>*/}
-                            {/*<Row className="justify-content-right">*/}
-                                <FormCheck
-                                    className="my-3 mb-1 mx-3 d-flex justify-content-center"
-                                    defaultChecked={shippingAddress.shippmentMethod==='sdek'}
-                                    type="radio"
-                                    label="СДЭК - по России"
-                                    id="sdek"
-                                    name="shipmentMethod"
-                                    onChange={(e) =>
-                                        setShippmentMethod(e.target.id)
-                                    }
-                                ></FormCheck>
-                            {/*</Row>*/}
-                        </FormGroup>
-                    </Col>
+                <ListGroup className='mt-3'>
+                <ListGroupItem className='d-block'>
+                <div className='d-flex'>
+                <Image
+                className={paymentMethod === 'bankCard' ? 'shadow' : ''}
+                src={cards}
+                alt='Картой онлайн'
+                width={100}
+                onClick={() =>
+                setPaymentMethod('bankCard')
+            }></Image>
+                <Image
+                className={paymentMethod === 'cash' ? 'shadow' : ''}
+                src={cash}
+                alt='Наличными при получении'
+                width={180}
+                onClick={() =>
+                setPaymentMethod('cash')
+            }></Image>
+                <Image
+                className={paymentMethod === 'deliveryCard' ? 'shadow' : ''}
+                src={deliveryCard}
+                alt='Картой при получении'
+                width={150}
+                onClick={() =>
+                setPaymentMethod('deliveryCard')
+            }></Image>
+
+                </div>
+                <div className='pt-3' style={{'backgroundColor': '#f2f5f9'}}>
+                <FontAwesomeIcon
+                icon={faRub}/> Получите скидку {disc} при оплате Ozon Картой
+                </div>
+                </ListGroupItem>
+
+                </ListGroup>
+                <span className='fw-bolder fs-5 fw-bolder'>Доставка</span>
+
+                <ListGroup>
+                <ListGroupItem className=''>
+                <span className='fw-bolder fs-4'>Способ получения</span>
+                <div className='d-flex fs-4 my-3'>
+                <Badge bg='primary' className={shippmentMethod === 'mskSelf' ? 'shadow ms-3' : ' ms-3'}
+                onClick={() => setShippmentMethod('mskSelf')}>
+                Самовывоз
+                </Badge>
+                <Badge bg='primary' className={shippmentMethod === 'pochtaRf' ? 'shadow ms-3' : ' ms-3'}
+                onClick={() => setShippmentMethod('pochtaRf')}>
+                Почтой РФ
+                </Badge>
+                <Badge bg='primary' className={shippmentMethod === 'sdek' ? 'shadow ms-3' : ' ms-3'}
+                onClick={() => setShippmentMethod('sdek')}>
+                СДЭК
+                </Badge>
+                <Badge bg='primary' className={shippmentMethod === 'mskCur' ? 'shadow ms-3' : ' ms-3'}
+                onClick={() => setShippmentMethod('mskCur')}>
+                Курьером
+                </Badge>
+                </div>
+
+            {shippmentMethod === 'mskSelf' &&
+                <span className='fs-4'>Самовывоз г. Москва</span>
+            }
+                </ListGroupItem>
+                </ListGroup>
+                </Col>
+                <Col md={4}>
+
+                </Col>
                 </Row>
-                <Button type="submit" variant="primary" className="text-center">
-                    Продолжить
-                </Button>
-            </Form>
-        </Container>
-    );
+            {/*<Form onSubmit={submitHandler} className="text-center">*/}
+            {/*    <Row className='w-100'>*/}
+            {/*        <Col className='col-12 col-sm-6 pe-0'>*/}
+            {/*            <FormLabel className="my-3 mb-3 d-flex justify-content-center">*/}
+            {/*                <h4>Адрес доставки</h4>*/}
+            {/*            </FormLabel>*/}
+            {/*            <Form.Group>*/}
+            {/*                <Form.Label>Страна</Form.Label>*/}
+            {/*                <Form.Control*/}
+            {/*                    disabled*/}
+            {/*                    readOnly*/}
+            {/*                    type="text"*/}
+            {/*                    placeholder="Введите страну"*/}
+            {/*                    value={country ? country : ""}*/}
+            {/*                ></Form.Control>*/}
+            {/*            </Form.Group>*/}
+            {/*            <Form.Group>*/}
+            {/*                <Form.Label>Город, улица ....</Form.Label>*/}
+            {/*                <AddressSuggestions*/}
+
+            {/*                    token={DADATA_TOKEN}*/}
+            {/*                    count={4}*/}
+            {/*                    autoload={true}*/}
+            {/*                    value={shippingAddress.daAddress}*/}
+            {/*                    onChange={setAddress}*/}
+            {/*                    filterFromBound="city"*/}
+            {/*                    filterToBound="flat"*/}
+            {/*                    filterLocations={[{country}]}*/}
+            {/*                />*/}
+
+            {/*            </Form.Group>*/}
+
+            {/*            <Form.Group controlId="postalcode">*/}
+            {/*                <Form.Label>Индекс<span*/}
+            {/*                    style={{'fontSize': '10px'}}> Заполняется автоматически</span></Form.Label>*/}
+            {/*                <Form.Control*/}
+            {/*                    onChange={setPostalcode}*/}
+            {/*                    type="text"*/}
+            {/*                    disabled*/}
+            {/*                    value={postalcode ? postalcode : ""}*/}
+            {/*                ></Form.Control>*/}
+            {/*            </Form.Group>*/}
+            {/*        </Col>*/}
+            {/*        <Col className="text-end ">*/}
+            {/*            <FormGroup>*/}
+            {/*                <FormLabel className="my-3 mb-5 d-flex justify-content-center">*/}
+            {/*                    <h4>Способ доставки</h4>*/}
+            {/*                </FormLabel>*/}
+            {/*                /!*<Row>*!/*/}
+            {/*                <FormCheck*/}
+            {/*                    className="mb-1 mx-3 d-flex float-start"*/}
+            {/*                    defaultChecked={shippingAddress.shippmentMethod === 'mskCur'}*/}
+            {/*                    // as='button'*/}
+            {/*                    type="radio"*/}
+            {/*                    label="По Москве - курьером"*/}
+            {/*                    id="mskCur"*/}
+            {/*                    name="shipmentMethod"*/}
+            {/*                    onChange={(e) =>*/}
+            {/*                        setShippmentMethod(e.target.id)*/}
+            {/*                    }*/}
+            {/*                ></FormCheck>*/}
+            {/*                /!*</Row>*!/*/}
+            {/*                /!*<Row className="justify-content-right">*!/*/}
+            {/*                <FormCheck*/}
+            {/*                    className="my-3 mb-1 mx-3 d-flex justify-content-center"*/}
+            {/*                    defaultChecked={shippingAddress.shippmentMethod === 'mskSelf'}*/}
+            {/*                    type="radio"*/}
+            {/*                    label="По Москве - самовывоз"*/}
+            {/*                    id="mskSelf"*/}
+            {/*                    name="shipmentMethod"*/}
+            {/*                    onChange={(e) =>*/}
+            {/*                        setShippmentMethod(e.target.id)*/}
+            {/*                    }*/}
+            {/*                ></FormCheck>*/}
+            {/*                /!*</Row>*!/*/}
+            {/*                /!*<Row className="justify-content-right">*!/*/}
+            {/*                <FormCheck*/}
+            {/*                    className="my-3 mb-1 mx-3 d-flex float-start"*/}
+            {/*                    type="radio"*/}
+            {/*                    defaultChecked={shippingAddress.shippmentMethod === 'pochtaRf'}*/}
+            {/*                    label="Почта России"*/}
+            {/*                    id="pochtaRf"*/}
+            {/*                    name="shipmentMethod"*/}
+            {/*                    onChange={(e) =>*/}
+            {/*                        setShippmentMethod(e.target.id)*/}
+            {/*                    }*/}
+            {/*                ></FormCheck>*/}
+            {/*                /!*</Row>*!/*/}
+            {/*                /!*<Row className="justify-content-right">*!/*/}
+            {/*                <FormCheck*/}
+            {/*                    className="my-3 mb-1 mx-3 d-flex justify-content-center"*/}
+            {/*                    defaultChecked={shippingAddress.shippmentMethod === 'sdek'}*/}
+            {/*                    type="radio"*/}
+            {/*                    label="СДЭК - по России"*/}
+            {/*                    id="sdek"*/}
+            {/*                    name="shipmentMethod"*/}
+            {/*                    onChange={(e) =>*/}
+            {/*                        setShippmentMethod(e.target.id)*/}
+            {/*                    }*/}
+            {/*                ></FormCheck>*/}
+            {/*                /!*</Row>*!/*/}
+            {/*            </FormGroup>*/}
+            {/*        </Col>*/}
+            {/*    </Row>*/}
+            {/*    <Button type="submit" variant="primary" className="text-center">*/}
+            {/*        Продолжить*/}
+            {/*    </Button>*/}
+            {/*</Form>*/}
+                </Container>
+                </>}
+        </>
+
+    )
+        ;
 }
 
 export default ShippingScreen;

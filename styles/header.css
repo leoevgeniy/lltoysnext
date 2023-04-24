@@ -1,5 +1,6 @@
 .header .navbar {
-    background-color: #e5097f;
+    background-color: #1281e3;
+    /*background-color: #e5097f;*/
     --bs-navbar-color: rgba(255, 255, 255);
     --bs-navbar-hover-color: rgba(255, 255, 255, 0.75);
     font-size: x-large;
