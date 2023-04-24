@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -15,7 +17,24 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
-
+.categ .old-price {
+  color: #707f8d;
+  font-size: 14px;
+  line-height: 18px;
+  position: relative;
+  white-space: nowrap;
+}
+.categ .old-price::before {
+  background: var(--bs-red);
+  content: "";
+  display: block;
+  height: 1px;
+  left: 0;
+  position: absolute;
+  top: 50%;
+  transform: rotate(-3deg);
+  width: 100%;
+}
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(

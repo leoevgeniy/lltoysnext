@@ -62,11 +62,8 @@ const Category = ({pageProps}) => {
         if (localStorage.getItem('oppenedItems')) {
             setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))
         }
-
-    }, [])
-    useEffect(() => {
-        // dispatch(listCategoryProducts(id))
         dispatch(listTopProducts())
+
 
     }, [])
     useEffect(() => {

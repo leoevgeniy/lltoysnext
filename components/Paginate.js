@@ -49,6 +49,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
     //     keyword = '?keyword='
     // }
     return (
+
         <div style={{display: "flex", justifyContent: "center"}}>
             {pages > 1 && page > 10 && (
                 <Pagination>
@@ -77,7 +78,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                             }/>
                     </span>
                     {[...Array(pages).keys()].map(function (x) {
-                        if (x + 1 >= page - 5 && x + 1 <= page + 5) {
+                        if (x + 1 >= page - 2 && x + 1 <= page + 2) {
                             return (
                                 <span
                                     key={x + 1}
@@ -102,22 +103,22 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                         }
                         return null;
                     })}
-                    {page + 6 <= pages && (
+                    {page + 3 <= pages && (
                         <span
-                            key={page + 6}
+                            key={page + 3}
 
                         >
                             <Pagination.Ellipsis
                                 href={
                                     !isAdmin
-                                        ? `${keyword}?page=${page + 6}`
+                                        ? `${keyword}?page=${page + 3}`
                                         : `/admin/productlist/${keyword}?page=${
-                                            page + 6
+                                            page + 3
                                         }`
                                 }/>
                         </span>
                     )}
-                    {page + 7 <= pages && (
+                    {page + 4 <= pages && (
                         <span
                             key={pages}
 
@@ -137,7 +138,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
             {pages > 1 && page < 11 && (
                 <Pagination>
                     {[...Array(pages).keys()].map((x) => {
-                        if (x + 1 <= page + 5) {
+                        if (x + 1 <= page + 3) {
                             return (
                                 <span
                                     key={x + 1}
@@ -163,14 +164,14 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                         }
                         return null;
                     })}
-                    {page + 6 <= pages && (
+                    {page + 4 <= pages && (
                         <span
-                            key={page + 10}
+                            key={page + 4}
                         >
                                 <Pagination.Ellipsis
                                     href={
                                         !isAdmin
-                                            ? `${keyword}?page=${page + 10}`
+                                            ? `${keyword}?page=${page + 4}`
                                             : `/admin/productlist/${keyword}?page=${
                                                 page + 6
                                             }`
@@ -178,7 +179,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                                 />
                         </span>
                     )}
-                    {page + 7 <= pages && (
+                    {page + 5 <= pages && (
                         <span
                             key={pages}
 

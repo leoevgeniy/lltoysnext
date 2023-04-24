@@ -10,6 +10,7 @@ import Modal from "react-bootstrap/Modal";
 import validator from "validator";
 import axios from "axios";
 import {useRouter, useSearchParams} from "next/navigation";
+import {API_HOST} from "@/consts";
 
 function LoginScreen() {
     const [email, setEmail] = useState('')
@@ -73,10 +74,10 @@ function LoginScreen() {
             // Изменил state
 
             try {
-                await axios.get(`/api/users/profile/exist?phone=${phone_number}`)
+                await axios.get(`${API_HOST}/api/users/profile/exist?phone=${phone_number}`)
                     .then(async exist => {
                         exist.data['detail'] ? setAxiosError(exist.data['detail']) :
-                            await axios.get(`/api/users/phone_confirmation?phone=${phone_number}&key=iKa0EzMTcxYzNSuPgKecMEZt0K948dP0&service_id=450214`)
+                            await axios.get(`${API_HOST}/api/users/phone_confirmation?phone=${phone_number}&key=iKa0EzMTcxYzNSuPgKecMEZt0K948dP0&service_id=450214`)
                                 .then(response => {
                                     setReceivedCode(response.data['code'])
                                     setIsValidPhone(true)

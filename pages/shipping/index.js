@@ -208,38 +208,7 @@ function ShippingScreen() {
                                 filterLocations={[{country}]}
                             />
 
-                            {/* <Form.Control
-                                required
-                                type="text"
-                                placeholder="Введите город"
-                                value={city ? city : ""}
-                                onChange={(e) => setCity(e.target.value)}
-                            ></Form.Control> */}
                         </Form.Group>
-                        {/*<Form.Group controlId="address">*/}
-                        {/*    <Form.Label>Адрес</Form.Label>*/}
-                        {/*    <AddressSuggestions*/}
-                        {/*        token={TOKEN}*/}
-                        {/*        value={address}*/}
-                        {/*        onChange={setAddress}*/}
-                        {/*        filterFromBound="street"*/}
-                        {/*        filterToBound="house"*/}
-                        {/*        filterLocations={[{city_with_type: city.value}]}*/}
-                        {/*        renderOption={(suggestions) => {*/}
-                        {/*            const {street, house, block, flat, postal_code} = suggestions.data*/}
-                        {/*            setPostalcode(postal_code)*/}
-                        {/*            setAddress(suggestions.value)*/}
-                        {/*        }}*/}
-                        {/*    />*/}
-                            {/*<Form.Control*/}
-                            {/*    required*/}
-                            {/*    id='address'*/}
-                            {/*    type="text"*/}
-                            {/*    placeholder="Введите адрес"*/}
-                            {/*    value={address ? address : ""}*/}
-                            {/*    onChange={(e) => setAddress(e.target.value)}*/}
-                            {/*></Form.Control>*/}
-                        {/*</Form.Group>*/}
 
                         <Form.Group controlId="postalcode">
                             <Form.Label>Индекс<span style={{'fontSize': '10px'}}> Заполняется автоматически</span></Form.Label>
@@ -258,7 +227,7 @@ function ShippingScreen() {
                             </FormLabel>
                             {/*<Row>*/}
                                 <FormCheck
-                                    className="mb-1 mx-3 d-flex justify-content-center"
+                                    className="mb-1 mx-3 d-flex float-start"
                                     defaultChecked={shippingAddress.shippmentMethod==='mskCur'}
                                     // as='button'
                                     type="radio"
@@ -285,7 +254,7 @@ function ShippingScreen() {
                             {/*</Row>*/}
                             {/*<Row className="justify-content-right">*/}
                                 <FormCheck
-                                    className="my-3 mb-1 mx-3 d-flex justify-content-center"
+                                    className="my-3 mb-1 mx-3 d-flex float-start"
                                     type="radio"
                                     defaultChecked={shippingAddress.shippmentMethod==='pochtaRf'}
                                     label="Почта России"

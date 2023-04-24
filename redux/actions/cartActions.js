@@ -12,7 +12,6 @@ export const addToCart = (id, qty, color, size, ind, discount) => async (dispatc
     const {data} = await axios.get(`${API_HOST}/api/products/${id}`)
     let countInStock = data.countInStock
     let aID = data.aID
-    console.log(data)
     // if (data.assortiment.length === 1 && !data.assortiment[0].color && !data.assortiment[0].size) {
     //     countInStock = data.assortiment[0].countInStock
     //     aID = data.assortiment[0].aID
@@ -47,6 +46,7 @@ export const addToCart = (id, qty, color, size, ind, discount) => async (dispatc
             name: data.name,
             image: data.imageSmall,
             price: Number(data.retailPrice).toFixed(0),
+            oldPrice: Number(data.baseRetailPrice).toFixed(0),
             discountPrice : (Number(data.retailPrice).toFixed(0) * (1 - discount)).toFixed(0),
             countInStock,
             aID,

@@ -80,7 +80,10 @@ export default function Header(props) {
                             {catalogItems.map((item, n) => (
                                 <Accordion.Item eventKey={n} key={n}>
                                     <Accordion.Header key={n}>
-                                        <p className='firstTitle'>{item[0]}</p>
+                                        <p onClick={() => {
+                                            catalogFiltered()
+                                            history.push(`/category/${item[0]}`).then(r => {})
+                                        }} className='firstTitle'>{item[0]}</p>
                                     </Accordion.Header>
                                     {item[1].map((subItem, i) => (
                                         <Accordion.Body key={i}>
@@ -201,7 +204,6 @@ export default function Header(props) {
                             </Link>
 
                         </Nav>
-
 
 
                     </Navbar.Collapse>

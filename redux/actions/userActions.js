@@ -47,7 +47,6 @@ export const phoneLogin = (phone, password) => async (dispatch) => {
 }
 export const reduxLogin = () => (dispatch) => {
     try{
-        console.log('asfa')
         const data = JSON.parse(localStorage.getItem('userInfo'))
         dispatch({
             type: t.USER_REDUX_LOGIN_SUCCESS,

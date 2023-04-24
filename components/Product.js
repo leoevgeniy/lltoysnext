@@ -7,24 +7,16 @@ import {PRODUCT_DETAILS_RESET} from "@/redux/types";
 import {addToCart} from "@/redux/actions/cartActions";
 import {useDispatch} from "react-redux";
 import {useRouter} from "next/router";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCreditCard} from "@fortawesome/free-solid-svg-icons";
 
 function Product({product}) {
     const dispatch = useDispatch();
     let price = Number(product.retailPrice)
     const rPrice = Number(product.baseRetailPrice)
     const [qty, setQty] = useState(1);
-    const [color, setColor] = useState(Object.keys(product.colors)[0])
-    // console.log(product.colors[0]);
-    // console.log(Object.keys(product.colors[0])[0]);
-    const [size, setSize] = useState('')
-    // useState(product.colors[0][Object.keys(product.colors[0])][0])
-    useEffect(() => {
-        if (product.colors[0]) {
-            setSize(product.colors[0][Object.keys(product.colors[0])][0])
-        }
-
-
-    }, [])
+    // const [color, setColor] = useState(Object.keys(product.colors)[0])
+    // const [size, setSize] = useState('')
     function move_to_cart(picture, cart) {
 
         let picture_pos = document.getElementById(picture).getBoundingClientRect();
@@ -48,8 +40,8 @@ function Product({product}) {
         void picture2.offsetWidth;
         picture2.style.transform = "translateX(" + delta_x + "px)";
         picture2.style.transform += "translateY(" + delta_y + "px)";
-        picture2.style.transform += "scale(0.25)"; // уменьшаем до 25%
-        picture2.style.transition = "1s"; // всё происходит за 1 секунду
+        picture2.style.transform += "scale(1.50)"; // уменьшаем до 25%
+        picture2.style.transition = "2s"; // всё происходит за 1 секунду
 
         setTimeout(() => document.body.removeChild(picture2), 960);
     }
@@ -64,32 +56,38 @@ function Product({product}) {
     }
     const addToCartHandler = (e) => {
         e.preventDefault()
-        dispatch(addToCart(product._id, qty, color, size, 'undefined', 0.1))
+        const sendColor = Object.keys(product.colors[0])[0] || ''
+        dispatch(addToCart(product._id, qty, sendColor,'', 'undefined', 0.1))
         dispatch({type: PRODUCT_DETAILS_RESET})
 
-        move_to_cart('toCart', 'cart')
+        // move_to_cart('toCart', 'cart')
     }
     const history = useRouter()
+
     function getRandomArbitrary(min, max) {
         return Math.random() * (max - min) + min;
     }
 
-    const oldPrice = product.superSaleCost ? (price * getRandomArbitrary(3,4)).toFixed(0) : (price * getRandomArbitrary(1.3,1.8)).toFixed(0)
+    // const oldPrice = product.superSaleCost ? (price * getRandomArbitrary(3,4)).toFixed(0) : (price * getRandomArbitrary(1.3,1.8)).toFixed(0)
+    const oldPrice = (rPrice > price) ? Number(rPrice).toFixed(0) : price
     const srcLink = `https://feed.p5s.ru/images/mid/${cat}/mid_${product.prodId}.jpg`
     const priceStyle = 'text-lowercase fw-bold card-buy d-inline-block text-start py-0 fs-6'
     // const assortimentBool = (product.colors[0] && Object.keys(product.colors[0])[0] && Object.keys(product.colors[0])[0] != 'цвет не указан') && product.colors[0][Object.keys(product.colors[0])[0]] !== ''
     return (
         <Card itemScope itemType="http://schema.org/Product" className='my-1 py-0 h-100 rounded cardstyle head'
-              >
-            <Card.Img
-                onClick={() => history.push(`/products/${product._id}`)}
-                src={srcLink}
-                alt={product.name}
-            />
-            {<Badge pill bg={product.superSaleCost ? 'danger':'success'} className={product.superSaleCost ? 'price text-bg-danger' : 'price text-bg-success'}
-                                  style={{'top': '1px', 'right': '1px', 'fontSize': '13px', 'width':'17%'}}>
-                - {((1-(price/oldPrice))* 100).toFixed(0)} %
-            </Badge>}
+        >
+            <div className='cardimg'>
+                <Card.Img
+                    onClick={() => history.push(`/products/${product._id}`)}
+                    src={srcLink}
+                    alt={product.name}
+                />
+
+
+                {(rPrice > price && (1 - (price / rPrice)) > 0.04) && <Badge pill bg='danger' className='badge'>
+                    - {((1 - (price / oldPrice)) * 100).toFixed(0)} %
+                </Badge>}
+            </div>
 
             <Card.Body itemProp="offers" itemScope itemType="http://schema.org/Offer"
 
@@ -106,8 +104,14 @@ function Product({product}) {
                     <meta itemProp="priceCurrency" content="RUB"/>
                     <span
                         className={product.superSaleCost ? 'price text-bg-danger fs-3' : 'price text-bg-success fs-3'}> ₽ {price.toFixed(0)} </span>
-                    <span
-                        className='old-price'> ₽ {oldPrice} </span>
+                    {(rPrice > price) &&
+                        <span
+                            className='old-price'> ₽ {oldPrice}
+
+                    </span>}
+                    <Badge pill bg='success' className='badgeCard float-end'>
+                        <FontAwesomeIcon icon={faCreditCard}/> - 10%
+                    </Badge>
                 </p>
                 {/*</Card.Title>*/}
                 <span onClick={() => history.push(`/products/${product._id}`)}
@@ -120,7 +124,7 @@ function Product({product}) {
                 {product.colors[0][Object.keys(product.colors[0])][0] === '' &&
                     <span
                         id='toCart'
-                        className='picture asButton w-50 text-center mt-1 mb-1 pl-0'
+                        className='picture asButton text-center mt-1 mb-1 pl-0'
                         onClick={addToCartHandler}
                     >В корзину</span>}
 
