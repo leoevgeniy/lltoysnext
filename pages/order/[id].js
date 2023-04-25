@@ -158,9 +158,9 @@ function OrderScreen({pageProps}) {
                 },
             });
             //
-            checkout.on('modal_close', () => {
-                dispatch(payOrderDetails(order, userInfo));
-            })
+            // checkout.on('modal_close', () => {
+            //     dispatch(payOrderDetails(order, userInfo));
+            // })
             checkout.render().then(() => {
                 setSdkReady(false);
             });
