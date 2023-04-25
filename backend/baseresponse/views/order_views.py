@@ -20,10 +20,9 @@ from baseresponse.serializers import OrderSerializer, ProfileSerializer, Payment
 @permission_classes([IsAuthenticated])
 def addOrderItems(request):
     user = request.user
-    print(user)
     data = request.data
     orderItems = data['orderItems']
-
+    print(data)
     if orderItems and len(orderItems) == 0:
         return Response({'detail': 'Нет товара в заказе'}, status=status.HTTP_400_BAD_REQUEST)
     else:
@@ -54,6 +53,7 @@ def addOrderItems(request):
         for i in orderItems:
             product = Product.objects.get(_id=i['product'])
             if data['paymentMethod'] == 'bankCard':
+                print(i)
                 item = OrderItem.objects.create(
                     product=product,
                     aID=i['aID'],
@@ -442,6 +442,7 @@ def PaymentDetails(request, pk):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def PaymentRequest(request, pk):
+    print(request.data)
     Configuration.account_id = '943529'
     Configuration.secret_key = 'live_6LB64qd7LospKObEfmOcCO7XgcofzLG3aHerB3Xlt9o'
     idempotence_key = str(uuid.uuid4())
