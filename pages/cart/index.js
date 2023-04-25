@@ -72,7 +72,6 @@ function Index({pageProps}) {
         .reduce((acc, item) => acc + item.discountPrice * item.qty, 0)
         .toFixed(0);
     // const {products: data} = useSelector((state) => state.productsTopRated)
-    console.log(totalQty, totalPrice, totalOldPrice)
     const {products: seenProducts} = useSelector((state) => state.productsSeen)
 
     return (

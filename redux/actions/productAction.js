@@ -26,7 +26,6 @@ export const listProducts = (keyword = '', sort = '', vendor = '', collection = 
             dispatch({type: t.PRODUCT_LIST_REQUEST});
             const {data} = await axios.get(`${API_HOST}/api/products${keyword}${sort}${filterColumn}`);
             data['filter'] = filter
-            console.log(data)
             dispatch({
                 type: t.PRODUCT_LIST_SUCCESS,
                 payload: data,

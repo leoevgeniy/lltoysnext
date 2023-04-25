@@ -43,7 +43,6 @@ function ProductsFilter(props) {
     //     if (catalog && category) {
     //         catList.push(catalog[category])
     //     }
-    //     console.log(catalog[category], category)
     // },[catalog])
     const HandleFiltersErase = () => {
         setMoreVendors(false)

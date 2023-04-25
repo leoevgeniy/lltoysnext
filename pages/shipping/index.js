@@ -28,6 +28,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCreditCard} from "@fortawesome/free-solid-svg-icons";
 import {TextInput} from "react-native-web";
 import {createOrder} from "@/redux/actions/orderActions";
+import {ORDER_CREATE_RESET} from "@/redux/typesOrders";
 
 function ShippingScreen() {
     const router = useRouter()
@@ -46,9 +47,9 @@ function ShippingScreen() {
     const [shippmentMethod, setShippmentMethod] = useState('pochtaRf');
     const [comments, setComments] = useState('')
     const {order} = useSelector(state => state.orderCreate)
-    const orderId = order._id
     useEffect(() => {
         router.isReady ? setIsLoading(false) : ''
+        dispatch({type: ORDER_CREATE_RESET});
     }, [])
 
     const {cartItems} = cart
@@ -139,6 +140,7 @@ function ShippingScreen() {
     //   }
     // }
     let shipingAddress = {}
+    const [submitted, setSubmitted] = useState('false')
     const submitHandler = async (e) => {
         e.preventDefault();
         if (shippmentMethod === 'pochtaRf') {
@@ -215,14 +217,27 @@ function ShippingScreen() {
                 comments: comments
             })
         );
+        // history.push(`/order/${order._id}`)
 
-        await history.push(`/order/${orderId}`)
+
+        // setSubmitted(true)
     };
     useEffect(() => {
         if (typeof address === "object") {
             setPostalcode(address.data.postal_code)
         }
+        // console.log(submitted)
+        // if (submitted) {
+        //     console.log('In',submitted)
+        //
+        //     history.push(`/order/${order._id}`)
+        // }
     }, [address])
+    useEffect(() => {
+        try {
+            history.push(`/order/${order._id}`)
+        } catch {}
+    },[order])
     const [paymentMethod, setPaymentMethod] = useState('bankCard');
     const totalQty = (cartItems.reduce((acc, item) => acc + Number(item.qty), 0))
     const totalOldPrice = cartItems.reduce((acc, item) => acc + Number(item.qty) * ((Number(item.oldPrice) > Number(item.price)) ? Number(item.oldPrice) : Number(item.price)), 0).toFixed(0)

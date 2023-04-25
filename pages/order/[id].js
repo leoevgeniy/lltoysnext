@@ -70,17 +70,19 @@ function OrderScreen({pageProps}) {
     //         .toFixed(0);
     // }
 
-    // function yookassaaddScript() {
-    //     const script = document.createElement("script");
-    //     script.src =
-    //         "https://yookassa.ru/checkout-widget/v1/checkout-widget.js";
-    //     script.async = true; // чтобы гарантировать порядок
-    //     document.body.appendChild(script);
-    // }
+    function yookassaaddScript() {
+        const script = document.createElement("script");
+        script.src =
+            "https://yookassa.ru/checkout-widget/v1/checkout-widget.js";
+        // script.async = true; // чтобы гарантировать порядок
+        document.body.appendChild(script);
+    }
+
+    useEffect(()=> {
+        yookassaaddScript();
+
+    },[])
     //
-    // yookassaaddScript();
-    //
-    // //
 
     useEffect(() => {
         if (!userInfo) {
@@ -139,27 +141,34 @@ function OrderScreen({pageProps}) {
         }
         if (!loading && order.paymentMethod === "bankCard" && sdkReady) {
             const confirmation_token = response.confirmation_url;
+            const payMethod = response.paymentMethod === 'sbp' ? 'sbp' : ''
             const checkout = new window.YooMoneyCheckoutWidget({
                 confirmation_token: confirmation_token, //Токен, который перед проведением оплаты нужно получить от ЮKassa
-                return_url: "http://lltoys.ru/" + cururl, //Ссылка на страницу завершения оплаты
+                return_url: "http://lltoys.ru" + cururl, //Ссылка на страницу завершения оплаты
 
                 //Настройка виджета
                 customization: {
                     //Настройка способа отображения
+                    // payment_method: ['bank_card', 'yoo_money', 'sberbank', 'sbp'],
                     modal: true,
                 },
                 error_callback: function (error) {
+                    console.log(error)
                     setSdkReady(false);
                 },
             });
+            //
+            checkout.on('modal_close', () => {
+                dispatch(payOrderDetails(order, userInfo));
+            })
             checkout.render().then(() => {
                 setSdkReady(false);
             });
         }
 
-        // if (!loading && order && order.paymentMethod === "bankCard") {
-        //     dispatch(payOrderDetails(order, userInfo));
-        // }
+        if (!loading && order) {
+            dispatch(payOrderDetails(order, userInfo));
+        }
         setCururl(history.asPath);
         // eslint-disable-next-line
     }, [
@@ -181,6 +190,8 @@ function OrderScreen({pageProps}) {
     };
 
     const paymentInitialization = () => {
+        // dispatch(payOrderDetails(order, userInfo));
+
         dispatch(
             payOrderRequest(order, userInfo, "http://lltoys.ru/" + cururl, () =>
                 setSdkReady(true)

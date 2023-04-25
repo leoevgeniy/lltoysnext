@@ -153,7 +153,7 @@ function OrderScreen({ match, history }) {
             });
         }
 
-        if (!loading && order && order.paymentMethod == "bankCard") {
+        if (!loading && order && order.paymentMethod === "bankCard") {
             dispatch(payOrderDetails(order, userInfo));
         }
         setCururl(history.location.pathname);
