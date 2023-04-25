@@ -22,7 +22,6 @@ def addOrderItems(request):
     user = request.user
     data = request.data
     orderItems = data['orderItems']
-    print(data)
     if orderItems and len(orderItems) == 0:
         return Response({'detail': 'Нет товара в заказе'}, status=status.HTTP_400_BAD_REQUEST)
     else:
@@ -53,7 +52,6 @@ def addOrderItems(request):
         for i in orderItems:
             product = Product.objects.get(_id=i['product'])
             if data['paymentMethod'] == 'bankCard':
-                print(i)
                 item = OrderItem.objects.create(
                     product=product,
                     aID=i['aID'],
@@ -406,16 +404,21 @@ def PaymentDetails(request, pk):
     Configuration.secret_key = 'live_6LB64qd7LospKObEfmOcCO7XgcofzLG3aHerB3Xlt9o'
     order = request.data['order']
     user = request.data['userDetails']
+
     if Payment.objects.filter(order_id=order['_id']).exists():
         payment = Payment.objects.get(order_id=order['_id'])
-        res = yooPayment.find_one(payment.payment_id)
+        order = Order.objects.get(_id=order['_id'])
 
+        res = yooPayment.find_one(payment.payment_id)
+        if res.payment_method == 'sbp' and not order.isPaid:
+            payment.payment_method = res.payment_method.type
         if res.cancellation_details:
             payment.status = res.status
             payment.save()
             return Response(res.status)
+        if res.payment_method:
+            payment.payment_method = res.payment_method.type
         if res.paid:
-            order = Order.objects.get(_id=order['_id'])
             payment.amount = res.amount.value
             payment.captured_at = res.captured_at
             payment.income_amount = res.income_amount.value
@@ -428,11 +431,13 @@ def PaymentDetails(request, pk):
             payment.payment_card_data_expiry_year = res.payment_method.card.expiry_year
             payment.payment_card_data_issuer_country = res.payment_method.card.issuer_country
             payment.payment_method_title = res.payment_method.title
+            payment.payment_method = res.payment_method.type
             order.isPaid = res.paid
             order.paidAt = res.captured_at
             payment.status = res.status
-            payment.save()
             order.save()
+        payment.save()
+
         serializer = PaymentSerializer(payment, many=False)
         return Response(serializer.data)
     else:
@@ -442,7 +447,6 @@ def PaymentDetails(request, pk):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def PaymentRequest(request, pk):
-    print(request.data)
     Configuration.account_id = '943529'
     Configuration.secret_key = 'live_6LB64qd7LospKObEfmOcCO7XgcofzLG3aHerB3Xlt9o'
     idempotence_key = str(uuid.uuid4())
@@ -491,7 +495,7 @@ def PaymentRequest(request, pk):
                     },
                     "items": items,
                 },
-                "carture": True,
+                # "carture": False,
                 # 'payment_method_data': {
                 #     'type': 'bank_card'
                 # },
@@ -506,6 +510,7 @@ def PaymentRequest(request, pk):
     if not Payment.objects.filter(order_id=order['_id']).exists():
         items = itemsCreate()
         res = yooRequest(items)
+
         confirmation_token = res.confirmation.confirmation_token
         payment = Payment.objects.create(
             order_id=order['_id'],
@@ -523,10 +528,11 @@ def PaymentRequest(request, pk):
         )
     else:
         payment = Payment.objects.get(order_id=order['_id'])
-        if payment.status == 'canceled':
+        # if not order.isPaid and payment.payment_method == 'sbp':
+        if payment.status == 'canceled' or (not order['isPaid'] and payment.payment_method == 'sbp'):
             payment.delete()
             items = itemsCreate()
-            res = yooRequest()
+            res = yooRequest(items)
             confirmation_token = res.confirmation.confirmation_token
             payment = Payment.objects.create(
                 order_id=order['_id'],

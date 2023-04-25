@@ -241,7 +241,6 @@ def getTopProducts(request):
 
 @api_view(['POST'])
 def getSeenProducts(request):
-    print(request.data)
     ids = request.data['oppenedItems']
     products = Product.objects.filter(Q(assortiment__countInStock__gt=0) & Q(prodId__in=ids)).distinct()
     serializer = ProductSerializer(products, many=True)

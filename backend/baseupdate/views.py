@@ -35,7 +35,6 @@ def migrateProduct(request):
         productsArr = {product.prodId: product for product in allProducts}
         product_assortiment = {p_assortiment.aID: p_assortiment for p_assortiment in allAssortiment}
         db.close_old_connections()
-        print(len(productsArr), len(product_assortiment))
         for row in reader:
 
             if productsArr.get(row[0]):
@@ -124,7 +123,6 @@ def migrateProduct(request):
                 created += 1
                 createdvar += 1
             if createdvar > 20000 or updatedvar > 20000:
-                print(len(products), len(assort), len(productsToUpdate), len(assortToUpdate))
                 createdvar = 0
                 updatedvar = 0
                 Product.objects.bulk_create(products)
@@ -133,20 +131,17 @@ def migrateProduct(request):
                 Assortiment.objects.bulk_update(assortToUpdate, fields=['countInStock', 'shippingDate'])
                 Category.objects.bulk_create(category)
                 db.close_old_connections()
-                print('sql closed')
                 products = []
                 assort = []
                 category = []
                 productsToUpdate = []
                 assortToUpdate = []
-    print('FINAL', len(products), len(assort), len(productsToUpdate), len(assortToUpdate))
     Product.objects.bulk_create(products)
     Assortiment.objects.bulk_create(assort)
     Product.objects.bulk_update(productsToUpdate, fields=['retailPrice'])
     Assortiment.objects.bulk_update(assortToUpdate, fields=['countInStock', 'shippingDate'])
     Category.objects.bulk_create(category)
     db.close_old_connections()
-    print('final sql closed')
     subject = 'Обновление номенклатуры'
     message = f'{updated} товаров обновились в Магазине радости. {created} было добавлено '
     email_from = settings.EMAIL_HOST_USER
@@ -162,7 +157,6 @@ def updateStock(request):
     urllib.request.urlretrieve(url, destination)
     productsArr = {product.prodId: product for product in Product.objects.all()}
     product_assortiment = {p_assortiment.aID: p_assortiment for p_assortiment in Assortiment.objects.all()}
-    print(len(productsArr), len(product_assortiment))
     db.close_old_connections()
     productsToUpdate = []
     assortToUpdate = []
@@ -184,14 +178,12 @@ def updateStock(request):
                 count = 0
                 Product.objects.bulk_update(productsToUpdate, fields=['retailPrice'])
                 Assortiment.objects.bulk_update(assortToUpdate, fields=['countInStock', 'shippingDate'])
-                print(len(productsArr), len(product_assortiment))
                 db.close_old_connections()
 
                 productsToUpdate = []
                 assortToUpdate = []
         Product.objects.bulk_update(productsToUpdate, fields=['retailPrice'])
         Assortiment.objects.bulk_update(assortToUpdate, fields=['countInStock', 'shippingDate'])
-        print(len(productsArr), len(product_assortiment))
         db.close_old_connections()
 
     subject = 'Информация об обновлении остатков'
