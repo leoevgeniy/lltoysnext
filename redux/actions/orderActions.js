@@ -38,6 +38,7 @@ import {CART_CLEAR_ITEMS} from "@/redux/typesCart";
 import {API_HOST} from "@/consts";
 
 export const createOrder = (order) => async (dispatch, getState) => {
+
     try {
         dispatch({
             type: ORDER_CREATE_REQUEST,
@@ -55,6 +56,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
         };
 
         const {data} = await axios.post(`${API_HOST}/api/order/add/`, order, config);
+
         dispatch({
             type: ORDER_CREATE_SUCCESS,
             payload: data,
@@ -127,7 +129,7 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
         };
 
         const {data} = await axios.get(`${API_HOST}/api/order/${id}/`, config);
-
+        data['itemsPrice'] = data.totalPrice
         // const {deliveryData} = await axios.get(`/api/order/p5sdetails/${id}`, config)
         // Object.assign(data, deliveryData)
         dispatch({
@@ -161,7 +163,6 @@ export const p5sgetOrderDetails = (id) => async (dispatch, getState) => {
             },
         };
         const {data} = await axios.get(`${API_HOST}/api/order/p5sdetails/${id}`, config)
-
         dispatch({
             type: P5S_DETAILS_SUCCESS,
             payload: data,

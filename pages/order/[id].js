@@ -7,11 +7,11 @@ import {
     Card,
     ListGroupItem,
     Button,
-    Form,
+    Form, Container,
 } from "react-bootstrap";
 import Link from 'next/link'
 import Head from 'next/head'
-import {useDispatch, useSelector, getState} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Message from "@/components/Message";
 import Loader from "@/components/Loader";
 import {
@@ -30,14 +30,9 @@ import {
 import {useRouter} from "next/router";
 import Script from "next/script";
 
-const getServerSideProps = (context) => {
-    const id = context.params.id
-    return {props: {id}}
-}
-
 function OrderScreen({pageProps}) {
     const history = useRouter()
-    const orderId = pageProps.id;
+    const {id : orderId} = pageProps;
     const dispatch = useDispatch();
 
     const [sdkReady, setSdkReady] = useState(false);
@@ -69,11 +64,11 @@ function OrderScreen({pageProps}) {
     const userDetails = useSelector((state) => state.userDetails);
     const [cururl, setCururl] = useState("");
 
-    if (!loading && !error) {
-        order.itemsPrice = order.orderItems
-            .reduce((acc, item) => acc + item.price * item.qty, 0)
-            .toFixed(0);
-    }
+    // if (!loading && !error) {
+    //     order.itemsPrice = order.orderItems
+    //         .reduce((acc, item) => acc + item.price * item.qty, 0)
+    //         .toFixed(0);
+    // }
 
     // function yookassaaddScript() {
     //     const script = document.createElement("script");
@@ -162,11 +157,10 @@ function OrderScreen({pageProps}) {
             });
         }
 
-        if (!loading && order && order.paymentMethod == "bankCard") {
-            dispatch(payOrderDetails(order, userInfo));
-        }
-        setCururl(history.pathname);
-
+        // if (!loading && order && order.paymentMethod === "bankCard") {
+        //     dispatch(payOrderDetails(order, userInfo));
+        // }
+        setCururl(history.asPath);
         // eslint-disable-next-line
     }, [
         dispatch,
@@ -199,10 +193,7 @@ function OrderScreen({pageProps}) {
     ) : error ? (
         <Message variant="danger">{error}</Message>
     ) : (
-        <>
-            {/*<Head>*/}
-                <Script src = "https://yookassa.ru/checkout-widget/v1/checkout-widget.js"/>
-            {/*</Head>*/}
+        <Container>
             <div>
                 <h1>Заказ: {order._id}</h1>
                 <Row>
@@ -285,7 +276,7 @@ function OrderScreen({pageProps}) {
                                                     </Col>
                                                     <Col>
                                                         <Link
-                                                            to={`/products/${item.product}`}
+                                                            href={`/products/${item.product}`}
                                                         >
                                                             {item.name}
                                                         </Link>
@@ -339,7 +330,7 @@ function OrderScreen({pageProps}) {
                                 <ListGroupItem>
                                     <Row>
                                         <Col>Товар</Col>
-                                        <Col>₽ {order.itemsPrice}</Col>
+                                        <Col>₽ {Number(order.itemsPrice).toFixed(0)}</Col>
                                     </Row>
                                 </ListGroupItem>
                                 {/*{order.paymentMethod === 'bankCard' &&*/}
@@ -406,8 +397,12 @@ function OrderScreen({pageProps}) {
                     </Col>
                 </Row>
             </div>
-        </>
+        </Container>
     );
+}
+export async function getServerSideProps(context) {
+    const id = context.params.id
+    return {props: {id}}
 }
 
 export default OrderScreen;

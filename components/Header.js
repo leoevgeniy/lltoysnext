@@ -210,7 +210,7 @@ export default function Header(props) {
                     <Navbar.Brand className='d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none'
                                   style={{'height': '70px', 'width': '100px'}}>
                         <Link href="/" onClick={() => setExpanded(false)} className='ms-auto'>
-                            <Image className='logo' src={kuragi} alt='Магазин Куражи'/>
+                            <Image priority className='logo' src={kuragi} alt='Магазин Куражи'/>
                         </Link>
                     </Navbar.Brand>
                     {<Link href='#' onClick={handleShow}

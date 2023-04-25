@@ -16,11 +16,11 @@ import axios from "axios";
 import {API_HOST} from "@/consts";
 
 function Index({pageProps}) {
-    const [sizeChange, setSizeChange] = useState('')
+    // const [sizeChange, setSizeChange] = useState('')
 
     const router = useRouter()
-    const productId = router.query
-    const [amount, setAmount] = useState(0)
+    // const productId = router.query
+    // const [amount, setAmount] = useState(0)
     // const query = useSearchParams();
     // const query = new URLSearchParams(location.search)
     // const [qty, setQty] = useState(Number(query.get('qty')))
@@ -65,14 +65,14 @@ function Index({pageProps}) {
     })
     const totalQty = (cartItems.reduce((acc, item) => acc + Number(item.qty), 0))
     const totalOldPrice = cartItems.reduce((acc, item) => acc + Number(item.qty) * ((Number(item.oldPrice) > Number(item.price)) ? Number(item.oldPrice) : Number(item.price)), 0).toFixed(0)
-    const totalPrice = cartItems.reduce((acc, item) => acc + Number(item.qty) * item.price, 0).toFixed(0)
+    const totalPrice = cartItems.reduce((acc, item) => acc + Number(item.qty) * Number(item.price), 0).toFixed(0)
     const disc = cart.cartItems
         .reduce((acc, item) => acc + item.price * item.qty, 0)
         .toFixed(0) - cart.cartItems
         .reduce((acc, item) => acc + item.discountPrice * item.qty, 0)
         .toFixed(0);
     // const {products: data} = useSelector((state) => state.productsTopRated)
-
+    console.log(totalQty, totalPrice, totalOldPrice)
     const {products: seenProducts} = useSelector((state) => state.productsSeen)
 
     return (
@@ -124,7 +124,7 @@ function Index({pageProps}) {
                                                                     }
 
                                                                 })
-                                                                dispatch(addToCart(item.product, item.qty, e.target.value, defSize, ind))
+                                                                dispatch(addToCart(item.product, item.qty, e.target.value, defSize, ind,0.1))
 
                                                             }}
                                                         >
@@ -151,7 +151,7 @@ function Index({pageProps}) {
                                                             onChange={(e) => {
                                                                 // setColor(e.target.value)
                                                                 // setSize(e.target.value.split(' / ')[1])
-                                                                dispatch(addToCart(item.product, item.qty, item.color, e.target.value, ind))
+                                                                dispatch(addToCart(item.product, item.qty, item.color, e.target.value, ind,0.1))
 
                                                             }}
                                                         >
@@ -266,7 +266,7 @@ function Index({pageProps}) {
                                             {cartItems.reduce((acc, item) => acc + Number(item.qty) * ((Number(item.oldPrice) > Number(item.price)) ? Number(item.oldPrice) : Number(item.price)), 0).toFixed(0)}
                                         </span>
                                     </div>
-                                    { totalOldPrice > totalPrice &&
+                                    { Number(totalOldPrice) > Number(totalPrice) &&
                                         <div className='d-flex justify-content-between'>
                                             <span className='fs-6'>Скидка</span>
                                             <span style={{

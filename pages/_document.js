@@ -1,43 +1,19 @@
 import {Html, Head, Main, NextScript} from 'next/document'
-import React, {useEffect, useState} from "react";
+import React from "react";
+import Script from "next/script";
 export default function Document() {
-    const size = useWindowSize();
-
-
-    function useWindowSize() {
-        // Initialize state with undefined width/height so server and client renders match
-        // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
-        const [windowSize, setWindowSize] = useState({
-            width: undefined,
-            height: undefined,
-        });
-
-        useEffect(() => {
-            // only execute all the code below in client side
-            // Handler to call on window resize
-            function handleResize() {
-                // Set window width/height to state
-                setWindowSize({
-                    width: window.innerWidth,
-                    height: window.innerHeight,
-                });
-            }
-
-            // Add event listener
-            window.addEventListener("resize", handleResize);
-
-            // Call handler right away so state gets updated with initial window size
-            handleResize();
-
-            // Remove event listener on cleanup
-            return () => window.removeEventListener("resize", handleResize);
-        }, []); // Empty array ensures that effect is only run on mount
-        return windowSize;}
-    console.log(size)
-
     return (
         <Html lang="en">
             <Head>
+                <meta
+                    name="viewport"
+                    content="initial-scale=1.0, width=device-width"
+                />
+                <link
+                    rel="stylesheet"
+                    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+                />
+                <script src="https://yookassa.ru/checkout-widget/v1/checkout-widget.js"></script>
             </Head>
             <body id='root'>
             <Main/>

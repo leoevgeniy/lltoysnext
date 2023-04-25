@@ -10,31 +10,32 @@ import {API_HOST} from "@/consts";
 
 export const addToCart = (id, qty, color, size, ind, discount) => async (dispatch, getState) => {
     const {data} = await axios.get(`${API_HOST}/api/products/${id}`)
-    let countInStock = data.countInStock
-    let aID = data.aID
-    // if (data.assortiment.length === 1 && !data.assortiment[0].color && !data.assortiment[0].size) {
-    //     countInStock = data.assortiment[0].countInStock
-    //     aID = data.assortiment[0].aID
-    // } else {
-    //     data.assortiment.forEach(item => {
-    //         if (item.color && item.size) {
-    //             if (item.color === color && item.size.includes(size)) {
-    //                 countInStock = item.countInStock
-    //                 aID = item.aID
-    //             }
-    //         } else if (!item.color && item.size) {
-    //             if (item.size.includes(size)) {
-    //                 countInStock = item.countInStock
-    //                 aID = item.aID
-    //             }
-    //         } else if (item.color && !item.size) {
-    //             if (item.color === color) {
-    //                 countInStock = item.countInStock
-    //                 aID = item.aID
-    //             }
-    //         }
-    //     })
-    // }
+    let countInStock = 0
+        // data.countInStock
+    let aID = ''
+    if (data.assortiment.length === 1) {
+        countInStock = data.assortiment[0].countInStock
+        aID = data.assortiment[0].aID
+    } else {
+        data.assortiment.forEach(item => {
+            if (item.color && item.size) {
+                if (item.color === color && item.size.includes(size)) {
+                    countInStock = item.countInStock
+                    aID = item.aID
+                }
+            } else if (!item.color && item.size) {
+                if (item.size.includes(size)) {
+                    countInStock = item.countInStock
+                    aID = item.aID
+                }
+            } else if (item.color && !item.size) {
+                if (item.color === color) {
+                    countInStock = item.countInStock
+                    aID = item.aID
+                }
+            }
+        })
+    }
     dispatch({
         type: CART_ADD_ITEM,
         payload: {

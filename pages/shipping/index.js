@@ -26,6 +26,8 @@ import deliveryCard from '@/public/deliveryCard.webp'
 import {faRub} from "@fortawesome/free-solid-svg-icons/faRub";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCreditCard} from "@fortawesome/free-solid-svg-icons";
+import {TextInput} from "react-native-web";
+import {createOrder} from "@/redux/actions/orderActions";
 
 function ShippingScreen() {
     const router = useRouter()
@@ -41,12 +43,14 @@ function ShippingScreen() {
     const [address, setAddress] = useState(shippingAddress.daAddress);
     const [postalcode, setPostalcode] = useState(shippingAddress.postalcode);
     const [country, setCountry] = useState('Россия');
-    const [shippmentMethod, setShippmentMethod] = useState(
-        shippingAddress.shippmentMethod
-    );
+    const [shippmentMethod, setShippmentMethod] = useState('pochtaRf');
+    const [comments, setComments] = useState('')
+    const {order} = useSelector(state => state.orderCreate)
+    const orderId = order._id
     useEffect(() => {
         router.isReady ? setIsLoading(false) : ''
     }, [])
+
     const {cartItems} = cart
 
 
@@ -134,11 +138,12 @@ function ShippingScreen() {
     //           .catch((error) => console.log("error", error))
     //   }
     // }
-    const submitHandler = (e) => {
+    let shipingAddress = {}
+    const submitHandler = async (e) => {
         e.preventDefault();
         if (shippmentMethod === 'pochtaRf') {
             // shipmentCostCalculation(shippmentMethod)
-            dispatch(
+            await dispatch(
                 saveShippingAddress({
                     city: address.value.split(',')[0],
                     address: address.value,
@@ -149,8 +154,8 @@ function ShippingScreen() {
                 })
             );
         } else if (shippmentMethod === 'mskCur') {
-            dispatch(saveShippingCost(300))
-            dispatch(
+            await dispatch(saveShippingCost(300))
+            await dispatch(
                 saveShippingAddress({
                     city: address.value.split(',')[0],
                     address: address.value,
@@ -161,8 +166,9 @@ function ShippingScreen() {
                 })
             )
         } else if (shippmentMethod === 'mskSelf') {
-            dispatch(saveShippingCost(0))
-            dispatch(
+            await dispatch(saveShippingCost(0))
+
+            await dispatch(
                 saveShippingAddress({
                     city: address.value.split(',')[0],
                     address: address.value,
@@ -174,7 +180,7 @@ function ShippingScreen() {
             )
         } else if (shippmentMethod === 'sdek') {
             // shipmentCostCalculation(shippmentMethod)
-            dispatch(
+            await dispatch(
                 saveShippingAddress({
                     city: address.value.split(',')[0],
                     address: address.value,
@@ -185,29 +191,39 @@ function ShippingScreen() {
                 })
             )
         }
-        dispatch(savePaymentMethod(paymentMethod));
-        dispatch(
+        shipingAddress = {
+            city: address.value.split(',')[0],
+            address: address.value,
+            daAddress: address,
+            postalcode,
+            country,
+            shippmentMethod,
+        }
+
+        await dispatch(savePaymentMethod(paymentMethod));
+        await dispatch(
             createOrder({
                 orderItems: cart.cartItems,
-                shippingAddress: cart.shippingAddress,
-                paymentMethod: cart.paymentMethod,
-                itemsPrice: cart.itemsPrice,
+                shippingAddress: shipingAddress,
+                paymentMethod: paymentMethod,
+                itemsPrice: finalPrice,
                 shippingPrice: cart.shippingPrice,
-                taxPrice: cart.taxPrice,
-                totalPrice: cart.totalPrice,
+                // taxPrice: cart.taxPrice,
+                totalPrice: finalPrice,
 
-                size: cart.size,
+                // size: cart.size,
                 comments: comments
             })
         );
-        history.push("/placeorder")
+
+        await history.push(`/order/${orderId}`)
     };
     useEffect(() => {
         if (typeof address === "object") {
             setPostalcode(address.data.postal_code)
         }
     }, [address])
-    const [paymentMethod, setPaymentMethod] = useState();
+    const [paymentMethod, setPaymentMethod] = useState('bankCard');
     const totalQty = (cartItems.reduce((acc, item) => acc + Number(item.qty), 0))
     const totalOldPrice = cartItems.reduce((acc, item) => acc + Number(item.qty) * ((Number(item.oldPrice) > Number(item.price)) ? Number(item.oldPrice) : Number(item.price)), 0).toFixed(0)
     const totalPrice = cartItems.reduce((acc, item) => acc + Number(item.qty) * item.price, 0).toFixed(0)
@@ -220,6 +236,7 @@ function ShippingScreen() {
     useEffect(() => {
         router.isReady ? setIsLoading(false) : ''
     }, [])
+    const finalPrice = paymentMethod === 'bankCard' ? totalPrice - disc : totalPrice;
     return (
 
         <div className='fa-shipping-fast shipping'>
@@ -236,7 +253,8 @@ function ShippingScreen() {
                         </h1>
                         <Row>
                             <Col ms={8}>
-                                <span className='fw-bolder fs-5'>Способ оплаты</span>
+                                <span className='fw-bolder fs-5'>Способ оплаты <span
+                                    className='text-danger'>*</span></span>
 
                                 <ListGroup className='mt-3'>
                                     <ListGroupItem className='d-block'>
@@ -254,6 +272,7 @@ function ShippingScreen() {
                                                 src={cash}
                                                 alt='Наличными при получении'
                                                 width={160}
+                                                height={100}
                                                 onClick={() =>
                                                     setPaymentMethod('cash')
                                                 }></Image>
@@ -334,47 +353,56 @@ function ShippingScreen() {
                                         }
                                         {['pochtaRf', 'sdek', 'mskCur'].includes(shippmentMethod) &&
                                             <Form>
-                                                    <FormLabel className="my-3 mb-3 d-flex justify-content-center">
-                                                        <h4>Адрес доставки</h4>
-                                                    </FormLabel>
-                                                    <Form.Group>
-                                                        <Form.Label>Страна</Form.Label>
-                                                        <Form.Control
-                                                            disabled
-                                                            readOnly
-                                                            type="text"
-                                                            placeholder="Введите страну"
-                                                            value={country ? country : ""}
-                                                        ></Form.Control>
-                                                    </Form.Group>
-                                                    <Form.Group>
-                                                        <Form.Label>Город, улица ....</Form.Label>
-                                                        <AddressSuggestions
+                                                <FormLabel className="my-3 mb-3 d-flex justify-content-center">
+                                                    <h4>Адрес доставки <span className='text-danger'>*</span></h4>
+                                                </FormLabel>
+                                                <Form.Group>
+                                                    <Form.Label>Страна</Form.Label>
+                                                    <Form.Control
+                                                        disabled
+                                                        readOnly
+                                                        type="text"
+                                                        placeholder="Введите страну"
+                                                        value={country ? country : ""}
+                                                    ></Form.Control>
+                                                </Form.Group>
+                                                <Form.Group>
+                                                    <Form.Label>Город, улица .... <span className='text-danger'>*</span></Form.Label>
+                                                    <AddressSuggestions
 
-                                                            token={DADATA_TOKEN}
-                                                            count={4}
-                                                            autoload={true}
-                                                            value={shippingAddress.daAddress}
-                                                            onChange={setAddress}
-                                                            filterFromBound="city"
-                                                            filterToBound="flat"
-                                                            filterLocations={[{country}]}
-                                                        />
+                                                        token={DADATA_TOKEN}
+                                                        count={4}
+                                                        autoload={true}
+                                                        value={shippingAddress.daAddress}
+                                                        onChange={setAddress}
+                                                        filterFromBound="city"
+                                                        filterToBound="flat"
+                                                        filterLocations={[{country}]}
+                                                    />
 
-                                                    </Form.Group>
+                                                </Form.Group>
 
-                                                    <Form.Group controlId="postalcode">
-                                                        <Form.Label>Индекс<span
-                                                            style={{'fontSize': '10px'}}> Заполняется автоматически</span></Form.Label>
-                                                        <Form.Control
-                                                            onChange={setPostalcode}
-                                                            type="text"
-                                                            disabled
-                                                            value={postalcode ? postalcode : ""}
-                                                        ></Form.Control>
-                                                    </Form.Group>
+                                                <Form.Group controlId="postalcode">
+                                                    <Form.Label>Индекс<span
+                                                        style={{'fontSize': '10px'}}> Заполняется автоматически</span></Form.Label>
+                                                    <Form.Control
+                                                        onChange={setPostalcode}
+                                                        type="text"
+                                                        disabled
+                                                        value={postalcode ? postalcode : ""}
+                                                    ></Form.Control>
+                                                </Form.Group>
                                             </Form>
                                         }
+                                    </ListGroupItem>
+                                    <ListGroupItem>
+                                        <Form.Group controlId='Comments'>
+                                            <Form.Label>Комментарии к заказу</Form.Label>
+                                            <Form.Control
+                                                onChange={(e) => setComments(e.target.value)}
+                                                type="text-area"
+                                            ></Form.Control>
+                                        </Form.Group>
                                     </ListGroupItem>
                                 </ListGroup>
                             </Col>
@@ -418,15 +446,25 @@ function ShippingScreen() {
                                             {cartItems.reduce((acc, item) => acc + Number(item.qty) * ((Number(item.oldPrice) > Number(item.price)) ? Number(item.oldPrice) : Number(item.price)), 0).toFixed(0)}
                                         </span>
                                                 </div>
-                                                {totalOldPrice > totalPrice &&
+                                                {Number(totalOldPrice) > Number(totalPrice) &&
                                                     <div className='d-flex justify-content-between'>
-                                                        <span className='fs-6'>Скидка</span>
+                                                        <span className='fs-6'>Скидка на товары</span>
                                                         <span style={{
                                                             'color': '#f91155',
                                                             'fontWeight': '700'
                                                         }}>
-                                            {(totalOldPrice - totalPrice).toFixed(0)}
-                                        </span>
+                                                            {(totalOldPrice - totalPrice).toFixed(0)}
+                                                        </span>
+                                                    </div>}
+                                                {paymentMethod === 'bankCard' &&
+                                                    <div className='d-flex justify-content-between'>
+                                                        <span className='fs-6'>Скидка при оплате картой</span>
+                                                        <span style={{
+                                                            'color': '#f91155',
+                                                            'fontWeight': '700'
+                                                        }}>
+                                                            {disc}
+                                                        </span>
                                                     </div>}
 
 
@@ -437,18 +475,19 @@ function ShippingScreen() {
                                                     <span style={{
                                                         // 'color': '#808d9a',
                                                         'fontWeight': '700'
-                                                    }}>{totalPrice}
+                                                    }}>{finalPrice}
                                         </span>
                                                 </div>
-                                                <div className='d-flex justify-content-between'>
-                                                    <span className='fs-6'>При оплате картой на сайте</span>
-                                                    <span style={{
-                                                        'color': '#10C44C',
-                                                        'fontWeight': '700'
-                                                    }}>
+                                                {paymentMethod !== 'bankCard' &&
+                                                    <div className='d-flex justify-content-between'>
+                                                        <span className='fs-6'>При оплате картой на сайте</span>
+                                                        <span style={{
+                                                            'color': '#10C44C',
+                                                            'fontWeight': '700'
+                                                        }}>
                                             {totalPrice - disc}
-                                        </span>
-                                                </div>
+                                                    </span>
+                                                    </div>}
 
                                             </ListGroupItem>
                                             {/*<ListGroupItem>*/}
