@@ -15,4 +15,5 @@ urlpatterns = [
     path('<str:pk>/', views.getOrderByID, name='user-orders'),
     path('<str:pk>/paymentrequest/', views.PaymentRequest, name='payment-request'),
     path('<str:pk>/paymentdetails/', views.PaymentDetails, name='payment-request'),
+    path('<str:pk>/sbprecreate/', views.SBPRecreate, name='payment-SBPRecreate'),
 ]

@@ -443,73 +443,56 @@ def PaymentDetails(request, pk):
     else:
         return Response('Запрос на оплату не отправлялся')
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def SBPRecreate(request, pk):
+    Configuration.account_id = '943529'
+    Configuration.secret_key = 'live_6LB64qd7LospKObEfmOcCO7XgcofzLG3aHerB3Xlt9o'
+    order = request.data['order']
+    user = request.data['userDetails']
+    payment = Payment.objects.get(order_id=order['_id'])
+    if Payment.objects.filter(order_id=order['_id']).exists():
+        if not order['isPaid'] and payment.payment_method == 'sbp':
+            print(payment.id)
+            payment.delete()
+            items = itemsCreate(order)
+            res = yooRequest(order, user, items)
+            confirmation_token = res.confirmation.confirmation_token
+            payment = Payment.objects.create(
+                order_id=order['_id'],
+                payment_id=res.id,
+                created_at=res.created_at,
+                confirmation_url=confirmation_token,
+                amount=res.amount.value,
+                description=f'Оплата заказа №{order["_id"]}',
+                status=res.status,
+                test=res.test,
+                is_paid=res.paid,
+                # payment_method=res.payment_method.type,
+                # payment_method_id=res.payment_method.id,
+                # payment_method_saved=res.payment_method.saved
+            )
+    serializer = PaymentSerializer(payment, many=False)
+    return Response(serializer.data)
+
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def PaymentRequest(request, pk):
     Configuration.account_id = '943529'
     Configuration.secret_key = 'live_6LB64qd7LospKObEfmOcCO7XgcofzLG3aHerB3Xlt9o'
-    idempotence_key = str(uuid.uuid4())
     order = request.data['order']
     user = request.data['userDetails']
-    items = []
 
-    def itemsCreate():
-        for item in order['orderItems']:
-            item_to_add = {
-                "description": item['name'],
-                "quantity": item['qty'],
-                "amount": {
-                    "value": item['price'],
-                    "currency": "RUB"
-                },
-                'vat_code': 1,
-                'measure': 'piece',
-                'payment_subject': 'commodity',
-                'payment_mode': 'full_payment',
-            }
-            items.append(item_to_add)
-        return items
-
-    def yooRequest(items):
-        result = yooPayment.create(
-            {
-                "amount": {
-                    "value": order['totalPrice'],
-                    "currency": "RUB"
-                },
-                "confirmation": {
-                    "type": "embedded",
-                    # "return_url": request.data['url']
-                },
-                "capture": True,
-                "description": f'Оплата заказа {order["_id"]} со скидкой 10%',
-                "metadata": {
-                    'orderNumber': order["_id"]
-                },
-                "receipt": {
-                    "customer": {
-                        "full_name": user['name'],
-                        "email": user['email'],
-                        "phone": user['phone_number'],
-                    },
-                    "items": items,
-                },
-                # "carture": False,
-                # 'payment_method_data': {
-                #     'type': 'bank_card'
-                # },
-            }, idempotence_key
-        )
-        return result
 
     # try:
     #     url = request.url
     # except:
     #     url = None
     if not Payment.objects.filter(order_id=order['_id']).exists():
-        items = itemsCreate()
-        res = yooRequest(items)
+        items = itemsCreate(order)
+        res = yooRequest(order, user, items)
 
         confirmation_token = res.confirmation.confirmation_token
         payment = Payment.objects.create(
@@ -529,10 +512,11 @@ def PaymentRequest(request, pk):
     else:
         payment = Payment.objects.get(order_id=order['_id'])
         # if not order.isPaid and payment.payment_method == 'sbp':
-        if payment.status == 'canceled' or (not order['isPaid'] and payment.payment_method == 'sbp'):
+        if payment.status == 'canceled':
+            # or (not order['isPaid'] and payment.payment_method == 'sbp'):
             payment.delete()
-            items = itemsCreate()
-            res = yooRequest(items)
+            items = itemsCreate(order)
+            res = yooRequest(order, user, items)
             confirmation_token = res.confirmation.confirmation_token
             payment = Payment.objects.create(
                 order_id=order['_id'],
@@ -550,3 +534,53 @@ def PaymentRequest(request, pk):
             )
     serializer = PaymentSerializer(payment, many=False)
     return Response(serializer.data)
+def itemsCreate(order):
+    items = []
+    for item in order['orderItems']:
+        item_to_add = {
+            "description": item['name'],
+            "quantity": item['qty'],
+            "amount": {
+                "value": item['price'],
+                "currency": "RUB"
+            },
+            'vat_code': 1,
+            'measure': 'piece',
+            'payment_subject': 'commodity',
+            'payment_mode': 'full_payment',
+        }
+        items.append(item_to_add)
+    return items
+
+def yooRequest(order, user, items):
+    idempotence_key = str(uuid.uuid4())
+    result = yooPayment.create(
+        {
+            "amount": {
+                "value": order['totalPrice'],
+                "currency": "RUB"
+            },
+            "confirmation": {
+                "type": "embedded",
+                # "return_url": request.data['url']
+            },
+            "capture": True,
+            "description": f'Оплата заказа {order["_id"]} со скидкой 10%',
+            "metadata": {
+                'orderNumber': order["_id"]
+            },
+            "receipt": {
+                "customer": {
+                    "full_name": user['name'],
+                    "email": user['email'],
+                    "phone": user['phone_number'],
+                },
+                "items": items,
+            },
+            # "carture": False,
+            # 'payment_method_data': {
+            #     'type': 'bank_card'
+            # },
+        }, idempotence_key
+    )
+    return result

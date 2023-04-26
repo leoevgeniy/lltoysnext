@@ -17,9 +17,9 @@ from baseresponse.serializers import ProductSerializer
 from rest_framework import status
 
 
-# @api_view(['Get'])
+@api_view(['Get'])
 def getProducts(request, *args):
-    # query = request.query_params.get('keyword')
+    query = request.query_params.get('keyword')
     # filterer = request.query_params.get('filter')
     # category = request.query_params.get('category')
     # sorts = request.query_params.get('sort')
@@ -32,83 +32,85 @@ def getProducts(request, *args):
     # priceUp = request.query_params.get('priceUp')
     sort = []
     # print('filterer', args[0]['filterer'], 'category', args[0]['category'])
-    if 'filterer' not in args[0].keys():
-        filterer = ''
-    else:
-        filterer = args[0]['filterer']
-    if 'query' not in args[0].keys():
+    # if 'filterer' not in args[0].keys():
+    #     filterer = ''
+    # else:
+    #     filterer = args[0]['filterer']
+    if query is None:
         query = ''
-    else:
-        query = args[0]['query']
+    # else:
+    #     query = args[0]['query']
+    #
+    # if 'category' not in args[0].keys():
+    #     category = ''
+    # else:
+    #     category = args[0]['category']
+    #
+    # if 'vendor' not in args[0].keys():
+    #     vendor = ''
+    # else:
+    #     vendor = args[0]['vendor']
+    #
+    # if 'collection' not in args[0].keys():
+    #     collection = ''
+    # else:
+    #     collection = args[0]['collection']
+    #
+    # if 'material' not in args[0].keys():
+    #     material = ''
+    # else:
+    #     material = args[0]['material']
+    #
+    # if 'color' not in args[0].keys():
+    #     color = ''
+    # else:
+    #     color = args[0]['color']
+    #
+    # if 'size' not in args[0].keys():
+    #     size = ''
+    # else:
+    #     size = args[0]['size']
+    #
+    # if 'priceLow' not in args[0].keys():
+    #     priceLow = 1
+    # else:
+    #     priceLow = float(args[0]['priceLow'])
+    # if 'priceUp' not in args[0].keys() or args[0]['priceUp'] == 0 or args[0]['priceUp'] == '':
+    #     priceUp = 100000000
+    # else:
+    #     priceUp = float(args[0]['priceUp'])
 
-    if 'category' not in args[0].keys():
-        category = ''
-    else:
-        category = args[0]['category']
-
-    if 'vendor' not in args[0].keys():
-        vendor = ''
-    else:
-        vendor = args[0]['vendor']
-
-    if 'collection' not in args[0].keys():
-        collection = ''
-    else:
-        collection = args[0]['collection']
-
-    if 'material' not in args[0].keys():
-        material = ''
-    else:
-        material = args[0]['material']
-
-    if 'color' not in args[0].keys():
-        color = ''
-    else:
-        color = args[0]['color']
-
-    if 'size' not in args[0].keys():
-        size = ''
-    else:
-        size = args[0]['size']
-
-    if 'priceLow' not in args[0].keys():
-        priceLow = 1
-    else:
-        priceLow = float(args[0]['priceLow'])
-    if 'priceUp' not in args[0].keys() or args[0]['priceUp'] == 0 or args[0]['priceUp'] == '':
-        priceUp = 100000000
-    else:
-        priceUp = float(args[0]['priceUp'])
-
-    if filterer == '' and query == '' and category == '':
-        products = Product.objects.filter(Q(isSuperSale=True) & Q(assortiment__countInStock__gt=0)).distinct().order_by(
-            'name')
-        maxPrice = \
-            Product.objects.filter(Q(isSuperSale=True) & Q(assortiment__countInStock__gt=0)).aggregate(
-                Max('retailPrice'))[
-                'retailPrice__max']
-    else:
-        products = Product.objects.filter(Q(name__icontains=query) & Q(category__category__icontains=category) & Q(
-            category__subCategory__icontains=filterer) & Q(retailPrice__gte=priceLow) & Q(retailPrice__lte=priceUp) &
-                                          Q(assortiment__countInStock__gt=0) & Q(brand__icontains=vendor) & Q(
-            CollectionName__contains=collection) &
-                                          Q(material__icontains=material) & Q(assortiment__color__icontains=color) &
-                                          Q(assortiment__size__icontains=size)).distinct().order_by('name')
-        maxPrice = Product.objects.filter(Q(name__icontains=query) & Q(category__category__icontains=category) & Q(
-            category__subCategory__icontains=filterer) &
-                                          Q(assortiment__countInStock__gt=0) & Q(brand__icontains=vendor) & Q(
-            CollectionName__contains=collection) &
-                                          Q(material__icontains=material) & Q(assortiment__color__icontains=color) &
-                                          Q(assortiment__size__icontains=size)).aggregate(Max('retailPrice'))[
-            'retailPrice__max']
-    vendorList = []
-    collectionList = []
-    materialList = []
-    colorList = []
-    colorUrlList = []
-    sizeList = []
-    priceUpApi = 0
-    priceLowApi = 10000000
+    # if filterer == '' and query == '' and category == '':
+    if query != '':
+    #     products = Product.objects.filter(Q(isSuperSale=True) & Q(assortiment__countInStock__gt=0)).distinct().order_by(
+    #         'name')
+    #     maxPrice = \
+    #         Product.objects.filter(Q(isSuperSale=True) & Q(assortiment__countInStock__gt=0)).aggregate(
+    #             Max('retailPrice'))[
+    #             'retailPrice__max']
+    # else:
+        products = Product.objects.filter(Q(name__icontains=query) & Q(assortiment__countInStock__gt=0)).distinct()
+            #                               & Q(category__category__icontains=category) & Q(
+            # category__subCategory__icontains=filterer) & Q(retailPrice__gte=priceLow) & Q(retailPrice__lte=priceUp) &
+            #                               Q(assortiment__countInStock__gt=0) & Q(brand__icontains=vendor) & Q(
+            # CollectionName__contains=collection) &
+            #                               Q(material__icontains=material) & Q(assortiment__color__icontains=color) &
+            #                               Q(assortiment__size__icontains=size))
+        # maxPrice = Product.objects.filter(Q(name__icontains=query) & Q(category__category__icontains=category) & Q(
+        #     category__subCategory__icontains=filterer) &
+        #                                   Q(assortiment__countInStock__gt=0) & Q(brand__icontains=vendor) & Q(
+        #     CollectionName__contains=collection) &
+        #                                   Q(material__icontains=material) & Q(assortiment__color__icontains=color) &
+        #                                   Q(assortiment__size__icontains=size)).aggregate(Max('retailPrice'))[
+        #     'retailPrice__max']
+    # vendorList = []
+    # collectionList = []
+    # materialList = []
+    # colorList = []
+    # colorUrlList = []
+    # sizeList = []
+    # priceUpApi = 0
+    # priceLowApi = 10000000
     # for product in products:
     #     assortiment = {}
     #     try:
@@ -157,42 +159,45 @@ def getProducts(request, *args):
     #     elif sort[0] == 'NameSortDown' and len(sort) == 1:
     #         products = products.order_by('-name')
 
-    # page = request.query_params.get('page')
-    #
-    # paginator = Paginator(products, 24)
-    # try:
-    #     products = paginator.page(page)
-    # except PageNotAnInteger:
-    #     products = paginator.page(1)
-    # except EmptyPage:
-    #     products = paginator.page(paginator.num_pages)
-    #
-    # if page == None:
-    #     page = 1
-    #
-    # page = int(page)
+    page = request.query_params.get('page')
 
-    # serializer = ProductSerializer(products, many=True)
-    # print(serializer.data)
-    return (
+    paginator = Paginator(products, 24)
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+
+    if page == None or page == 'undefined':
+        page = 1
+
+    page = int(page)
+
+    serializer = ProductSerializer(products, many=True)
+    return Response(
         {
-            'products': products,
+            'products': serializer.data,
             # 'products': serializer.data,
-            # 'page': page, 'pages': paginator.num_pages,
-            'vendorList': vendorList,
-            'collectionList': collectionList, 'colorUrlList': colorUrlList, 'materialList': materialList,
-            'colorList': colorList, 'sizeList': sizeList,
-            'priceUpApi': priceUpApi, 'priceLowApi': priceLowApi, 'maxPrice': maxPrice})
+            'page': page, 'pages': paginator.num_pages,
+            # 'vendorList': vendorList,
+            # 'collectionList': collectionList, 'colorUrlList': colorUrlList, 'materialList': materialList,
+            # 'colorList': colorList, 'sizeList': sizeList,
+            # 'priceUpApi': priceUpApi, 'priceLowApi': priceLowApi, 'maxPrice': maxPrice
+        })
 
 
 @api_view(['GET'])
 def getCategotyProducts(request, **args):
+    query = request.query_params.get('keyword')
+    if query is None:
+        query = ''
     category = args['pk']
     try:
         subcategory = args['pk1']
     except:
         subcategory = ''
-    products = Product.objects.filter(Q(category__subCategory__icontains=subcategory) & Q(
+    products = Product.objects.filter(Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
         category__category__icontains=category) & Q(assortiment__countInStock__gt=0)).distinct().order_by('name')
     page = request.query_params.get('page')
     paginator = Paginator(products, 24)
