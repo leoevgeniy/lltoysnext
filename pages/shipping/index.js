@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import {AddressSuggestions} from "react-dadata";
 import "react-dadata/dist/react-dadata.css";
 import {
@@ -25,15 +25,22 @@ import cash from '@/public/payment_cash.webp'
 import deliveryCard from '@/public/deliveryCard.webp'
 import {faRub} from "@fortawesome/free-solid-svg-icons/faRub";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCreditCard} from "@fortawesome/free-solid-svg-icons";
-import {TextInput} from "react-native-web";
-import {createOrder} from "@/redux/actions/orderActions";
+import {createOrder, payOrderRequest} from "@/redux/actions/orderActions";
 import {ORDER_CREATE_RESET} from "@/redux/typesOrders";
 
 function ShippingScreen() {
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(true)
+    const paymentRequest = useSelector((state) => state.paymentRequest);
+    const userLogin = useSelector((state) => state.userLogin);
+    const {userInfo} = userLogin;
 
+    const {
+        response,
+        error: paymentError,
+        loading: paymentLoading,
+        success: paymentSuccess,
+    } = paymentRequest;
     const history = useRouter()
     // const TOKEN = "c626ed218daca90f04edd627891ee1c035e86387";
     const cart = useSelector((state) => state.cart);
@@ -50,149 +57,53 @@ function ShippingScreen() {
     useEffect(() => {
         router.isReady ? setIsLoading(false) : ''
         dispatch({type: ORDER_CREATE_RESET});
+        setSdkReady(false)
+        setSubmitted(false)
     }, [])
 
     const {cartItems} = cart
+    const [cururl, setCururl] = useState("");
+    const [sdkReady, setSdkReady] = useState(false);
 
+    function yookassaaddScript() {
+        const script = document.createElement("script");
+        script.src =
+            "https://yookassa.ru/checkout-widget/v1/checkout-widget.js";
+        script.async = true; // чтобы гарантировать порядок
+        document.body.appendChild(script);
+    }
 
-    // function placeInCenter( str, substr ){
-    //     let index = str.toString().length - 2;
-    //     const finallStr = str.toString().substring(0 , index) + substr + str.toString().substring( index );
-    //     return parseFloat(finallStr).toFixed(2)
-    // }
-    // const shipmentCostCalculation = async (source) => {
-    //   dispatch(saveShippingCost(0))
-    //   let res = {}
-    //   if (source === "pochtaRf") {
-    //   await fetch(`https://tariff.pochta.ru/v2/calculate/tariff?json&object=23030&from=115280&to=${postalcode}&weight=1000&group=0&closed=1`)
-    //       .then ((response) => response.text())
-    //       .then ((result) => {
-    //         res = JSON.parse(result)
-    //         for (let key in res) {
-    //           if (key === 'paymoneynds') {
-    //             const cost = Number(placeInCenter(res[key], '.'))
-    //             dispatch(saveShippingCost(cost))
-    //           }
-    //         }
-    //       })
-    //       .catch((error) => console.log("error", error))
-    // } else if (source === "sdek") {
-    //       const headers = {
-    //           // 'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6WyJvcmRlcjphbGwiLCJwYXltZW50OmFsbCJdLCJleHAiOjE2NjIwMTE3MjQsImF1dGhvcml0aWVzIjpbInNoYXJkLWlkOnJ1LTAxIiwiY2xpZW50LWNpdHk60J3QvtCy0L7RgdC40LHQuNGA0YHQuiwg0J3QvtCy0L7RgdC40LHQuNGA0YHQutCw0Y8g0L7QsdC70LDRgdGC0YwiLCJmdWxsLW5hbWU60KLQtdGB0YLQuNGA0L7QstCw0L3QuNC1INCY0L3RgtC10LPRgNCw0YbQuNC4INCY0JwsINCe0JHQqdCV0KHQotCS0J4g0KEg0J7Qk9Cg0JDQndCY0KfQldCd0J3QntCZINCe0KLQktCV0KLQodCi0JLQldCd0J3QntCh0KLQrNCuIiwiY29udHJhY3Q60JjQnC3QoNCkLdCT0JvQky0yMiIsImFjY291bnQtbGFuZzpydXMiLCJhcGktdmVyc2lvbjoxLjEiLCJhY2NvdW50LXV1aWQ6ZTkyNWJkMGYtMDVhNi00YzU2LWI3MzctNGI5OWMxNGY2NjlhIiwiY2xpZW50LWlkLWVjNTplZDc1ZWNmNC0zMGVkLTQxNTMtYWZlOS1lYjgwYmI1MTJmMjIiLCJjbGllbnQtaWQtZWM0OjE0MzQ4MjMxIiwiY29udHJhZ2VudC11dWlkOmVkNzVlY2Y0LTMwZWQtNDE1My1hZmU5LWViODBiYjUxMmYyMiIsInNvbGlkLWFkZHJlc3M6ZmFsc2UiXSwianRpIjoiODZhYWFhNDItODE2YS00NTVlLWJlZjgtMzcwYzU2ZmUxNjk0IiwiY2xpZW50X2lkIjoiRU1zY2Q2cjlKbkZpUTNiTG95akpZNmVNNzhKckpjZUkifQ.ltgnQ20jYyb0wI7mCp3ZeW_oimlq3tKcWzuelol7HgeVUhyt5XQPj0OhzSE8lKn_xFhpr_wsHMEfci3J3K21yoCUIOn_411YMUm8jW-njekQJQULmKNIR-eEgB047bA3jAdMEVPKjStzH-JDlZ_xbnYxMK8Rv27899qkqZ6917rBqZ9eGtwm1FGAoqNBBXFQY2OuAHgc8TEPN_pnjyxAwEZ8fTrzh3PCUR-w7j86pbLllj5BeYV9akxv5ebQvf8Jy0JAJn0hQtvlhoDKpUJZwqIVHFQtE6vWjY8moRyBO9j9x1UTBkLp_bDLjHrFxyuYqgFF5rAcvjKtJ93_lEBQTQ',
-    //           'Content-Type': 'application/json ',
-    //           'Origin':  '*',
-    //           // 'Access-Control-Allow-Credentials': 'true',
-    //           // 'Access-Control-Allow-Methods': 'POST',
-    //           // 'Access-Control-Allow-Headers': 'Content-Type',
-    //       }
-    //       const body = {
-    //           "version":"1.0",
-    //           "senderCityPostCode" : '115280',
-    //           "receiverCityPostCode" :  Number(postalcode),
-    //           "tariffId":"137",
-    //           "goods":
-    //               {
-    //                   "height": 30,
-    //                   "length": 30,
-    //                   "weight": 1000,
-    //                   "width": 30
-    //               },
-    //           "services": [
-    //               {
-    //                   "id": 2,
-    //                   "param": 2000
-    //               },
-    //               {
-    //                   "id": 30
-    //               }
-    //           ]
-
-
-    //       }
-    //       const myInit = {
-    //           method: 'POST',
-    //           // 'Access-Control-Allow-Origin':  'http://127.0.0.1:3000',
-    //           // 'Access-Control-Allow-Credentials': 'true',
-    //           // 'Access-Control-Allow-Methods': 'POST',
-    //           // 'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    //           // client_id : 'EMscd6r9JnFiQ3bLoyjJY6eM78JrJceI',
-    //           // client_secret: 'PjLZkKBHEiLK3YsjtNrt3TGNG0ahs3kG',
-    //           headers: headers,
-    //           body,
-    //           // mode: 'cors',
-    //           // cache: 'default'
-    //       };
-    //       await fetch(`http://api.cdek.ru/calculator/calculate_price_by_json.php `, myInit)
-    //           .then ((response) => {
-    //               response.text()
-    //           })
-    //           .then ((result) => {
-    //               // res = JSON.parse(result)
-    //               // for (let key in res) {
-    //               //     if (key === 'paymoneynds') {
-    //               //         const cost = Number(placeInCenter(res[key], '.'))
-    //               //         console.log((cost))
-    //               //         dispatch(saveShippingCost(cost))
-    //               //     }
-    //               // }
-    //           })
-    //           .catch((error) => console.log("error", error))
-    //   }
-    // }
-    let shipingAddress = {}
-    const [submitted, setSubmitted] = useState('false')
-    const submitHandler = async (e) => {
-        e.preventDefault();
-        if (shippmentMethod === 'pochtaRf') {
-            // shipmentCostCalculation(shippmentMethod)
-            await dispatch(
-                saveShippingAddress({
-                    city: address.value.split(',')[0],
-                    address: address.value,
-                    daAddress: address,
-                    postalcode,
-                    country,
-                    shippmentMethod,
-                })
-            );
-        } else if (shippmentMethod === 'mskCur') {
-            await dispatch(saveShippingCost(300))
-            await dispatch(
-                saveShippingAddress({
-                    city: address.value.split(',')[0],
-                    address: address.value,
-                    daAddress: address,
-                    postalcode,
-                    country,
-                    shippmentMethod,
-                })
-            )
-        } else if (shippmentMethod === 'mskSelf') {
-            await dispatch(saveShippingCost(0))
-
-            await dispatch(
-                saveShippingAddress({
-                    city: address.value.split(',')[0],
-                    address: address.value,
-                    daAddress: address,
-                    postalcode,
-                    country,
-                    shippmentMethod,
-                })
-            )
-        } else if (shippmentMethod === 'sdek') {
-            // shipmentCostCalculation(shippmentMethod)
-            await dispatch(
-                saveShippingAddress({
-                    city: address.value.split(',')[0],
-                    address: address.value,
-                    daAddress: address,
-                    postalcode,
-                    country,
-                    shippmentMethod,
-                })
-            )
+    useEffect(() => {
+        yookassaaddScript();
+        if (cartItems.length === 0) {
+            history.push('/cart')
         }
+    }, [])
+    let shipingAddress = {}
+    const [paySubmitted, setPaySubmitted] = useState(false)
+    const [submitted, setSubmitted] = useState('false')
+    const submitPaymentHandler = () => {
+        submit()
+        setPaySubmitted(true)
+    }
+
+
+
+    const submitHandler = async () => {
+        await submit()
+        setSubmitted(true)
+    }
+    const submit = async () => {
+        await dispatch(
+            saveShippingAddress({
+                city: address.value.split(',')[0],
+                address: address.value,
+                daAddress: address,
+                postalcode,
+                country,
+                shippmentMethod,
+            })
+        );
         shipingAddress = {
             city: address.value.split(',')[0],
             address: address.value,
@@ -217,27 +128,64 @@ function ShippingScreen() {
                 comments: comments
             })
         );
-        // history.push(`/order/${order._id}`)
-
-
-        // setSubmitted(true)
     };
     useEffect(() => {
         if (typeof address === "object") {
             setPostalcode(address.data.postal_code)
         }
-        // console.log(submitted)
-        // if (submitted) {
-        //     console.log('In',submitted)
-        //
-        //     history.push(`/order/${order._id}`)
-        // }
-    }, [address])
+        setCururl(history.asPath);
+        if (paySubmitted && order && userInfo) {
+            dispatch(
+                payOrderRequest(order, userInfo, "http://lltoys.ru/" + cururl, () =>
+                    setSdkReady(true)
+                )
+            );
+
+        }
+        if (!paymentLoading && order && order.paymentMethod === "bankCard" && sdkReady) {
+            const confirmation_token = response.confirmation_url;
+            const payMethod = response.paymentMethod === 'sbp' ? 'sbp' : ''
+            const checkout = new window.YooMoneyCheckoutWidget({
+                confirmation_token: confirmation_token, //Токен, который перед проведением оплаты нужно получить от ЮKassa
+                return_url: "http://lltoys.ru" + cururl, //Ссылка на страницу завершения оплаты
+
+                //Настройка виджета
+                customization: {
+                    //Настройка способа отображения
+                    // payment_method: ['bank_card', 'yoo_money', 'sberbank', 'sbp'],
+                    modal: true,
+                },
+                error_callback: function (error) {
+                    console.log(error)
+                    setSdkReady(false);
+                },
+            });
+            //
+            checkout.on('complete', () => {
+                try {
+                    history.push(`/order/${order._id}`)
+                } catch {
+                }
+
+            })
+            checkout.on('modal_close', () => {
+                try {
+                    history.push(`/order/${order._id}`)
+                } catch {
+                }
+
+            })
+            checkout.render().then(() => {
+                setSdkReady(false);
+            });
+        }
+
+    }, [dispatch, address, sdkReady, order])
     useEffect(() => {
-        try {
+        if (submitted && order) {
             history.push(`/order/${order._id}`)
-        } catch {}
-    },[order])
+        }
+    }, [submitted])
     const [paymentMethod, setPaymentMethod] = useState('bankCard');
     const totalQty = (cartItems.reduce((acc, item) => acc + Number(item.qty), 0))
     const totalOldPrice = cartItems.reduce((acc, item) => acc + Number(item.qty) * ((Number(item.oldPrice) > Number(item.price)) ? Number(item.oldPrice) : Number(item.price)), 0).toFixed(0)
@@ -426,19 +374,30 @@ function ShippingScreen() {
                                     <Card>
                                         {cartItems &&
                                             <ListGroupItem>
-                                                <Button
-                                                    type='button'
-                                                    variant='success'
-                                                    className='w-100 mb-3'
-                                                    disabled={cartItems.length === 0 || !shippmentMethod || !paymentMethod || (['pochtaRf', 'sdek', 'mskCur'].includes(shippmentMethod) && !address)}
-                                                    onClick={submitHandler}
-                                                >
-                                                    Заказать
-                                                </Button>
-                                                <p style={{'color': '#808d9a', 'fontSize': '14px'}}>Доступные способы и
-                                                    время
-                                                    доставки можно выбрать при
-                                                    оформлении заказа</p>
+                                                {paymentMethod !== 'bankCard' &&
+                                                    <Button
+                                                        type='button'
+                                                        variant='success'
+                                                        className='w-100 mb-3'
+                                                        disabled={cartItems.length === 0 || !shippmentMethod || !paymentMethod || (['pochtaRf', 'sdek', 'mskCur'].includes(shippmentMethod) && !address)}
+                                                        onClick={submitHandler}
+                                                    >
+                                                        Заказать
+                                                    </Button>}
+                                                {paymentMethod === 'bankCard' &&
+                                                    <Button
+                                                        type='button'
+                                                        variant='success'
+                                                        className='w-100 mb-3'
+                                                        disabled={cartItems.length === 0 || !shippmentMethod || !paymentMethod || (['pochtaRf', 'sdek', 'mskCur'].includes(shippmentMethod) && !address)}
+                                                        onClick={submitPaymentHandler}
+                                                    >
+                                                        Оплатить
+                                                    </Button>}
+                                                {/*<p style={{'color': '#808d9a', 'fontSize': '14px'}}>Доступные способы и*/}
+                                                {/*    время*/}
+                                                {/*    доставки можно выбрать при*/}
+                                                {/*    оформлении заказа</p>*/}
                                             </ListGroupItem>}
 
                                         <ListGroup variant='flush'>

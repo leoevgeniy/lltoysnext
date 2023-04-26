@@ -219,6 +219,49 @@ export const payOrderRequest = (order, userDetails, url, callback) => async (dis
         });
     }
 };
+export const payOrderReRequest = (order, userDetails, url, callback) => async (dispatch, getState) => {
+    try {
+        const id = order._id
+        dispatch({
+            type: ORDER_PAYMENT_REQUEST,
+        });
+
+        const {
+            userLogin: {userInfo},
+        } = getState();
+
+        const config = {
+            headers: {
+                "Content-type": "application/json",
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+        const body = {
+            order,
+            userDetails,
+            url
+        }
+        const {data} = await axios.post(
+            `${API_HOST}/api/order/${id}/sbprecreate/`,
+            body,
+            config
+        );
+        dispatch({
+            type: ORDER_PAYMENT_SUCCESS,
+            payload: data,
+        });
+
+        callback()
+    } catch (error) {
+        dispatch({
+            type: ORDER_PAYMENT_FAIL,
+            payload:
+                error.response && error.response.data.detail
+                    ? error.response.data.detail
+                    : error.message,
+        });
+    }
+};
 export const payOrderDetails = (order, userDetails) => async (dispatch, getState) => {
     try {
         const id = order._id
@@ -249,6 +292,8 @@ export const payOrderDetails = (order, userDetails) => async (dispatch, getState
             type: ORDER_PAYMENT_DETAILS_SUCCESS,
             payload: data,
         });
+        // callback()
+
     } catch (error) {
         dispatch({
             type: ORDER_PAYMENT_DETAILS_FAIL,

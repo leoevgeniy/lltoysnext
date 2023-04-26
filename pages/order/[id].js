@@ -7,7 +7,7 @@ import {
     Card,
     ListGroupItem,
     Button,
-    Form, Container,
+    Container,
 } from "react-bootstrap";
 import Link from 'next/link'
 import Head from 'next/head'
@@ -21,7 +21,7 @@ import {
     p5sCreateOrder,
     payOrderRequest,
     payOrderDetails,
-    p5sgetOrderDetails,
+    p5sgetOrderDetails, payOrderReRequest,
 } from "@/redux/actions/orderActions";
 import {
     ORDER_PAY_RESET,
@@ -32,7 +32,7 @@ import Script from "next/script";
 
 function OrderScreen({pageProps}) {
     const history = useRouter()
-    const {id : orderId} = pageProps;
+    const {id: orderId} = pageProps;
     const dispatch = useDispatch();
 
     const [sdkReady, setSdkReady] = useState(false);
@@ -45,6 +45,13 @@ function OrderScreen({pageProps}) {
         loading: paymentLoading,
         success: paymentSuccess,
     } = paymentRequest;
+    const paymentDerailsRequest = useSelector((state) => state.paymentDetailsRequest);
+    const {
+        response: responseDetails,
+        error: paymentDetailsError,
+        loading: paymentDetailsLoading,
+        success: paymentDetailsSuccess,
+    } = paymentDerailsRequest;
     const orderPay = useSelector((state) => state.orderPay);
     const {loading: loadingPay, success: successPay} = orderPay;
 
@@ -63,7 +70,7 @@ function OrderScreen({pageProps}) {
 
     const userDetails = useSelector((state) => state.userDetails);
     const [cururl, setCururl] = useState("");
-
+    const [sbpReCreate, setSbpReCreate] = useState(false)
     // if (!loading && !error) {
     //     order.itemsPrice = order.orderItems
     //         .reduce((acc, item) => acc + item.price * item.qty, 0)
@@ -74,14 +81,14 @@ function OrderScreen({pageProps}) {
         const script = document.createElement("script");
         script.src =
             "https://yookassa.ru/checkout-widget/v1/checkout-widget.js";
-        // script.async = true; // чтобы гарантировать порядок
+        script.async = true; // чтобы гарантировать порядок
         document.body.appendChild(script);
     }
 
-    useEffect(()=> {
+    useEffect(() => {
         yookassaaddScript();
 
-    },[])
+    }, [])
     //
 
     useEffect(() => {
@@ -100,27 +107,27 @@ function OrderScreen({pageProps}) {
             dispatch(p5sgetOrderDetails(orderId));
         }
 
-        if (!loading && p5sDetailsError) {
-            if (
-                order.paymentMethod === "cash" ||
-                order.paymentMethod === "deliveryCard"
-            ) {
-                dispatch(
-                    p5sCreateOrder({
-                        orderItems: order.orderItems,
-                        shippingAddress: order.shippingAddress,
-                        paymentMethod: order.paymentMethod,
-                        itemsPrice: order.itemsPrice,
-                        shippingPrice: order.shippingPrice,
-                        taxPrice: order.taxPrice,
-                        totalPrice: order.totalPrice,
-                        size: order.size,
-                        orderID: Number(orderId),
-                        comments: order.comments,
-                    })
-                );
-            }
-        }
+        // if (!loading && p5sDetailsError) {
+        //     if (
+        //         order.paymentMethod === "cash" ||
+        //         order.paymentMethod === "deliveryCard"
+        //     ) {
+        //         dispatch(
+        //             p5sCreateOrder({
+        //                 orderItems: order.orderItems,
+        //                 shippingAddress: order.shippingAddress,
+        //                 paymentMethod: order.paymentMethod,
+        //                 itemsPrice: order.itemsPrice,
+        //                 shippingPrice: order.shippingPrice,
+        //                 taxPrice: order.taxPrice,
+        //                 totalPrice: order.totalPrice,
+        //                 size: order.size,
+        //                 orderID: Number(orderId),
+        //                 comments: order.comments,
+        //             })
+        //         );
+        //     }
+        // }
         if (!loading && p5sDetailsError) {
             if (order.paymentMethod === "bankCard" && order.isPaid) {
                 dispatch(
@@ -130,16 +137,18 @@ function OrderScreen({pageProps}) {
                         paymentMethod: order.paymentMethod,
                         itemsPrice: order.itemsPrice,
                         shippingPrice: order.shippingPrice,
-                        taxPrice: order.taxPrice,
+                        // taxPrice: order.taxPrice,
                         totalPrice: order.totalPrice,
-                        size: order.size,
+                        // size: order.size,
                         orderID: Number(orderId),
                         comments: order.comments,
                     })
                 )
             }
         }
-        if (!loading && order.paymentMethod === "bankCard" && sdkReady) {
+
+        if (!loading && !paymentLoading && order.paymentMethod === "bankCard" && sdkReady) {
+            // if (!sbpReCreate) {
             const confirmation_token = response.confirmation_url;
             const payMethod = response.paymentMethod === 'sbp' ? 'sbp' : ''
             const checkout = new window.YooMoneyCheckoutWidget({
@@ -157,29 +166,39 @@ function OrderScreen({pageProps}) {
                     setSdkReady(false);
                 },
             });
-            //
-            // checkout.on('modal_close', () => {
-            //     dispatch(payOrderDetails(order, userInfo));
-            // })
+            checkout.on('modal_close', () => {
+                dispatch(payOrderDetails(order, userInfo));
+            })
             checkout.render().then(() => {
                 setSdkReady(false);
             });
+            // }
         }
 
         if (!loading && order) {
+
             dispatch(payOrderDetails(order, userInfo));
         }
+
         setCururl(history.asPath);
         // eslint-disable-next-line
     }, [
+        loading,
         dispatch,
         order,
         orderId,
-        successPay,
-        successDeliver,
         p5sDetailsError,
+        sbpReCreate,
         sdkReady,
     ]);
+    useEffect(() => {
+        if (!loading && !paymentDetailsLoading && responseDetails && responseDetails['payment_method'] && responseDetails['payment_method'] === 'sbp') {
+            setSbpReCreate(true)
+        } else {
+            setSbpReCreate(false)
+        }
+        console.log(paymentDetailsLoading, sbpReCreate)
+    }, [paymentDetailsLoading, paymentDetailsSuccess])
 
     const successPaymentHandler = (paymentResult) => {
         dispatch(payOrder(orderId, paymentResult));
@@ -193,12 +212,35 @@ function OrderScreen({pageProps}) {
         // dispatch(payOrderDetails(order, userInfo));
 
         dispatch(
-            payOrderRequest(order, userInfo, "http://lltoys.ru/" + cururl, () =>
-                setSdkReady(true)
+            payOrderRequest(order, userInfo, "http://lltoys.ru/" + cururl, () => {
+                    try {
+                    } catch {
+                    }
+                    // if (response && response['payment_method'] && response['payment_method'] === 'sbp') {
+                    //     setSbpReCreate(true)
+                    // }
+                    setSdkReady(true)
+
+
+                }
             )
         );
     };
+    const sbpReInitialization = (e) => {
+        e.preventDefault()
+        dispatch(payOrderReRequest(order, userInfo, "http://lltoys.ru/" + cururl, () => {
+                try {
+                } catch {
+                }
+                // if (response && response['payment_method'] && response['payment_method'] === 'sbp') {
+                //     setSbpReCreate(true)
+                // }
+                setSdkReady(true)
 
+
+            }
+        ))
+    }
     return loading ? (
         <Loader/>
     ) : error ? (
@@ -359,7 +401,7 @@ function OrderScreen({pageProps}) {
                                     </Row>
                                 </ListGroupItem>
 
-                                {!order.isPaid &&
+                                {!order.isPaid && !sbpReCreate &&
                                     order.paymentMethod === "bankCard" && (
                                         <>
                                             <ListGroupItem>
@@ -375,6 +417,26 @@ function OrderScreen({pageProps}) {
                                                         Оплатить
                                                     </Button>
                                                 </ListGroupItem>
+                                            </ListGroupItem>
+                                        </>
+                                    )}
+                                {(!order.isPaid && sbpReCreate) &&
+                                    order.paymentMethod === "bankCard" && (
+                                        <>
+                                            {paymentLoading && <Loader/>}
+                                            <ListGroupItem>
+                                                <span>Вы пытались оплатить с помощью СБП, но перевод еще не прошел. Если вы уверены, что не оплачивали, то Вы можете </span>
+
+                                                <Link
+                                                    href='/'
+                                                    // type="button"
+                                                    // className="btn w-100"
+                                                    onClick={
+                                                        sbpReInitialization
+                                                    }
+                                                >
+                                                     оплатить снова
+                                                </Link>
                                             </ListGroupItem>
                                         </>
                                     )}
@@ -411,6 +473,7 @@ function OrderScreen({pageProps}) {
         </Container>
     );
 }
+
 export async function getServerSideProps(context) {
     const id = context.params.id
     return {props: {id}}

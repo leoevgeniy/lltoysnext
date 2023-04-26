@@ -13,7 +13,7 @@ import {listCatalog} from "@/redux/actions/productAction";
 import SearchBox from "./SearchBox";
 import kuragi from '@/public/Kuragi.png'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBarsStaggered, faCartShopping, faListUl, faPhone} from "@fortawesome/free-solid-svg-icons";
+import {faBarsStaggered, faBriefcase, faCartShopping, faFaceSmile, faPhone} from "@fortawesome/free-solid-svg-icons";
 
 export default function Header(props) {
     const cart = useSelector(state => state.cart)
@@ -65,7 +65,7 @@ export default function Header(props) {
     };
 
     return (
-        <Container className='header position-sticky' style={{'width': '100%'}}>
+        <Container className='header position-sticky d-none d-md-block' style={{'width': '100%'}}>
             <Offcanvas show={show} onHide={handleClose} className='catalog'>
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>Каталог</Offcanvas.Title>
@@ -82,7 +82,8 @@ export default function Header(props) {
                                     <Accordion.Header key={n}>
                                         <p onClick={() => {
                                             catalogFiltered()
-                                            history.push(`/category/${item[0]}`).then(r => {})
+                                            history.push(`/category/${item[0]}`).then(r => {
+                                            })
                                         }} className='firstTitle'>{item[0]}</p>
                                     </Accordion.Header>
                                     {item[1].map((subItem, i) => (
@@ -112,30 +113,37 @@ export default function Header(props) {
                 <Container className='justify-content-start align-content-center'>
                     <Navbar.Text style={{'color': 'white', 'fontSize': '15px', 'display': 'flex'}}>
                         {/*<Image src={phone} alt='телефон' style={{'width': 'auto', 'height': 'auto'}}/>*/}
-                        <FontAwesomeIcon icon={faPhone} className='text-center'/>
-                        <i className='pl-1'> | +7 (995) 131-08-12</i>
+                        <FontAwesomeIcon icon={faPhone} className='text-center my-auto'/>
+                        <i className='pl-1 fs-small'> | +7 (995) 131-08-12</i>
                     </Navbar.Text>
                 </Container>
                 <Container className='justify-content-end text-white fs-6'>
+                    {/*{isLoading && userInfo &&*/}
+                    {/*}*/}
                     {!isLoading && userInfo ? (
-                        <NavDropdown
-                            title={userInfo.name.split(' ')[0]}
-                            id="username"
-                            className='text-center px-3 ms-auto'
-                        >
+                        <Nav>
+                            <Link href={'/profile?orders=my'} className='my-auto text-white'>
+                                <FontAwesomeIcon icon={faBriefcase}/>
+                            </Link>
+                            <NavDropdown
+                                title={userInfo.name.split(' ')[0]}
+                                id="username"
+                                className='text-center px-3 ms-auto'
+                            >
 
-                            <NavDropdown.Item onClick={() => {
-                                setExpanded(false)
-                                history.push('/profile')
-                            }}
-                                              className='text-center'>
-                                Профиль
-                            </NavDropdown.Item>
+                                <NavDropdown.Item onClick={() => {
+                                    setExpanded(false)
+                                    history.push('/profile')
+                                }}
+                                                  className='text-center'>
+                                    Профиль
+                                </NavDropdown.Item>
 
-                            <NavDropdown.Item onClick={logoutHendler} className='text-center'>
-                                Выйти
-                            </NavDropdown.Item>
-                        </NavDropdown>
+                                <NavDropdown.Item onClick={logoutHendler} className='text-center'>
+                                    Выйти
+                                </NavDropdown.Item>
+                            </NavDropdown>
+                        </Nav>
                     ) : (
                         <Link
                             href={'/login'}
@@ -229,12 +237,30 @@ export default function Header(props) {
 
 
                     </Nav>
-                    <Link href={'/cart'} className='position-relative float-end'>
+                    {!isLoading &&
+                        <div
+                            onClick={() => history.push('/profile')}
+                            className='text-white d-none d-md-inline-flex position-relative orders'
+                        >
+
+                            <FontAwesomeIcon icon={faFaceSmile}/>
+                            {userInfo ? <span className='fs-6'>{userInfo.name.split(' ')[0]} </span> : <span className='fs-6'>Войти</span>}
+                        </div>
+                    }
+                    {!isLoading && userInfo &&
+                        <div
+                            onClick={() => history.push('/profile?orders=my')}
+                            className='text-white d-none d-md-inline-flex position-relative orders'
+                        >
+                            <FontAwesomeIcon icon={faBriefcase}/>
+                            <span className='fs-6'>Заказы </span>
+                        </div>
+                    }
+                    <Link href={'/cart'} className='position-relative float-end cart text-white'>
                         <FontAwesomeIcon id='cart' icon={faCartShopping} className='text-white'/>
-
-
-                        {!isLoading && <Badge pill bg='success' className='position-absolute'
-                                              style={{'top': '-5px', 'right': '-12px', 'fontSize': '13px'}}>
+                        <span className='fs-6'>Корзина</span>
+                        {!isLoading && <Badge pill bg='danger' className='position-absolute'
+                                              style={{'top': '-5px', 'right': '0px', 'fontSize': '13px'}}>
                             {cart && cart.cartItems ? cartItems.reduce((acc, item) => acc + Number(item.qty), 0) : '0'}
                         </Badge>}
                     </Link>

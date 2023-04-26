@@ -240,6 +240,9 @@
     .category10 {
         grid-area: 2 / 2 / 3 / 3;
     }
+    .popular span {
+        width: 65%;
+    }
 }
 
 @media (max-width: 376px) {

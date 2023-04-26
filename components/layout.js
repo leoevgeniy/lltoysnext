@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import React, {useEffect, useState} from "react";
 import MyVerticallyCenteredModal from "@/components/MyVerticallyCenteredModal";
 import {userAgent} from "next/server";
+import HeaderSmall from "@/components/HeaderSmall";
 
 const Layout = ({children}) => {
     const [modalShow, setModalShow] = useState(true);
@@ -16,6 +17,7 @@ const Layout = ({children}) => {
             {/*    backdropClassName=''*/}
             {/*/>*/}
             <Header/>
+            <HeaderSmall/>
             {children}
             <Footer/>
         </div>

@@ -24,13 +24,15 @@ import App, {AppContext} from "next/app";
 import axios from "axios";
 import {API_HOST} from "@/consts";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
+import PaginateSearch from "@/components/PaginateSearch";
 
 
-const Category = ({pageProps}) => {
-    // const history = useRouter()
+const Search = ({pageProps}) => {
+    const history = useRouter()
     // const id = history.query.id
     // const productList = useSelector((state) => state.categoryproduct);
-    const category = pageProps.category
+    // const category = pageProps.category
+    // const {data: products} = pageProps
     const {error, loading, products, page, pages} = pageProps.data;
     const dispatch = useDispatch()
     // const [sort, setSort] = useState('')
@@ -57,7 +59,7 @@ const Category = ({pageProps}) => {
     // const [priceUp, setPriceUp] = useState(productList.priceUpApi)
     const searchParams = useSearchParams();
     let keyword = searchParams.get('keyword')
-
+    //
     useEffect(() => {
         if (localStorage.getItem('oppenedItems')) {
             setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))
@@ -71,45 +73,42 @@ const Category = ({pageProps}) => {
             dispatch(listSeenProducts(oppenedItems))
         }
 
-
     }, [dispatch, oppenedItems])
-    const brCategory = `/category/${category}`
-    const size = useWindowSize();
-    console.log(size.width)
+    const brCategory = `/search?keyword=${keyword}`
     return (
         <Container>
-            {loading ? (
-                <Loader/>
-            ) : error ? (
-                    <Message variant="danger">{error}</Message>
-                ) :
+            {/*{loading ? (*/}
+            {/*    <Loader/>*/}
+            {/*) : error ? (*/}
+            {/*        <Message variant="danger">{error}</Message>*/}
+            {/*    ) :*/}
                 <>
                     <Head>
-                        <title>{category}</title>
-                        <meta name='description' content={category}/>
-                        <meta name='keywords' content={category}/>
+                        {/*<title>{category}</title>*/}
+                        {/*<meta name='description' content={category}/>*/}
+                        {/*<meta name='keywords' content={category}/>*/}
                         <meta name='keywords'
                               content='sexshop, сексшоп, магазин интимных товаров для взрослых, секс игрушки, sex toys, интимшоп, интим шоп, intimshop, секс, вибратор, фаллоимитатор, вагина, фаллос, клитор, стимулятор, мастурбатор, куклы, эротическое белье'/>
 
                     </Head>
                     <div className="content justify-content-center">
-                        <h1 className='text-center'>{category}</h1>
+                        {/*<h1 className='text-center'>{category}</h1>*/}
 
                         <div>
-                            <Breadcrumb>
-                                <Breadcrumb.Item
-                                    href='/'
-                                >
-                                    Главная
-                                </Breadcrumb.Item>
-                                <Breadcrumb.Item
-                                    href={brCategory}
-                                    active
-                                >
-                                    {category}
-                                </Breadcrumb.Item>
+            {/*                <Breadcrumb>*/}
+            {/*                    <Breadcrumb.Item*/}
+            {/*                        href='/'*/}
+            {/*                    >*/}
+            {/*                        Главная*/}
+            {/*                    </Breadcrumb.Item>*/}
+            {/*                    <Breadcrumb.Item*/}
+            {/*                        href={brCategory}*/}
+            {/*                        active*/}
+            {/*                    >*/}
+            {/*                        {category}*/}
+            {/*                    </Breadcrumb.Item>*/}
 
-                            </Breadcrumb>
+            {/*                </Breadcrumb>*/}
                             <Row className='mb-4 mx-0 w-100 justify-content-center text-center'>
                                 {Array.from(products).map(
                                     (product) => (
@@ -129,7 +128,7 @@ const Category = ({pageProps}) => {
                                     )
                                 )}
                             </Row>
-                            <Paginate
+                            <PaginateSearch
                                 className='mt-2'
                                 page={page}
                                 pages={pages}
@@ -138,7 +137,7 @@ const Category = ({pageProps}) => {
                         </div>
                     </div>
                 </>
-            }
+            {/*}*/}
 
             {(oppenedItems && oppenedItems.length > 0 && seenProducts) &&
                 <>
@@ -157,44 +156,24 @@ const Category = ({pageProps}) => {
         </Container>
 
     )
-    function useWindowSize() {
-        // Initialize state with undefined width/height so server and client renders match
-        // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
-        const [windowSize, setWindowSize] = useState({
-            width: undefined,
-            height: undefined,
-        });
-        useEffect(() => {
-            // only execute all the code below in client side
-            // Handler to call on window resize
-            function handleResize() {
-                // Set window width/height to state
-                setWindowSize({
-                    width: window.innerWidth,
-                    height: window.innerHeight,
-                });
-            }
-            // Add event listener
-            window.addEventListener("resize", handleResize);
-            // Call handler right away so state gets updated with initial window size
-            handleResize();
-            // Remove event listener on cleanup
-            return () => window.removeEventListener("resize", handleResize);
-        }, []); // Empty array ensures that effect is only run on mount
-        return windowSize;}
 }
 
 export const getServerSideProps = async (context) => {
-    let {category, page} = context.query
-    page = '?page='+page
-    const {data} = await axios.get(`${API_HOST}/api/products/category/${category}${page}`);
+    console.log(context)
+    let {keyword, page} = context.query
+    // let {category, page} = context.query
+    if (keyword) {page = '&page='+page}
+    if (!page) {page = ''}
+    const {data} = await axios.get(`${API_HOST}/api/products/?keyword=${keyword}${page}`);
     const topData = await axios.get(`${API_HOST}/api/products/top`);
     if (!data) {
         return {
             notFound: true,
-        }
-    }
-    return {props: {data, topData: topData.data, category}}
+        }}
+
+    return {props: {data, topData: topData.data}}
+
+
 }
 
-export default Category
+export default Search

@@ -5,6 +5,13 @@
     --bs-navbar-hover-color: rgba(255, 255, 255, 0.75);
     font-size: x-large;
 }
+.header-small .container{
+    background-color: #1281e3;
+    /*background-color: #e5097f;*/
+    --bs-navbar-color: rgba(255, 255, 255);
+    --bs-navbar-hover-color: rgba(255, 255, 255, 0.75);
+    font-size: medium;
+}
 /*.header .catalog {*/
 /*    color: ;*/
 /*}*/
@@ -16,6 +23,20 @@
 }
 .bi-telephone-fill {
     color: white;
+}
+
+.orders, .cart {
+    align-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    color: #001a34;
+    display: flex;
+    flex-direction: column;
+    height: 56px;
+    justify-content: flex-start;
+    padding-top: 8px;
+    position: relative;
+    width: 76px;
 }
 @media (max-width: 991px) {
     .header .navbar-nav a {

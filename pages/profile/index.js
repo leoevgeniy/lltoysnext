@@ -9,8 +9,11 @@ import {USER_UPDATE_PROFILE_RESET} from '@/redux/typesUsers'
 import {listMyOrders} from '@/redux/actions/orderActions'
 import {useRouter} from "next/router";
 import Link from "next/link";
+import {faXmark} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
-function ProfileScreen() {
+function ProfileScreen({pageProps}) {
+    const myOrders = pageProps.orders
     const history = useRouter()
     const [name, setName] = useState('')
     const [phone_number, setPhone_number] = useState('')
@@ -72,7 +75,8 @@ function ProfileScreen() {
     return (
         <Container>
             <Row>
-                <Col md={3}>
+                {!myOrders &&
+                    <Col md={3}>
                     <h2>Профиль</h2>
                     {message && <Message variant='danger'>{message}</Message>}
                     {error && <Message variant='danger'>{error}</Message>}
@@ -140,8 +144,8 @@ function ProfileScreen() {
                         </Form.Group>
                         <Button type='submit' variant='primary'>Обновить</Button>
                     </Form>
-                </Col>
-                <Col md={9}>
+                </Col>}
+                <Col md={myOrders ? 12 : 9}>
                     <h2>Заказы</h2>
                     {loadingOrders ? (
                         <Loader/>
@@ -166,10 +170,10 @@ function ProfileScreen() {
                                     <td>{order.createdAt.substring(0, 10)}</td>
                                     <td>₽ {order.totalPrice}</td>
                                     <td>{order.isPaid ? order.paidAt.substring(0, 10) : (
-                                        <i className='fas fa-times' style={{color: 'red'}}></i>
+                                        <FontAwesomeIcon icon={faXmark} style={{color: 'red'}}/>
                                     )}</td>
                                     <td>{order.isDelivered ? order.deliveredAt.substring(0, 10) : (
-                                        <i className='fas fa-times' style={{color: 'red'}}></i>
+                                        <FontAwesomeIcon icon={faXmark} style={{color: 'red'}}/>
                                     )}</td>
                                     <td>
                                         <Link href={`/order/${order._id}`}>
@@ -187,6 +191,10 @@ function ProfileScreen() {
     )
 }
 
+export const getServerSideProps = (context) => {
+    const orders = context.query.orders || null
+    return {props : {orders}}
+}
 export default ProfileScreen
 
 
