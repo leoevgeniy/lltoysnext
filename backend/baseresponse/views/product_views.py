@@ -1,4 +1,5 @@
 import datetime
+import operator
 import urllib
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
@@ -81,21 +82,22 @@ def getProducts(request, *args):
     #     priceUp = float(args[0]['priceUp'])
 
     # if filterer == '' and query == '' and category == '':
-    if query != '':
-    #     products = Product.objects.filter(Q(isSuperSale=True) & Q(assortiment__countInStock__gt=0)).distinct().order_by(
-    #         'name')
-    #     maxPrice = \
-    #         Product.objects.filter(Q(isSuperSale=True) & Q(assortiment__countInStock__gt=0)).aggregate(
-    #             Max('retailPrice'))[
-    #             'retailPrice__max']
-    # else:
-        products = Product.objects.filter(Q(name__icontains=query) & Q(assortiment__countInStock__gt=0)).distinct()
-            #                               & Q(category__category__icontains=category) & Q(
-            # category__subCategory__icontains=filterer) & Q(retailPrice__gte=priceLow) & Q(retailPrice__lte=priceUp) &
-            #                               Q(assortiment__countInStock__gt=0) & Q(brand__icontains=vendor) & Q(
-            # CollectionName__contains=collection) &
-            #                               Q(material__icontains=material) & Q(assortiment__color__icontains=color) &
-            #                               Q(assortiment__size__icontains=size))
+        #     products = Product.objects.filter(Q(isSuperSale=True) & Q(assortiment__countInStock__gt=0)).distinct().order_by(
+        #         'name')
+        #     maxPrice = \
+        #         Product.objects.filter(Q(isSuperSale=True) & Q(assortiment__countInStock__gt=0)).aggregate(
+        #             Max('retailPrice'))[
+        #             'retailPrice__max']
+        # else:
+    products = Product.objects.filter(
+        Q(name__icontains=query) & Q(assortiment__countInStock__gt=0) | Q(category__category__icontains=query) | Q(
+            category__subCategory__icontains=query)).distinct().order_by('name')
+        #                               & Q(category__category__icontains=category) & Q(
+        # category__subCategory__icontains=filterer) & Q(retailPrice__gte=priceLow) & Q(retailPrice__lte=priceUp) &
+        #                               Q(assortiment__countInStock__gt=0) & Q(brand__icontains=vendor) & Q(
+        # CollectionName__contains=collection) &
+        #                               Q(material__icontains=material) & Q(assortiment__color__icontains=color) &
+        #                               Q(assortiment__size__icontains=size))
         # maxPrice = Product.objects.filter(Q(name__icontains=query) & Q(category__category__icontains=category) & Q(
         #     category__subCategory__icontains=filterer) &
         #                                   Q(assortiment__countInStock__gt=0) & Q(brand__icontains=vendor) & Q(
@@ -111,6 +113,34 @@ def getProducts(request, *args):
     # sizeList = []
     # priceUpApi = 0
     # priceLowApi = 10000000
+    categoryList = {}
+    subCategoryList = {}
+
+    if query:
+        for product in products:
+            try:
+                categoryRecords = Category.objects.filter(product=product._id)
+                for categoryRecord in categoryRecords:
+                    if categoryRecord.category not in categoryList.keys():
+                        categoryList[categoryRecord.category] = 1
+                    else:
+                        categoryList[categoryRecord.category] += 1
+                    if categoryRecord.subCategory not in subCategoryList.keys():
+                        subCategoryList[categoryRecord.subCategory] = 1
+                    else:
+                        subCategoryList[categoryRecord.subCategory] += 1
+
+            except:
+                pass
+    if categoryList and subCategoryList:
+        sortedCategoryTuple = sorted(categoryList.items(), key=operator.itemgetter(1), reverse=True)
+        sortedCategoryList = {k: v for k, v in sortedCategoryTuple}
+        sortedSubCategoryTuple = sorted(subCategoryList.items(), key=operator.itemgetter(1), reverse=True)
+        sortedSubCategoryList = {k: v for k, v in sortedSubCategoryTuple}
+    else:
+        sortedCategoryList = {}
+        sortedSubCategoryList = {}
+
     # for product in products:
     #     assortiment = {}
     #     try:
@@ -178,6 +208,8 @@ def getProducts(request, *args):
     return Response(
         {
             'products': serializer.data,
+            'categoryList': sortedCategoryList,
+            'subCategoryList': sortedSubCategoryList,
             # 'products': serializer.data,
             'page': page, 'pages': paginator.num_pages,
             # 'vendorList': vendorList,
@@ -190,6 +222,7 @@ def getProducts(request, *args):
 @api_view(['GET'])
 def getCategotyProducts(request, **args):
     query = request.query_params.get('keyword')
+    print(request.query_params)
     if query is None:
         query = ''
     category = args['pk']
