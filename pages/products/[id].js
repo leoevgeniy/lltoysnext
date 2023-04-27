@@ -115,7 +115,7 @@ function ProductScreen({pageProps}) {
                             size="lg"
                             aria-labelledby="contained-modal-title-vcenter"
                         >
-                            <Modal.Header closeButton>
+                            <Modal.Header  className='text-dark' closeVariant='dark'>
                                 <Modal.Title id="contained-modal-title-vcenter">
                                     {product.name}
                                 </Modal.Title>
