@@ -9,9 +9,15 @@ import {connect, useDispatch} from "react-redux";
 import {wrapper} from "@/redux/store";
 import {useAppSelector} from "@/Hook";
 import {reduxLogin} from "@/redux/actions/userActions";
+import {useRouter} from "next/router";
 
 
 const Home = ({pageProps}) => {
+    const history = useRouter()
+    try {
+        if (pageProps.search) {history.push(`/search?keyword=${pageProps.search}`)}
+
+    } catch {}
     return (
         <>
             <Head>
@@ -39,13 +45,17 @@ const Home = ({pageProps}) => {
 
 
 export const getServerSideProps = wrapper.getServerSideProps(store => async (ctx) => {
+    const { keyword } = ctx.query;
+    console.log(keyword)
     const {data} = await axios.get(`${API_HOST}/api/products/top`);
+    let search = null
+    if (keyword) {search=keyword}
     if (!data) {
         return {
             notFound: true,
         }
     }
-    return {props: {topData: data}}
+    return {props: {topData: data, search:search}}
 })
 // export default connect(mapStateToProps, mapDispatchToProps)(Home)
 export default Home

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useRouter} from 'next/router'
 import {useDispatch, useSelector} from "react-redux";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import {Navbar, Nav, Container, NavDropdown, NavLink, Badge, Button} from "react-bootstrap";
+import {Navbar, Nav, Container, NavDropdown, NavLink, Badge, Button, Form, FormControl} from "react-bootstrap";
 import Image from 'next/image'
 import Accordion from "react-bootstrap/Accordion";
 import Link from "next/link";
@@ -13,7 +13,14 @@ import {listCatalog} from "@/redux/actions/productAction";
 import SearchBox from "./SearchBox";
 import kuragi from '@/public/Kuragi.png'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBarsStaggered, faBriefcase, faCartShopping, faFaceSmile, faPhone} from "@fortawesome/free-solid-svg-icons";
+import {
+    faBarsStaggered,
+    faBriefcase,
+    faCartShopping,
+    faFaceSmile,
+    faMagnifyingGlass,
+    faPhone
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function Header(props) {
     const cart = useSelector(state => state.cart)
@@ -34,6 +41,7 @@ export default function Header(props) {
     const [isLoading, setIsLoading] = useState(true)
     const [expandedFilter, setExpandedFilter] = useState(false)
 
+    const [keyword, setKeyword] = useState('');
 
     useEffect(() => {
         router.isReady ? setIsLoading(false) : ''
@@ -112,14 +120,11 @@ export default function Header(props) {
             >
                 <Container className='justify-content-start align-content-center'>
                     <Navbar.Text style={{'color': 'white', 'fontSize': '15px', 'display': 'flex'}}>
-                        {/*<Image src={phone} alt='телефон' style={{'width': 'auto', 'height': 'auto'}}/>*/}
                         <FontAwesomeIcon icon={faPhone} className='text-center my-auto'/>
                         <i className='pl-1 fs-small'> | +7 (995) 131-08-12</i>
                     </Navbar.Text>
                 </Container>
                 <Container className='justify-content-end text-white fs-6'>
-                    {/*{isLoading && userInfo &&*/}
-                    {/*}*/}
                     {!isLoading && userInfo ? (
                         <Nav>
                             <Link href={'/profile?orders=my'} className='my-auto text-white'>
@@ -177,7 +182,7 @@ export default function Header(props) {
                 </Container>
             </Navbar>
             <Navbar
-                bg='#e5097f'
+                // bg='#e5097f'
                 expand="md"
                 collapseOnSelect
                 expanded={expanded}
@@ -187,56 +192,58 @@ export default function Header(props) {
             >
                 <Container className={expanded ? "d-flex justify-content-start" : "d-flex"}>
 
-                    <Navbar.Toggle
-                        style={expanded ? {'boxShadow': '0 0 0 var(--bs-navbar-toggler-focus-width)'} : {"boxShadow": "none"}}
-                        aria-controls="navbarScroll" onClick={() => setExpanded(expanded ? false : "expanded")}/>
-
-                    <Navbar.Collapse id="navbarScroll">
-
-                        <Nav className='d-none justify-content-around d-md-flex'>
-                            <Navbar.Brand className='align-self-center' style={{'height': '70px', 'width': '100px'}}
-                                          onClick={() => {
-                                              setExpanded(false)
-                                              history.push("/")
-                                          }}>
+                    <Nav className='d-none justify-content-around d-md-flex'>
+                        <Navbar.Brand className='align-self-center' style={{'height': '70px', 'width': '100px'}}
+                                      onClick={() => {
+                                          setExpanded(false)
+                                          history.push("/")
+                                      }}>
 
 
-                                {/*    /!*<Navbar.Brand>МАГАЗИН РАДОСТИ</Navbar.Brand>*!/*/}
-                                <Image priority className='logo' src={kuragi} alt='Магазин Куражи'/>
-                            </Navbar.Brand>
-
-                            <Link href='#' onClick={handleShow}
-                                  className='align-self-center align-items-center text-white pl-3'>
-                                <FontAwesomeIcon icon={faBarsStaggered}/>
-                                <span className='pl-3'>Каталог</span>
-                            </Link>
-
-                        </Nav>
-
-
-                    </Navbar.Collapse>
-                    <Navbar.Brand className='d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none'
-                                  style={{'height': '70px', 'width': '100px'}}>
-                        <Link href="/" onClick={() => setExpanded(false)} className='ms-auto'>
+                            {/*    /!*<Navbar.Brand>МАГАЗИН РАДОСТИ</Navbar.Brand>*!/*/}
                             <Image priority className='logo' src={kuragi} alt='Магазин Куражи'/>
-                        </Link>
-                    </Navbar.Brand>
-                    {<Link href='#' onClick={handleShow}
-                           className='align-self-center align-items-center text-white pl-3 d-flex d-md-none'>
-                        <FontAwesomeIcon icon={faBarsStaggered}/>
-                        <span className='pl-3'>Каталог</span>
-                    </Link>}
-                    <SearchBox/>
-                    <Nav
-                        className='d-flex position-relative d-none d-lg-flex '>
-                        {!isLoading && <Link href='/cart'
-                                             className='text-decoration-none fs-5 text-white '>{(cart && cart.cartItems) ? cartItems.reduce((acc, item) => acc + Number(item.qty), 0) : 0} товаров
-                            | {(cart && cart.cartItems) ? cart.cartItems
-                                .reduce((acc, item) => acc + item.price * item.qty, 0)
-                                .toFixed(0) : 0} руб.</Link>}
+                        </Navbar.Brand>
 
+                        <Link href='#' onClick={handleShow}
+                              className='align-self-center align-items-center text-white px-3 d-flex'>
+                            <FontAwesomeIcon icon={faBarsStaggered}/>
+                            <span className='pl-3'>Каталог</span>
+                        </Link>
 
                     </Nav>
+
+
+                    {/*</Navbar.Collapse>*/}
+                    <Form onSubmit={() => history.push(`/search?keyword=${keyword}`)} className="d-flex w-100">
+                        <FormControl
+                            type="text"
+                            name='keyword'
+                            placeholder='Найти свой Кураж'
+                            // value=''
+                            onChange={(e) => {
+                                setKeyword(e.target.value)
+                            }}
+                        ></FormControl>
+
+                        <span onClick={() => {
+                            if (keyword){
+                            history.push(`/search?keyword=${keyword}`)}
+                            else {}
+
+                        }} className='position-relative'
+                              style={{'top': '8px', 'right': '30px', 'fontSize': '13px'}}><FontAwesomeIcon
+                            icon={faMagnifyingGlass}/></span>
+                    </Form>
+                    <Nav
+                        className='d-flex position-relative d-none d-lg-flex '>
+                        {/*{!isLoading && <Link href='/cart'*/}
+                        {/*                     className='text-decoration-none fs-5 text-white '>{(cart && cart.cartItems) ? cartItems.reduce((acc, item) => acc + Number(item.qty), 0) : 0} товаров*/}
+                        {/*    | {(cart && cart.cartItems) ? cart.cartItems*/}
+                        {/*        .reduce((acc, item) => acc + item.price * item.qty, 0)*/}
+                        {/*        .toFixed(0) : 0} руб.</Link>}*/}
+
+
+
                     {!isLoading &&
                         <div
                             onClick={() => history.push('/profile')}
@@ -244,7 +251,8 @@ export default function Header(props) {
                         >
 
                             <FontAwesomeIcon icon={faFaceSmile}/>
-                            {userInfo ? <span className='fs-6'>{userInfo.name.split(' ')[0]} </span> : <span className='fs-6'>Войти</span>}
+                            {userInfo ? <span className='fs-6'>{userInfo.name.split(' ')[0]} </span> :
+                                <span className='fs-6'>Войти</span>}
                         </div>
                     }
                     {!isLoading && userInfo &&
@@ -264,7 +272,7 @@ export default function Header(props) {
                             {cart && cart.cartItems ? cartItems.reduce((acc, item) => acc + Number(item.qty), 0) : '0'}
                         </Badge>}
                     </Link>
-
+                    </Nav>
                 </Container>
             </Navbar>
 

@@ -1,5 +1,7 @@
 import React, {useState, useEffect, useCallback} from "react";
 import {AddressSuggestions} from "react-dadata";
+// import {Map, Placemark, YMaps} from "react-yandex-map";
+
 import "react-dadata/dist/react-dadata.css";
 import {
     Form,
@@ -27,6 +29,7 @@ import {faRub} from "@fortawesome/free-solid-svg-icons/faRub";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {createOrder, payOrderRequest} from "@/redux/actions/orderActions";
 import {ORDER_CREATE_RESET} from "@/redux/typesOrders";
+import {Map, Placemark, YMaps} from "react-yandex-map";
 
 function ShippingScreen() {
     const router = useRouter()
@@ -200,6 +203,8 @@ function ShippingScreen() {
         router.isReady ? setIsLoading(false) : ''
     }, [])
     const finalPrice = paymentMethod === 'bankCard' ? totalPrice - disc : totalPrice;
+    let width = '320px'
+
     return (
 
         <div className='fa-shipping-fast shipping'>
@@ -297,6 +302,23 @@ function ShippingScreen() {
                                                 <p>
                                                     Время работы: ежедневно с 9:00 до 21:00.
                                                 </p>
+                                                <YMaps className='YMap w-100'>
+                                                    <div id='YMap'>
+                                                        <Map
+                                                            width={width + 'px'}
+                                                            defaultState={{
+                                                                center: [55.705944, 37.646597],
+                                                                zoom: 15,
+                                                                autoFocus: true,
+
+                                                                controls: ['zoomControl', 'fullscreenControl']
+                                                            }} modules={['control.ZoomControl', 'control.FullscreenControl']}
+                                                        >
+                                                            <Placemark defaultGeometry={[55.705944, 37.646597]}/>
+                                                        </Map>
+
+                                                    </div>
+                                                </YMaps>
                                                 <p>
 
                                                     После того, как заказ будет полностью укомплектован, ваш
@@ -312,6 +334,8 @@ function ShippingScreen() {
                                                     расформировывается. Клиент уведомляется по электронной почте об
                                                     отказе от заказа в связи с его неполучением.
                                                 </p>
+
+
                                             </div>
                                         }
                                         {['pochtaRf', 'sdek', 'mskCur'].includes(shippmentMethod) &&

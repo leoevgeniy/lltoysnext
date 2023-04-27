@@ -7,16 +7,15 @@ import kuragi from "../public/Kuragi.png";
 
 function Footer() {
     return (
-        <footer className='d-flex justify-content-lg-around' >
             <Container className='d-flex justify-content-center footer'>
-                <Row className='d-flex py-3 justify-content-md-center text-white text-center' md='auto'>
+                <Row className='d-flex py-3 justify-content-md-center text-white text-center fs-6' md='auto'>
                     <Link href="/"
                           className='d-none d-sm-none d-md-none d-lg-block d-xl-block d-xxl-block justify-self-left'>
                         <Image quality={100} priority className='logo img-fluid align-self-auto' src={kuragi} alt='Sex Shop logo'/>
                     </Link>
-                    <div className='d-flex justify-content-center'>
+                    <div className='d-flex justify-content-center fs-6'>
                         <div id='delivery'
-                             className='d-none d-sm-none d-md-none d-lg-flex d-xl-flex d-xxl-flex flex-column text-light fs-4 px-5'>
+                             className='d-none d-sm-none d-md-none d-lg-flex d-xl-flex d-xxl-flex flex-column text-light  px-5'>
                             <p>Доставка заказов</p>
                             <Link id='curerom' href='/delivery-curerom' className='link-secondary text-decoration-none'>
                                 Курьером
@@ -33,7 +32,7 @@ function Footer() {
                                 Почта России
                             </Link>
                         </div>
-                        <div id='delivery' className='d-flex flex-column text-light fs-4'>
+                        <div id='delivery' className='d-flex flex-column text-light '>
                             <p>Информация</p>
                             <Link id='garanty' href='/garanty' className='link-secondary text-decoration-none'>
                                 Гарантия и возврат
@@ -49,7 +48,7 @@ function Footer() {
                                     персональных данных</p>
                             </Link>
                         </div>
-                        <div id='time' className='d-flex flex-column text-light fs-4'>
+                        <div id='time' className='d-flex flex-column text-light '>
                             <p>Время работы</p>
                             <span id='garanty' >
                                 Ежедневно: <span className='link-secondary'>9.00 - 21.00</span>
@@ -62,7 +61,6 @@ function Footer() {
                     </div>
                 </Row>
             </Container>
-        </footer>
     )
 }
 

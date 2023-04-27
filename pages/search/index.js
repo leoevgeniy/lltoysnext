@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import React from "react";
-import {Row, Col, Container} from 'react-bootstrap'
+import {Row, Col, Container, Badge} from 'react-bootstrap'
 import {useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Product from '@/components/Product'
@@ -25,6 +25,8 @@ import axios from "axios";
 import {API_HOST} from "@/consts";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import PaginateSearch from "@/components/PaginateSearch";
+import category from "@/pages/category/[category]";
+import Link from "next/link";
 
 
 const Search = ({pageProps}) => {
@@ -33,7 +35,7 @@ const Search = ({pageProps}) => {
     // const productList = useSelector((state) => state.categoryproduct);
     // const category = pageProps.category
     // const {data: products} = pageProps
-    const {error, loading, products, page, pages} = pageProps.data;
+    const {categoryList, subCategoryList, products, page, pages} = pageProps.data;
     const dispatch = useDispatch()
     // const [sort, setSort] = useState('')
     // const [priceSortUp, setPriceSortUp] = useState(false);
@@ -82,61 +84,76 @@ const Search = ({pageProps}) => {
             {/*) : error ? (*/}
             {/*        <Message variant="danger">{error}</Message>*/}
             {/*    ) :*/}
-                <>
-                    <Head>
-                        {/*<title>{category}</title>*/}
-                        {/*<meta name='description' content={category}/>*/}
-                        {/*<meta name='keywords' content={category}/>*/}
-                        <meta name='keywords'
-                              content='sexshop, сексшоп, магазин интимных товаров для взрослых, секс игрушки, sex toys, интимшоп, интим шоп, intimshop, секс, вибратор, фаллоимитатор, вагина, фаллос, клитор, стимулятор, мастурбатор, куклы, эротическое белье'/>
+            <>
+                <Head>
+                    {/*<title>{category}</title>*/}
+                    {/*<meta name='description' content={category}/>*/}
+                    {/*<meta name='keywords' content={category}/>*/}
+                    <meta name='keywords'
+                          content='sexshop, сексшоп, магазин интимных товаров для взрослых, секс игрушки, sex toys, интимшоп, интим шоп, intimshop, секс, вибратор, фаллоимитатор, вагина, фаллос, клитор, стимулятор, мастурбатор, куклы, эротическое белье'/>
 
-                    </Head>
-                    <div className="content justify-content-center">
-                        {/*<h1 className='text-center'>{category}</h1>*/}
+                </Head>
+                <div className="content justify-content-center">
+                    {products.length > 0 ?
+                        <div className='d-inline-block'>
+                            <span className='mb-2'> Найдено <strong>{categoryList[Object.keys(categoryList)[0]]}</strong> в категории <Link
+                            href={'/category/' + Object.keys(categoryList)[0] + '?keyword=' + keyword}>{Object.keys(categoryList)[0]}</Link><br/> </span>
+                            <span> <strong>{subCategoryList[Object.keys(subCategoryList)[0]]}</strong> в категории <Link
+                                href={'/category/' + Object.keys(categoryList)[0] + '/' + Object.keys(subCategoryList)[0] + '?keyword=' + keyword}>{Object.keys(subCategoryList)[0]}</Link><br/></span>
+                            <Badge>
+                                {keyword}
+                                <Badge onClick={() => history.push(`/`)}>
+                                    x
+                                </Badge>
 
-                        <div>
-            {/*                <Breadcrumb>*/}
-            {/*                    <Breadcrumb.Item*/}
-            {/*                        href='/'*/}
-            {/*                    >*/}
-            {/*                        Главная*/}
-            {/*                    </Breadcrumb.Item>*/}
-            {/*                    <Breadcrumb.Item*/}
-            {/*                        href={brCategory}*/}
-            {/*                        active*/}
-            {/*                    >*/}
-            {/*                        {category}*/}
-            {/*                    </Breadcrumb.Item>*/}
+                            </Badge>
 
-            {/*                </Breadcrumb>*/}
-                            <Row className='mb-4 mx-0 w-100 justify-content-center text-center'>
-                                {Array.from(products).map(
-                                    (product) => (
-                                        <Col
-                                            className='px-0'
-                                            key={product._id}
-                                            xs={12}
-                                            sm={6}
-                                            md={4}
-                                            lg={3}
-                                            xl={3}
-                                        >
-                                            <Product
-                                                product={product}
-                                            />
-                                        </Col>
-                                    )
-                                )}
-                            </Row>
-                            <PaginateSearch
-                                className='mt-2'
-                                page={page}
-                                pages={pages}
-                                keyword={brCategory}
-                            />
                         </div>
+                        : <span>К сожалению по Вашему запросу ничего не нашлось.</span>
+                    }
+                    <div>
+                        {/*                <Breadcrumb>*/}
+                        {/*                    <Breadcrumb.Item*/}
+                        {/*                        href='/'*/}
+                        {/*                    >*/}
+                        {/*                        Главная*/}
+                        {/*                    </Breadcrumb.Item>*/}
+                        {/*                    <Breadcrumb.Item*/}
+                        {/*                        href={brCategory}*/}
+                        {/*                        active*/}
+                        {/*                    >*/}
+                        {/*                        {category}*/}
+                        {/*                    </Breadcrumb.Item>*/}
+
+                        {/*                </Breadcrumb>*/}
+                        <Row className='mb-4 mx-0 w-100 justify-content-center text-center'>
+                            {Array.from(products).map(
+                                (product) => (
+                                    <Col
+                                        className='px-0'
+                                        key={product._id}
+                                        xs={12}
+                                        sm={6}
+                                        md={4}
+                                        lg={3}
+                                        xl={3}
+                                    >
+                                        <Product
+                                            product={product}
+                                        />
+                                    </Col>
+                                )
+                            )}
+                        </Row>
+                        <Paginate
+                            className='mt-2'
+                            page={page}
+                            pages={pages}
+                            keyword={brCategory}
+                        />
                     </div>
-                </>
+                </div>
+            </>
             {/*}*/}
 
             {(oppenedItems && oppenedItems.length > 0 && seenProducts) &&
@@ -159,17 +176,21 @@ const Search = ({pageProps}) => {
 }
 
 export const getServerSideProps = async (context) => {
-    console.log(context)
     let {keyword, page} = context.query
     // let {category, page} = context.query
-    if (keyword) {page = '&page='+page}
-    if (!page) {page = ''}
+    if (keyword) {
+        page = '&page=' + page
+    }
+    if (!page) {
+        page = ''
+    }
     const {data} = await axios.get(`${API_HOST}/api/products/?keyword=${keyword}${page}`);
     const topData = await axios.get(`${API_HOST}/api/products/top`);
     if (!data) {
         return {
             notFound: true,
-        }}
+        }
+    }
 
     return {props: {data, topData: topData.data}}
 

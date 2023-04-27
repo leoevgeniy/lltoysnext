@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import React from "react";
-import {Row, Col, Container} from 'react-bootstrap'
+import {Row, Col, Container, Badge} from 'react-bootstrap'
 import {useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Product from '@/components/Product'
@@ -27,7 +27,7 @@ import Breadcrumb from "react-bootstrap/Breadcrumb";
 
 
 const Category = ({pageProps}) => {
-    // const history = useRouter()
+    const history = useRouter()
     // const id = history.query.id
     // const productList = useSelector((state) => state.categoryproduct);
     const category = pageProps.category
@@ -55,8 +55,8 @@ const Category = ({pageProps}) => {
     // const [priceRange, setPriceRange] = useState([])
     // const [priceLow, setPriceLow] = useState(productList.priceLowApi)
     // const [priceUp, setPriceUp] = useState(productList.priceUpApi)
-    const searchParams = useSearchParams();
-    let keyword = searchParams.get('keyword')
+    // const searchParams = useSearchParams();
+    let keyword = pageProps.keyword
 
     useEffect(() => {
         if (localStorage.getItem('oppenedItems')) {
@@ -74,8 +74,7 @@ const Category = ({pageProps}) => {
 
     }, [dispatch, oppenedItems])
     const brCategory = `/category/${category}`
-    const size = useWindowSize();
-    console.log(size.width)
+    console.log(keyword)
     return (
         <Container>
             {loading ? (
@@ -110,6 +109,20 @@ const Category = ({pageProps}) => {
                                 </Breadcrumb.Item>
 
                             </Breadcrumb>
+                            {products.length === 0 &&
+                                <span>К сожалению по Вашему запросу ничего не нашлось. <br/></span>
+
+                            }
+                            {keyword &&
+                                <Badge>
+                                    {keyword}
+                                    <Badge onClick={() => history.push(`/category/${category}`)}>
+                                        x
+                                    </Badge>
+
+                                </Badge>
+                            }
+
                             <Row className='mb-4 mx-0 w-100 justify-content-center text-center'>
                                 {Array.from(products).map(
                                     (product) => (
@@ -157,44 +170,25 @@ const Category = ({pageProps}) => {
         </Container>
 
     )
-    function useWindowSize() {
-        // Initialize state with undefined width/height so server and client renders match
-        // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
-        const [windowSize, setWindowSize] = useState({
-            width: undefined,
-            height: undefined,
-        });
-        useEffect(() => {
-            // only execute all the code below in client side
-            // Handler to call on window resize
-            function handleResize() {
-                // Set window width/height to state
-                setWindowSize({
-                    width: window.innerWidth,
-                    height: window.innerHeight,
-                });
-            }
-            // Add event listener
-            window.addEventListener("resize", handleResize);
-            // Call handler right away so state gets updated with initial window size
-            handleResize();
-            // Remove event listener on cleanup
-            return () => window.removeEventListener("resize", handleResize);
-        }, []); // Empty array ensures that effect is only run on mount
-        return windowSize;}
 }
 
 export const getServerSideProps = async (context) => {
-    let {category, page} = context.query
-    page = '?page='+page
-    const {data} = await axios.get(`${API_HOST}/api/products/category/${category}${page}`);
+    let {category, page, keyword} = context.query
+    page = '?page=' + page
+    let res = {}
+    if (keyword) {
+        res = await axios.get(`${API_HOST}/api/products/category/${category}${page}&keyword=${keyword}`);
+    } else {
+        keyword = null
+        res = await axios.get(`${API_HOST}/api/products/category/${category}${page}`);
+    }
     const topData = await axios.get(`${API_HOST}/api/products/top`);
-    if (!data) {
+    if (!res.data) {
         return {
             notFound: true,
         }
     }
-    return {props: {data, topData: topData.data, category}}
+    return {props: {data: res.data, topData: topData.data, category, keyword}}
 }
 
 export default Category

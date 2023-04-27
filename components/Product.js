@@ -121,7 +121,7 @@ function Product({product}) {
 
 
                 </span>
-                {product.colors[0][Object.keys(product.colors[0])][0] === '' &&
+                {!product.colors[0] || product.colors[0][Object.keys(product.colors[0])][0] === '' &&
                     <span
                         id='toCart'
                         className='picture asButton text-center mt-1 mb-1 pl-0'

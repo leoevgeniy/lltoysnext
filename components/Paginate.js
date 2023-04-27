@@ -48,6 +48,10 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
     // } else {
     //     keyword = '?keyword='
     // }
+    let pageStr = '?page'
+    if (keyword.includes('?')) {
+        pageStr = '&page'
+    }
     return (
 
         <div style={{display: "flex", justifyContent: "center"}}>
@@ -60,7 +64,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                         <Pagination.First
                             href={
                                 !isAdmin
-                                    ? `${keyword}?page=${1}`
+                                    ? `${keyword}${pageStr}=${1}`
                                     : `/admin/productlist/${keyword}}?page=${1}`
                             }/>
                     </span>
@@ -71,7 +75,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                         <Pagination.Ellipsis
                             href={
                                 !isAdmin
-                                    ? `${keyword}?page=${page - 10}`
+                                    ? `${keyword}${pageStr}=${page - 10}`
                                     : `/admin/productlist/${keyword}?page=${
                                         page - 10
                                     }`
@@ -88,7 +92,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                                         active={x + 1 === page}
                                         href={
                                             !isAdmin
-                                                ? `${keyword}?page=${
+                                                ? `${keyword}${pageStr}=${
                                                     x + 1
                                                 }`
                                                 : `/admin/productlist/${keyword}?page=${
@@ -111,7 +115,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                             <Pagination.Ellipsis
                                 href={
                                     !isAdmin
-                                        ? `${keyword}?page=${page + 3}`
+                                        ? `${keyword}${pageStr}=${page + 3}`
                                         : `/admin/productlist/${keyword}?page=${
                                             page + 3
                                         }`
@@ -126,7 +130,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                             <Pagination.Last
                                 href={
                                     !isAdmin
-                                        ? `${keyword}?page=${pages}`
+                                        ? `${keyword}${pageStr}=${pages}`
                                         : `/admin/productlist/${keyword}?page=${pages}`
                                 }/>
                         </span>
@@ -148,7 +152,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                                         active={x + 1 === page}
                                         href={
                                             !isAdmin
-                                                ? `${keyword}?page=${
+                                                ? `${keyword}${pageStr}=${
                                                     x + 1
                                                 }`
                                                 : `/admin/productlist/${keyword}?page=${
@@ -171,7 +175,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                                 <Pagination.Ellipsis
                                     href={
                                         !isAdmin
-                                            ? `${keyword}?page=${page + 4}`
+                                            ? `${keyword}${pageStr}=${page + 4}`
                                             : `/admin/productlist/${keyword}?page=${
                                                 page + 6
                                             }`
@@ -187,7 +191,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                             <Pagination.Last
                                 href={
                                     !isAdmin
-                                        ? `${keyword}?page=${pages}`
+                                        ? `${keyword}${pageStr}=${pages}`
                                         : `/admin/productlist/${keyword}?page=${pages}`
                                 }/>
                         </span>

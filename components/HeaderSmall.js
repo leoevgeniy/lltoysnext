@@ -14,6 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import SearchBox from "@/components/SearchBox";
 import {useSelector} from "react-redux";
+import {useSearchParams} from "next/navigation";
 
 const HeaderSmall = () => {
     const history = useRouter()
@@ -25,7 +26,8 @@ const HeaderSmall = () => {
         (state) => state.catalogList
     );
     let {userInfo} = userLogin;
-    const [keyword, setKeyword] = useState("");
+    const searchParams = useSearchParams();
+    const [keyword, setKeyword] = useState('');
 
 
     useEffect(() => {
@@ -39,21 +41,26 @@ const HeaderSmall = () => {
     return (
         <header-small >
             <Container className="d-flex d-md-none justify-content-between bg-primary align-items-center fixed-top">
-                <Link href="/" style={{'height': '70px', 'width': '120px'}}>
+                <Link href="/" style={{'height': '70px', 'width': '160px'}}>
                     <Image priority className='logo' src={kuragi} alt='Магазин Куражи'/>
                 </Link>
-                <Form onSubmit={() => history.push(`/search?keyword=${keyword}`)} className="d-flex">
+                <Form onSubmit={() => history.push(`/search?keyword=${keyword}`)} className="d-flex w-100 mx-3">
                     <FormControl
                         type="text"
-                        name="keyword"
+                        name='keyword'
                         placeholder='Найти свой Кураж'
-                        value={keyword}
+                        // value=''
                         onChange={(e) => {
                             setKeyword(e.target.value)
                         }}
                     ></FormControl>
 
-                    <span onClick={() => history.push(`/search?keyword=${keyword}`)} className='position-relative'
+                    <span onClick={() => {
+                        if (keyword){
+                        history.push(`/search?keyword=${keyword}`)}
+                        else {}
+
+                    }} className='position-relative'
                           style={{'top': '8px', 'right': '30px', 'fontSize': '13px'}}><FontAwesomeIcon
                         icon={faMagnifyingGlass}/></span>
                 </Form>

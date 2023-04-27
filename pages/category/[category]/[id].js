@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import React from "react";
-import {Row, Col, Container} from 'react-bootstrap'
+import {Row, Col, Container, Badge} from 'react-bootstrap'
 import {useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Product from '@/components/Product'
@@ -54,8 +54,9 @@ const SubCategory = ({pageProps}) => {
     // const [priceRange, setPriceRange] = useState([])
     // const [priceLow, setPriceLow] = useState(productList.priceLowApi)
     // const [priceUp, setPriceUp] = useState(productList.priceUpApi)
-    const searchParams = useSearchParams();
-    // let keyword = searchParams.get('keyword')
+    const history = useRouter()
+    // const searchParams = useSearchParams();
+    let keyword = pageProps.keyword
     useEffect(() => {
         if (localStorage.getItem('oppenedItems')) {
             setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))
@@ -114,6 +115,14 @@ const SubCategory = ({pageProps}) => {
                                     {subCategory}
                                 </Breadcrumb.Item>
                             </Breadcrumb>
+                            {keyword &&
+                                <Badge>
+                                    {keyword}
+                                    <Badge onClick={()=> history.push(brSubCategory)}>
+                                        x
+                                    </Badge>
+                                </Badge>
+                            }
                             <Row className='mb-4 mx-0 w-100 justify-content-center text-center'>
                                 {Array.from(products).map(
                                     (product) => (
@@ -137,7 +146,7 @@ const SubCategory = ({pageProps}) => {
                                 className='mt-2'
                                 page={page}
                                 pages={pages}
-                                keyword={brSubCategory}
+                                keyword={keyword ? brSubCategory+'?keyword='+keyword: brSubCategory}
                             />
                         </div>
                     </div>
@@ -164,17 +173,27 @@ const SubCategory = ({pageProps}) => {
 }
 
 export const getServerSideProps = async (context) => {
-    let {category, page} = context.query
+    let {category, page, keyword} = context.query
     let subCategory = context.params.id
     if (page) {page = '?page=' + page} else {page = ''}
-    const {data} = await axios.get(`${API_HOST}/api/products/category/${category}/${subCategory}${page}`);
+    let res = {}
+
+    if (keyword && page) {
+        res = await axios.get(`${API_HOST}/api/products/category/${category}/${subCategory}${page}&keyword=${keyword}`);
+    } else if (keyword && !page) {
+        res = await axios.get(`${API_HOST}/api/products/category/${category}/${subCategory}?keyword=${keyword}`);
+
+    }
+    else {
+        keyword = null
+        res = await axios.get(`${API_HOST}/api/products/category/${category}/${subCategory}${page}`);}
     const topData = await axios.get(`${API_HOST}/api/products/top`);
-    if (!data) {
+    if (!res.data) {
         return {
             notFound: true,
         }
     }
-    return {props: {data, topData: topData.data, category, subCategory}}
+    return {props: {data: res.data, topData: topData.data, category, subCategory, keyword}}
 }
 
 export default SubCategory

@@ -15,11 +15,11 @@
 .header .form-control {
     border-radius: 25px;
     border: none;
-    background: #F49CCC;
+    background: white;
     }
 .header .form-control:enabled {
     border-radius: 25px;
     border: none;
-    background: #F49CCC;
-    color: white;
+    background: white;
+    color: black;
     }
