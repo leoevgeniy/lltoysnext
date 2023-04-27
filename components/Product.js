@@ -87,6 +87,12 @@ function Product({product}) {
                 {(rPrice > price && (1 - (price / rPrice)) > 0.04) && <Badge pill bg='danger' className='badge'>
                     - {((1 - (price / oldPrice)) * 100).toFixed(0)} %
                 </Badge>}
+                {product.superSaleCost &&
+                    <Badge pill bg='danger' className='badge-sale'>
+                        Распродажа
+                    </Badge>
+
+                }
             </div>
 
             <Card.Body itemProp="offers" itemScope itemType="http://schema.org/Offer"
@@ -103,7 +109,7 @@ function Product({product}) {
                     <meta itemProp="price" content={price.toFixed(0)}/>
                     <meta itemProp="priceCurrency" content="RUB"/>
                     <span
-                        className={product.superSaleCost ? 'price text-bg-danger fs-3' : 'price text-bg-success fs-3'}> ₽ {price.toFixed(0)} </span>
+                        className={product.superSaleCost ? 'price text-bg-danger fs-3' : rPrice > price ? 'price text-bg-success fs-3' : 'price  fs-3'}> ₽ {price.toFixed(0)} </span>
                     {(rPrice > price) &&
                         <span
                             className='old-price'> ₽ {oldPrice}

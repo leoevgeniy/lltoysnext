@@ -18,12 +18,21 @@
 
 .card .cardimg .badge {
     position: absolute;
-    top: 55%;
-    right: 83%;
+    top: 40%;
+    right: 76%;
     font-size: 15px;
     height: 5%;
-    width: 19%;
-}.card .cardimg .badgeCard {
+    width: 25%;
+}
+.card .cardimg .badge-sale {
+    position: absolute;
+    top: 1%;
+    right: 50%;
+    font-size: 15px;
+    height: 7%;
+    width: 50%;
+}
+.card .cardimg .badgeCard {
     position: absolute;
     top: 55%;
     right: 2%;

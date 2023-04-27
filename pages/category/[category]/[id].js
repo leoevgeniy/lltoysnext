@@ -30,7 +30,7 @@ import Link from "next/link";
 const SubCategory = ({pageProps}) => {
     const subCategory = pageProps.subCategory
     const category = pageProps.category
-    const {error, loading, products, page, pages} = pageProps.data;
+    const {error, loading, products, productsLength, page, pages} = pageProps.data;
     const dispatch = useDispatch()
     // const [sort, setSort] = useState('')
     // const [priceSortUp, setPriceSortUp] = useState(false);
@@ -77,7 +77,7 @@ const SubCategory = ({pageProps}) => {
     const brCategory = `/category/${category}`
     const brSubCategory = `/category/${category}/${subCategory}`
     return (
-        <Container>
+        <Container className='categ'>
             {loading ? (
                 <Loader/>
             ) : error ? (
@@ -95,7 +95,11 @@ const SubCategory = ({pageProps}) => {
                     <div className="content justify-content-center">
                         {/*{(filter || category) ? (*/}
 
-                        <h1 className='text-center'>{subCategory}</h1>
+                        <h1 className='text-start'>{subCategory}
+                            {productsLength > 0 && <span className='prod-length pl-2'>{productsLength} товаров</span>}
+
+                        </h1>
+
                         <div>
                             <Breadcrumb>
                                 <Breadcrumb.Item

@@ -3,6 +3,7 @@ import {Provider} from "react-redux";
 import React, {useEffect, useState} from "react";
 import Layout from '@/components/layout'
 import '@/styles/header.css'
+import '@/styles/category.css'
 import '@/styles/catalog.css'
 import '@/styles/fontawesome.min.css'
 import 'bootstrap/dist/css/bootstrap.css'

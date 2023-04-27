@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import React from "react";
-import {Row, Col, Container, Badge} from 'react-bootstrap'
+import {Row, Col, Container, Badge, FormCheck} from 'react-bootstrap'
 import {useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Product from '@/components/Product'
@@ -24,6 +24,7 @@ import App, {AppContext} from "next/app";
 import axios from "axios";
 import {API_HOST} from "@/consts";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
+import Link from "next/link";
 
 
 const Category = ({pageProps}) => {
@@ -31,7 +32,7 @@ const Category = ({pageProps}) => {
     // const id = history.query.id
     // const productList = useSelector((state) => state.categoryproduct);
     const category = pageProps.category
-    const {error, loading, products, page, pages} = pageProps.data;
+    const {error, loading, products, productsLength, subCategoriesList, page, pages} = pageProps.data;
     const dispatch = useDispatch()
     // const [sort, setSort] = useState('')
     // const [priceSortUp, setPriceSortUp] = useState(false);
@@ -57,6 +58,7 @@ const Category = ({pageProps}) => {
     // const [priceUp, setPriceUp] = useState(productList.priceUpApi)
     // const searchParams = useSearchParams();
     let keyword = pageProps.keyword
+    const [isSuperSale, setIsSuperSale] = useState(false)
 
     useEffect(() => {
         if (localStorage.getItem('oppenedItems')) {
@@ -67,6 +69,15 @@ const Category = ({pageProps}) => {
 
     }, [])
     useEffect(() => {
+        console.log(isSuperSale, history.asPath)
+        if (isSuperSale) {
+            if (history.asPath.includes('?')) {history.push(history.asPath+'&isSuperSale=1')}
+            else {history.push(history.asPath+'?isSuperSale=1')}
+        } else {
+            if (history.asPath.includes('isSuperSale')) {history.push(history.asPath.split('isSuperSale=')[0].slice(0,-1))}
+        }
+    }, [isSuperSale])
+    useEffect(() => {
         if (oppenedItems) {
             dispatch(listSeenProducts(oppenedItems))
         }
@@ -74,9 +85,8 @@ const Category = ({pageProps}) => {
 
     }, [dispatch, oppenedItems])
     const brCategory = `/category/${category}`
-    console.log(keyword)
     return (
-        <Container>
+        <Container className='categ'>
             {loading ? (
                 <Loader/>
             ) : error ? (
@@ -91,65 +101,92 @@ const Category = ({pageProps}) => {
                               content='sexshop, сексшоп, магазин интимных товаров для взрослых, секс игрушки, sex toys, интимшоп, интим шоп, intimshop, секс, вибратор, фаллоимитатор, вагина, фаллос, клитор, стимулятор, мастурбатор, куклы, эротическое белье'/>
 
                     </Head>
-                    <div className="content justify-content-center">
-                        <h1 className='text-center'>{category}</h1>
+                    <h1 className='text-start'>{category}
+                        {productsLength > 0 &&
+                            <span className='prod-length pl-2'>{productsLength} товаров</span>}
+                    </h1>
 
-                        <div>
-                            <Breadcrumb>
-                                <Breadcrumb.Item
-                                    href='/'
-                                >
-                                    Главная
-                                </Breadcrumb.Item>
-                                <Breadcrumb.Item
-                                    href={brCategory}
-                                    active
-                                >
-                                    {category}
-                                </Breadcrumb.Item>
+                    <Row>
+                        <Col sm={0} md={3}>
+                            <p className='fw-bolder fs-5'>Категория</p>
+                            <p className='ml-5'>  {category}</p>
+                            {Object.keys(subCategoriesList).map((item) =>
+                                <ul key={item}>
+                                    <li>
+                                        <Link href={'/category/' + category + '/' + item}>{item}<span
+                                            className='prod-length pl-2'>{subCategoriesList[item]}</span></Link>
+                                    </li>
+                                </ul>
+                            )}
+                            <br/>
+                            <div className='d-flex justify-content-between'>
+                            <span>
+                                Распродажа</span>
+                                <FormCheck type='switch' onChange={() => setIsSuperSale(!isSuperSale)} className=''></FormCheck>
+                            </div>
+                        </Col>
+                        <Col sm={12} md={9}>
+                            <div className="content">
 
-                            </Breadcrumb>
-                            {products.length === 0 &&
-                                <span>К сожалению по Вашему запросу ничего не нашлось. <br/></span>
 
-                            }
-                            {keyword &&
-                                <Badge>
-                                    {keyword}
-                                    <Badge onClick={() => history.push(`/category/${category}`)}>
-                                        x
-                                    </Badge>
-
-                                </Badge>
-                            }
-
-                            <Row className='mb-4 mx-0 w-100 justify-content-center text-center'>
-                                {Array.from(products).map(
-                                    (product) => (
-                                        <Col
-                                            className='px-0'
-                                            key={product._id}
-                                            xs={12}
-                                            sm={6}
-                                            md={4}
-                                            lg={3}
-                                            xl={3}
+                                <div>
+                                    <Breadcrumb>
+                                        <Breadcrumb.Item
+                                            href='/'
                                         >
-                                            <Product
-                                                product={product}
-                                            />
-                                        </Col>
-                                    )
-                                )}
-                            </Row>
-                            <Paginate
-                                className='mt-2'
-                                page={page}
-                                pages={pages}
-                                keyword={brCategory}
-                            />
-                        </div>
-                    </div>
+                                            Главная
+                                        </Breadcrumb.Item>
+                                        <Breadcrumb.Item
+                                            href={brCategory}
+                                            active
+                                        >
+                                            {category}
+                                        </Breadcrumb.Item>
+
+                                    </Breadcrumb>
+                                    {products.length === 0 &&
+                                        <span>К сожалению по Вашему запросу ничего не нашлось. <br/></span>
+
+                                    }
+                                    {keyword &&
+                                        <Badge>
+                                            {keyword}
+                                            <Badge onClick={() => history.push(`/category/${category}`)}>
+                                                x
+                                            </Badge>
+
+                                        </Badge>
+                                    }
+
+                                    <Row className='mb-4 mx-0 w-100 justify-content-center text-center'>
+                                        {Array.from(products).map(
+                                            (product) => (
+                                                <Col
+                                                    className='px-0'
+                                                    key={product._id}
+                                                    xs={12}
+                                                    sm={6}
+                                                    md={4}
+                                                    lg={3}
+                                                    xl={3}
+                                                >
+                                                    <Product
+                                                        product={product}
+                                                    />
+                                                </Col>
+                                            )
+                                        )}
+                                    </Row>
+                                    <Paginate
+                                        className='mt-2'
+                                        page={page}
+                                        pages={pages}
+                                        keyword={keyword ? brCategory + '?keyword=' + keyword : brCategory}
+                                    />
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
                 </>
             }
 
@@ -173,14 +210,28 @@ const Category = ({pageProps}) => {
 }
 
 export const getServerSideProps = async (context) => {
-    let {category, page, keyword} = context.query
-    page = '?page=' + page
+    console.log(context)
+    let {category, page, keyword, isSuperSale} = context.query
+    if (page) {
+        page = '?page=' + page
+    } else {
+        page = ''
+    }
     let res = {}
-    if (keyword) {
-        res = await axios.get(`${API_HOST}/api/products/category/${category}${page}&keyword=${keyword}`);
+    let data = {}
+    let superSale = ''
+    if (isSuperSale) {
+        if (context.resolvedUrl.includes('?')) {superSale = `&isSuperSale=1`}
+        else {superSale = `?isSuperSale=1`}
+    }
+    if (keyword && page) {
+        res = await axios.get(`${API_HOST}/api/products/category/${category}${page}&keyword=${keyword}${superSale}`);
+    } else if (keyword && !page) {
+        res = await axios.get(`${API_HOST}/api/products/category/${category}?keyword=${keyword}${superSale}`);
     } else {
         keyword = null
-        res = await axios.get(`${API_HOST}/api/products/category/${category}${page}`);
+        console.log(superSale)
+        res = await axios.get(`${API_HOST}/api/products/category/${category}${page}${superSale}`);
     }
     const topData = await axios.get(`${API_HOST}/api/products/top`);
     if (!res.data) {
