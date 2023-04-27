@@ -82,29 +82,29 @@ def getProducts(request, *args):
     #     priceUp = float(args[0]['priceUp'])
 
     # if filterer == '' and query == '' and category == '':
-        #     products = Product.objects.filter(Q(isSuperSale=True) & Q(assortiment__countInStock__gt=0)).distinct().order_by(
-        #         'name')
-        #     maxPrice = \
-        #         Product.objects.filter(Q(isSuperSale=True) & Q(assortiment__countInStock__gt=0)).aggregate(
-        #             Max('retailPrice'))[
-        #             'retailPrice__max']
-        # else:
+    #     products = Product.objects.filter(Q(isSuperSale=True) & Q(assortiment__countInStock__gt=0)).distinct().order_by(
+    #         'name')
+    #     maxPrice = \
+    #         Product.objects.filter(Q(isSuperSale=True) & Q(assortiment__countInStock__gt=0)).aggregate(
+    #             Max('retailPrice'))[
+    #             'retailPrice__max']
+    # else:
     products = Product.objects.filter(
         Q(name__icontains=query) & Q(assortiment__countInStock__gt=0) | Q(category__category__icontains=query) | Q(
             category__subCategory__icontains=query)).distinct().order_by('name')
-        #                               & Q(category__category__icontains=category) & Q(
-        # category__subCategory__icontains=filterer) & Q(retailPrice__gte=priceLow) & Q(retailPrice__lte=priceUp) &
-        #                               Q(assortiment__countInStock__gt=0) & Q(brand__icontains=vendor) & Q(
-        # CollectionName__contains=collection) &
-        #                               Q(material__icontains=material) & Q(assortiment__color__icontains=color) &
-        #                               Q(assortiment__size__icontains=size))
-        # maxPrice = Product.objects.filter(Q(name__icontains=query) & Q(category__category__icontains=category) & Q(
-        #     category__subCategory__icontains=filterer) &
-        #                                   Q(assortiment__countInStock__gt=0) & Q(brand__icontains=vendor) & Q(
-        #     CollectionName__contains=collection) &
-        #                                   Q(material__icontains=material) & Q(assortiment__color__icontains=color) &
-        #                                   Q(assortiment__size__icontains=size)).aggregate(Max('retailPrice'))[
-        #     'retailPrice__max']
+    #                               & Q(category__category__icontains=category) & Q(
+    # category__subCategory__icontains=filterer) & Q(retailPrice__gte=priceLow) & Q(retailPrice__lte=priceUp) &
+    #                               Q(assortiment__countInStock__gt=0) & Q(brand__icontains=vendor) & Q(
+    # CollectionName__contains=collection) &
+    #                               Q(material__icontains=material) & Q(assortiment__color__icontains=color) &
+    #                               Q(assortiment__size__icontains=size))
+    # maxPrice = Product.objects.filter(Q(name__icontains=query) & Q(category__category__icontains=category) & Q(
+    #     category__subCategory__icontains=filterer) &
+    #                                   Q(assortiment__countInStock__gt=0) & Q(brand__icontains=vendor) & Q(
+    #     CollectionName__contains=collection) &
+    #                                   Q(material__icontains=material) & Q(assortiment__color__icontains=color) &
+    #                                   Q(assortiment__size__icontains=size)).aggregate(Max('retailPrice'))[
+    #     'retailPrice__max']
     # vendorList = []
     # collectionList = []
     # materialList = []
@@ -113,6 +113,7 @@ def getProducts(request, *args):
     # sizeList = []
     # priceUpApi = 0
     # priceLowApi = 10000000
+    productsLength = len(products)
     categoryList = {}
     subCategoryList = {}
 
@@ -210,6 +211,7 @@ def getProducts(request, *args):
             'products': serializer.data,
             'categoryList': sortedCategoryList,
             'subCategoryList': sortedSubCategoryList,
+            'productsLength': productsLength,
             # 'products': serializer.data,
             'page': page, 'pages': paginator.num_pages,
             # 'vendorList': vendorList,
@@ -222,16 +224,41 @@ def getProducts(request, *args):
 @api_view(['GET'])
 def getCategotyProducts(request, **args):
     query = request.query_params.get('keyword')
-    print(request.query_params)
+    isSuperSale = request.query_params.get('isSuperSale')
+
+    try:
+
+        print(request.query_params)
+    except:
+        pass
     if query is None:
         query = ''
+    if isSuperSale:
+        print(isSuperSale)
+
     category = args['pk']
     try:
         subcategory = args['pk1']
     except:
         subcategory = ''
-    products = Product.objects.filter(Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
-        category__category__icontains=category) & Q(assortiment__countInStock__gt=0)).distinct().order_by('name')
+    subCategoriesList = {}
+    if isSuperSale:
+        products = Product.objects.filter(Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
+            category__category__icontains=category) & Q(assortiment__countInStock__gt=0) & Q(superSaleCost=True)).distinct().order_by('name')
+    else:
+        products = Product.objects.filter(Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
+            category__category__icontains=category) & Q(assortiment__countInStock__gt=0)).distinct().order_by('name')
+    productsLength = len(products)
+
+    for product in products:
+        try:
+            categories = Category.objects.filter(product=product._id)
+            for cat in categories:
+                if cat.subCategory not in subCategoriesList.keys():
+                    subCategoriesList[cat.subCategory] = len(Product.objects.filter(
+                        Q(category__subCategory__icontains=cat.subCategory) & Q(assortiment__countInStock__gt=0)))
+        except:
+            pass
     page = request.query_params.get('page')
     paginator = Paginator(products, 24)
     try:
@@ -245,8 +272,12 @@ def getCategotyProducts(request, **args):
     page = int(page)
     serializer = ProductSerializer(products, many=True)
     return Response(
-        {'products': serializer.data
-            , 'page': page, 'pages': paginator.num_pages
+        {'products': serializer.data,
+         'page': page,
+         'pages': paginator.num_pages,
+         'productsLength': productsLength,
+         'subCategoriesList': subCategoriesList,
+
          # 'vendorList': vendorList,
          # 'collectionList': collectionList, 'colorUrlList': colorUrlList, 'materialList': materialList,
          # 'colorList': colorList, 'sizeList': sizeList,
