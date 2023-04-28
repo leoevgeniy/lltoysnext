@@ -73,7 +73,7 @@ export default function Header(props) {
     };
 
     return (
-        <Container className='header position-sticky d-none d-md-block' style={{'width': '100%'}}>
+        <Container className='header position-sticky d-none d-md-block px-0' style={{'width': '100%'}}>
             <Offcanvas show={show} onHide={handleClose} className='catalog'>
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>Каталог</Offcanvas.Title>

@@ -71,10 +71,15 @@ const Category = ({pageProps}) => {
     useEffect(() => {
         console.log(isSuperSale, history.asPath)
         if (isSuperSale) {
-            if (history.asPath.includes('?')) {history.push(history.asPath+'&isSuperSale=1')}
-            else {history.push(history.asPath+'?isSuperSale=1')}
+            if (history.asPath.includes('?')) {
+                history.push(history.asPath + '&isSuperSale=1')
+            } else {
+                history.push(history.asPath + '?isSuperSale=1')
+            }
         } else {
-            if (history.asPath.includes('isSuperSale')) {history.push(history.asPath.split('isSuperSale=')[0].slice(0,-1))}
+            if (history.asPath.includes('isSuperSale')) {
+                history.push(history.asPath.split('isSuperSale=')[0].slice(0, -1))
+            }
         }
     }, [isSuperSale])
     useEffect(() => {
@@ -101,40 +106,48 @@ const Category = ({pageProps}) => {
                               content='sexshop, сексшоп, магазин интимных товаров для взрослых, секс игрушки, sex toys, интимшоп, интим шоп, intimshop, секс, вибратор, фаллоимитатор, вагина, фаллос, клитор, стимулятор, мастурбатор, куклы, эротическое белье'/>
 
                     </Head>
-                    <h1 className='text-start'>{category}
+                    <h1 className='text-start fs-5 fs-'>{category}
                         {productsLength > 0 &&
                             <span className='prod-length pl-2'>{productsLength} товаров</span>}
                     </h1>
 
                     <Row>
-                        <Col sm={0} md={3}>
+                        <Col xs={0} md={3} className='d-none d-md-block'>
                             <p className='fw-bolder fs-5'>Категория</p>
                             <p className='ml-5'>  {category}</p>
                             {Object.keys(subCategoriesList).map((item) =>
                                 <ul key={item}>
                                     <li>
-                                        <Link href={'/category/' + category + '/' + item}>{item}<span
-                                            className='prod-length pl-2'>{subCategoriesList[item]}</span></Link>
+                                        <Link href={'/category/' + category + '/' + item} className='subCategory'>{item}</Link>
+                                        <span
+                                            className='prod-length pl-2'>{subCategoriesList[item]}</span>
                                     </li>
                                 </ul>
                             )}
                             <br/>
                             <div className='d-flex justify-content-between'>
-                            <span>
+                                <span>
                                 Распродажа</span>
-                                <FormCheck type='switch' onChange={() => setIsSuperSale(!isSuperSale)} className=''></FormCheck>
+                                <FormCheck
+                                    custom='true'
+                                    id='isSusperSale'
+                                    type='switch'
+                                    сhecked={isSuperSale?'true': ''}
+                                    onChange={() => setIsSuperSale(!isSuperSale)}
+                                    className=''></FormCheck>
                             </div>
                         </Col>
-                        <Col sm={12} md={9}>
+                        <Col xs={12} md={9}>
                             <div className="content">
 
 
                                 <div>
-                                    <Breadcrumb>
+                                    <Breadcrumb >
                                         <Breadcrumb.Item
                                             href='/'
+
                                         >
-                                            Главная
+                                            <span className='breadcrump'>Главная</span>
                                         </Breadcrumb.Item>
                                         <Breadcrumb.Item
                                             href={brCategory}
@@ -164,7 +177,7 @@ const Category = ({pageProps}) => {
                                                 <Col
                                                     className='px-0'
                                                     key={product._id}
-                                                    xs={12}
+                                                    xs={6}
                                                     sm={6}
                                                     md={4}
                                                     lg={3}
@@ -193,14 +206,14 @@ const Category = ({pageProps}) => {
             {(oppenedItems && oppenedItems.length > 0 && seenProducts) &&
                 <>
                     <div className='popular my-3'>
-                        <span className='mx-3 fs-4'>Вы смотрели</span>
+                        <span className='mx-3 fs-4 text-white'>Вы смотрели</span>
                         <div className='line'></div>
                     </div>
                     <SeenProductCarousel/>
                 </>
             }
             <div className='popular my-3'>
-                <span className='mx-3 fs-4'>Популярное</span>
+                <span className='mx-3 fs-4 text-white'>Популярное</span>
                 <div className='line'></div>
             </div>
             <ProductCarousel data={pageProps.topData}/>
@@ -218,20 +231,20 @@ export const getServerSideProps = async (context) => {
         page = ''
     }
     let res = {}
-    let data = {}
-    let superSale = ''
+    let data = {'superSale': false}
     if (isSuperSale) {
-        if (context.resolvedUrl.includes('?')) {superSale = `&isSuperSale=1`}
-        else {superSale = `?isSuperSale=1`}
+        data['superSale'] = true
+    } else {
+        isSuperSale = false
     }
+
     if (keyword && page) {
-        res = await axios.get(`${API_HOST}/api/products/category/${category}${page}&keyword=${keyword}${superSale}`);
+        res = await axios.post(`${API_HOST}/api/products/category/${category}${page}&keyword=${keyword}`, data);
     } else if (keyword && !page) {
-        res = await axios.get(`${API_HOST}/api/products/category/${category}?keyword=${keyword}${superSale}`);
+        res = await axios.post(`${API_HOST}/api/products/category/${category}?keyword=${keyword}`, data);
     } else {
         keyword = null
-        console.log(superSale)
-        res = await axios.get(`${API_HOST}/api/products/category/${category}${page}${superSale}`);
+        res = await axios.post(`${API_HOST}/api/products/category/${category}${page}`, data);
     }
     const topData = await axios.get(`${API_HOST}/api/products/top`);
     if (!res.data) {
@@ -239,7 +252,7 @@ export const getServerSideProps = async (context) => {
             notFound: true,
         }
     }
-    return {props: {data: res.data, topData: topData.data, category, keyword}}
+    return {props: {data: res.data, topData: topData.data, category, keyword, isSuperSale}}
 }
 
 export default Category

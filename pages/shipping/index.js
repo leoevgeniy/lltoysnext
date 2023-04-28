@@ -91,7 +91,6 @@ function ShippingScreen() {
     }
 
 
-
     const submitHandler = async () => {
         await submit()
         setSubmitted(true)
@@ -193,6 +192,8 @@ function ShippingScreen() {
     const totalQty = (cartItems.reduce((acc, item) => acc + Number(item.qty), 0))
     const totalOldPrice = cartItems.reduce((acc, item) => acc + Number(item.qty) * ((Number(item.oldPrice) > Number(item.price)) ? Number(item.oldPrice) : Number(item.price)), 0).toFixed(0)
     const totalPrice = cartItems.reduce((acc, item) => acc + Number(item.qty) * item.price, 0).toFixed(0)
+    const deliveryCost = (Number(totalPrice))>=3000 ? 0 :300
+
     const disc = cart.cartItems
         .reduce((acc, item) => acc + item.price * item.qty, 0)
         .toFixed(0) - cart.cartItems
@@ -202,7 +203,7 @@ function ShippingScreen() {
     useEffect(() => {
         router.isReady ? setIsLoading(false) : ''
     }, [])
-    const finalPrice = paymentMethod === 'bankCard' ? totalPrice - disc : totalPrice;
+    const finalPrice = paymentMethod === 'bankCard' ? (Number(totalPrice)) + Number(deliveryCost) - disc : (Number(totalPrice)) + Number(deliveryCost);
     let width = '320px'
 
     return (
@@ -312,7 +313,8 @@ function ShippingScreen() {
                                                                 autoFocus: true,
 
                                                                 controls: ['zoomControl', 'fullscreenControl']
-                                                            }} modules={['control.ZoomControl', 'control.FullscreenControl']}
+                                                            }}
+                                                            modules={['control.ZoomControl', 'control.FullscreenControl']}
                                                         >
                                                             <Placemark defaultGeometry={[55.705944, 37.646597]}/>
                                                         </Map>
@@ -464,6 +466,15 @@ function ShippingScreen() {
                                                             {disc}
                                                         </span>
                                                     </div>}
+                                                <div className='d-flex justify-content-between'>
+                                                    <span className='fs-6'>Доставка</span>
+                                                        <span style={{
+                                                            // 'color': '#808d9a',
+                                                            'fontWeight': '700'
+                                                        }}>
+                                                            {deliveryCost}
+                                                        </span>
+                                                </div>
 
 
                                             </ListGroupItem>
@@ -483,7 +494,7 @@ function ShippingScreen() {
                                                             'color': '#10C44C',
                                                             'fontWeight': '700'
                                                         }}>
-                                            {totalPrice - disc}
+                                            {finalPrice - disc}
                                                     </span>
                                                     </div>}
 

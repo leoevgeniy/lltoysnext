@@ -1,8 +1,21 @@
 .categ .prod-length {
-    color: #96a3ae;
+    color: black;
     font-size: 14px;
     text-size-adjust: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-family: "GTEestiPro",arial,sans-serif;
+}
+.categ {
+    background: #e5097f linear-gradient(#e5097f, rgb(0 0 0));
+
+}
+.categ .subCategory {
+    color: white;
+}
+.categ .breadcrump {
+    color: white;
+}
+.categ .breadcrumb-item.active, .breadcrumb-item.active::before {
+    color: black;
 }

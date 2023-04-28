@@ -81,7 +81,8 @@ function Product({product}) {
                     onClick={() => history.push(`/products/${product._id}`)}
                     src={srcLink}
                     alt={product.name}
-                />
+                >
+                </Card.Img>
 
 
                 {(rPrice > price && (1 - (price / rPrice)) > 0.04) && <Badge pill bg='danger' className='badge'>
@@ -109,12 +110,12 @@ function Product({product}) {
                     <meta itemProp="price" content={price.toFixed(0)}/>
                     <meta itemProp="priceCurrency" content="RUB"/>
                     <span
-                        className={product.superSaleCost ? 'price text-bg-danger fs-3' : rPrice > price ? 'price text-bg-success fs-3' : 'price  fs-3'}> ₽ {price.toFixed(0)} </span>
-                    {(rPrice > price) &&
+                        className={product.superSaleCost ? 'price text-bg-danger fs-3' : rPrice > price ? 'price fs-3' : 'price  fs-3'}> ₽ {price.toFixed(0)} </span>
+                    {(rPrice > price) ?
                         <span
-                            className='old-price'> ₽ {oldPrice}
+                            className='old-price '> ₽ {oldPrice}
 
-                    </span>}
+                    </span> : <br/>}
                     <Badge pill bg='success' className='badgeCard float-end'>
                         <FontAwesomeIcon icon={faCreditCard}/> - 10%
                     </Badge>
@@ -131,6 +132,7 @@ function Product({product}) {
                     <span
                         id='toCart'
                         className='picture asButton text-center mt-1 mb-1 pl-0'
+                        style={{'background-color': ''}}
                         onClick={addToCartHandler}
                     >В корзину</span>}
 

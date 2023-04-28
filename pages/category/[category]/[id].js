@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import React from "react";
-import {Row, Col, Container, Badge} from 'react-bootstrap'
+import {Row, Col, Container, Badge, FormCheck} from 'react-bootstrap'
 import {useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Product from '@/components/Product'
@@ -99,61 +99,92 @@ const SubCategory = ({pageProps}) => {
                             {productsLength > 0 && <span className='prod-length pl-2'>{productsLength} товаров</span>}
 
                         </h1>
+                        <Row>
+                            <Col sm={0} md={3}>
+                                {/*<p className='fw-bolder fs-5'>Категория</p>*/}
+                                {/*<p className='ml-5'>  {category}</p>*/}
+                                {/*{Object.keys(subCategoriesList).map((item) =>*/}
+                                {/*    <ul key={item}>*/}
+                                {/*        <li>*/}
+                                {/*            <Link href={'/category/' + category + '/' + item}*/}
+                                {/*                  className='subCategory'>{item}</Link>*/}
+                                {/*            <span*/}
+                                {/*                className='prod-length pl-2'>{subCategoriesList[item]}</span>*/}
+                                {/*        </li>*/}
+                                {/*    </ul>*/}
+                                {/*)}*/}
+                                {/*<br/>*/}
+                                {/*<div className='d-flex justify-content-between'>*/}
+                                {/*<span>*/}
+                                {/*Распродажа</span>*/}
+                                {/*    <FormCheck*/}
+                                {/*        custom='true'*/}
+                                {/*        id='isSusperSale'*/}
+                                {/*        type='switch'*/}
+                                {/*        сhecked={isSuperSale ? 'true' : ''}*/}
+                                {/*        onChange={() => setIsSuperSale(!isSuperSale)}*/}
+                                {/*        className=''></FormCheck>*/}
+                                {/*</div>*/}
 
-                        <div>
-                            <Breadcrumb>
-                                <Breadcrumb.Item
-                                    href='/'
-                                >
-                                    Главная
-                                </Breadcrumb.Item>
-                                <Breadcrumb.Item
-                                    href={brCategory}
-                                >
-                                    {category}
-                                </Breadcrumb.Item>
-                                <Breadcrumb.Item
-                                    href={brSubCategory}
-                                    active
-                                >
-                                    {subCategory}
-                                </Breadcrumb.Item>
-                            </Breadcrumb>
-                            {keyword &&
-                                <Badge>
-                                    {keyword}
-                                    <Badge onClick={()=> history.push(brSubCategory)}>
-                                        x
-                                    </Badge>
-                                </Badge>
-                            }
-                            <Row className='mb-4 mx-0 w-100 justify-content-center text-center'>
-                                {Array.from(products).map(
-                                    (product) => (
-                                        <Col
-                                            className='px-0'
-                                            key={product._id}
-                                            xs={12}
-                                            sm={6}
-                                            md={4}
-                                            lg={3}
-                                            xl={3}
+                            </Col>
+                            <Col sm={12} md={9}>
+                                <div>
+                                    <Breadcrumb>
+                                        <Breadcrumb.Item
+                                            href='/'
                                         >
-                                            <Product
-                                                product={product}
-                                            />
-                                        </Col>
-                                    )
-                                )}
-                            </Row>
-                            <Paginate
-                                className='mt-2'
-                                page={page}
-                                pages={pages}
-                                keyword={keyword ? brSubCategory+'?keyword='+keyword: brSubCategory}
-                            />
-                        </div>
+                                            Главная
+                                        </Breadcrumb.Item>
+                                        <Breadcrumb.Item
+                                            href={brCategory}
+                                        >
+                                            {category}
+                                        </Breadcrumb.Item>
+                                        <Breadcrumb.Item
+                                            href={brSubCategory}
+                                            active
+                                        >
+                                            {subCategory}
+                                        </Breadcrumb.Item>
+                                    </Breadcrumb>
+                                    {keyword &&
+                                        <Badge>
+                                            {keyword}
+                                            <Badge onClick={() => history.push(brSubCategory)}>
+                                                x
+                                            </Badge>
+                                        </Badge>
+                                    }
+                                    <Row className='mb-4 mx-0 w-100 justify-content-center text-center'>
+                                        {Array.from(products).map(
+                                            (product) => (
+                                                <Col
+                                                    className='px-0'
+                                                    key={product._id}
+                                                    xs={12}
+                                                    sm={6}
+                                                    md={4}
+                                                    lg={3}
+                                                    xl={3}
+                                                >
+                                                    <Product
+                                                        product={product}
+                                                    />
+                                                </Col>
+                                            )
+                                        )}
+                                    </Row>
+                                    <Paginate
+                                        className='mt-2'
+                                        page={page}
+                                        pages={pages}
+                                        keyword={keyword ? brSubCategory + '?keyword=' + keyword : brSubCategory}
+                                    />
+                                </div>
+                            </Col>
+                        </Row>
                     </div>
+
                 </div>
             }
 
@@ -177,20 +208,28 @@ const SubCategory = ({pageProps}) => {
 }
 
 export const getServerSideProps = async (context) => {
-    let {category, page, keyword} = context.query
+    let {category, page, keyword, isSuperSale} = context.query
     let subCategory = context.params.id
-    if (page) {page = '?page=' + page} else {page = ''}
+    if (page) {
+        page = '?page=' + page
+    } else {
+        page = ''
+    }
     let res = {}
+    let data = {'superSale': false}
+    if (isSuperSale) {
+        data['superSale'] = true
+    }
 
     if (keyword && page) {
-        res = await axios.get(`${API_HOST}/api/products/category/${category}/${subCategory}${page}&keyword=${keyword}`);
+        res = await axios.post(`${API_HOST}/api/products/category/${category}/${subCategory}${page}&keyword=${keyword}`, data);
     } else if (keyword && !page) {
-        res = await axios.get(`${API_HOST}/api/products/category/${category}/${subCategory}?keyword=${keyword}`);
+        res = await axios.post(`${API_HOST}/api/products/category/${category}/${subCategory}?keyword=${keyword}`, data);
 
-    }
-    else {
+    } else {
         keyword = null
-        res = await axios.get(`${API_HOST}/api/products/category/${category}/${subCategory}${page}`);}
+        res = await axios.post(`${API_HOST}/api/products/category/${category}/${subCategory}${page}`, data);
+    }
     const topData = await axios.get(`${API_HOST}/api/products/top`);
     if (!res.data) {
         return {

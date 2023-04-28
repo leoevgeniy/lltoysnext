@@ -7,7 +7,7 @@ import {Container} from "react-bootstrap";
 
 function DeliveryCurerom() {
     return (
-        <Container className="callout-colors-example fs-4 w-100 pb-3">
+        <Container className="callout-colors-example fs-4 w-100 pb-3 text-white">
             <Head>
                 <title>Доставка по Москве</title>
                 {/*<meta name='description' content={product.description}/>*/}
@@ -26,7 +26,7 @@ function DeliveryCurerom() {
                 {/*    Доставка и оплата*/}
                 {/*</Breadcrumb.Item>*/}
             </Breadcrumb>
-            <h1 className='py-4'>Доставка по Москве</h1>
+            <h1 className='py-4 '>Доставка по Москве</h1>
             <p>
                 Курьерская доставка заказов по г. Москве осуществляется в пределах МКАД с 10.00 до 19.00 без выходных в
                 заранее оговоренное с клиентом время. В случае, если Вы не указали желаемое время и день доставки, с

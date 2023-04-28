@@ -39,8 +39,8 @@ const HeaderSmall = () => {
 
     }
     return (
-        <header-small >
-            <Container className="d-flex d-md-none justify-content-between bg-primary align-items-center fixed-top">
+        <header-small classname='bg-dark'>
+            <Container className="d-flex d-md-none justify-content-between align-items-center fixed-top header-small">
                 <Link href="/" style={{'height': '70px', 'width': '160px'}}>
                     <Image priority className='logo' src={kuragi} alt='Магазин Куражи'/>
                 </Link>

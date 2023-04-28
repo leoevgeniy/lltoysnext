@@ -27,7 +27,7 @@ const chevronWidth = 60;
 const autoPlayDelay = 4000;
 
 function ProductCarousel() {
-    const { loading, error, products, oppenedItems } = useSelector(
+    const { loading, error, products} = useSelector(
         (state) => state.productsSeen
     );
     const [state, setState] = useState({activeItemIndex: 0})
@@ -40,7 +40,7 @@ function ProductCarousel() {
             clearInterval(interval)
         }
         
-    }, [state]);
+    }, []);
 
     const onChange = value => setState({ activeItemIndex: value });
 

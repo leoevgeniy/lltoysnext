@@ -8,7 +8,7 @@ function SelfDelivery() {
     let width = '320px'
 
     return (
-        <Container className="callout-colors-example fs-4 w-100 pb-3">
+        <Container className="callout-colors-example fs-4 w-100 pb-3 text-white">
             <Head>
                 <title>Самовывоз</title>
                 {/*<meta name='description' content={product.description}/>*/}

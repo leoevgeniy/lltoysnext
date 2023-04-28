@@ -11,7 +11,16 @@
   }
 }
 
+.paginator .active {
+  color: #e5097f;
+}
+
+.breadcrumb .breadcrumb-item a{
+  color: white;
+}
+
 #__next {
+  background-color: black;
   display: flex;
   flex-direction: column;
   min-height: 100vh;

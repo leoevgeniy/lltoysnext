@@ -8,7 +8,7 @@ function Opd() {
         // width = document.getElementById('YMap').clientWidth
     }, [])
 
-    return (<Container className="callout-colors-example fs-4 w-100 pb-3">
+    return (<Container className="callout-colors-example fs-4 w-100 pb-3 text-white">
         <Head>
             <title>Согласие на обработку персональных данных</title>
             {/*<meta name='description' content={product.description}/>*/}

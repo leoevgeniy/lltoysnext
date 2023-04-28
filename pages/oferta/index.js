@@ -9,7 +9,7 @@ function Oferta() {
         // width = document.getElementById('YMap').clientWidth
     }, [])
 
-    return (<Container className="callout-colors-example fs-4 w-100 pb-3">
+    return (<Container className="callout-colors-example fs-4 w-100 pb-3 text-white">
         <Head>
             <title>Публичная оферта</title>
             {/*<meta name='description' content={product.description}/>*/}

@@ -5,7 +5,7 @@ import Head from "next/head";
 
 function PickPoint() {
     return (
-        <Container className="callout-colors-example fs-4 w-100 pb-3">
+        <Container className="callout-colors-example fs-4 w-100 pb-3 text-white">
             <Head>
                 <title>Постаматы PickPoint по всей России</title>
                 {/*<meta name='description' content={product.description}/>*/}

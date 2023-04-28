@@ -385,6 +385,10 @@ function OrderScreen({pageProps}) {
                                         <Col>Товар</Col>
                                         <Col>₽ {Number(order.itemsPrice).toFixed(0)}</Col>
                                     </Row>
+                                    <Row>
+                                        <Col>Доставка</Col>
+                                        <Col>₽ {Number(order.itemsPrice).toFixed(0)> 3000 ? 0 : 300}</Col>
+                                    </Row>
                                 </ListGroupItem>
                                 {/*{order.paymentMethod === 'bankCard' &&*/}
                                 {/*    <ListGroupItem>*/}

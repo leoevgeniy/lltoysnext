@@ -13,7 +13,7 @@ function Recvisits() {
     }, [])
 
     return (
-        <Container className="callout-colors-example fs-4 w-100 pb-3">
+        <Container className="callout-colors-example fs-4 w-100 pb-3 text-white">
             <Head>
                 <title>Информация</title>
                 {/*<meta name='description' content={product.description}/>*/}

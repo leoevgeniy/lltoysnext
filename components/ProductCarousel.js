@@ -9,17 +9,14 @@ import {Container} from "react-bootstrap";
 
 function ProductCarousel({data}) {
     const products = data
-    const {error, loading} =
-        useSelector((state) => state.productsTopRated
-    );
     let numberOfCards = 0
     const chevronWidth = 60;
     const autoPlayDelay = 4000;
 
     // const [activeItemIndex, setActiveItemIndex] = useState(0);
-    const [state, setState] = useState({activeItemIndex: 0})
+    const [stat, setStat] = useState({activeItemIndex: 0})
     useEffect(() => {
-        const tick = () => setState(prevState => ({
+        const tick = () => setStat(prevState => ({
             activeItemIndex: (prevState.activeItemIndex + 1),
           }));
         let interval = setInterval(tick, autoPlayDelay);
@@ -27,7 +24,7 @@ function ProductCarousel({data}) {
             clearInterval(interval)
         }
         
-    }, [state]);
+    }, [stat]);
     useEffect(() => {
         let pageWidth = 0
         if (typeof document !== 'undefined') {
@@ -45,7 +42,7 @@ function ProductCarousel({data}) {
         } else {numberOfCards = 7}
     },[])
 
-    const onChange = value => setState({ activeItemIndex: value });
+    const onChange = value => setStat({ activeItemIndex: value });
 
 
     return (
@@ -58,7 +55,7 @@ function ProductCarousel({data}) {
                 infiniteLoop
                 gutter={20}
                 numberOfCards={numberOfCards}
-                activeItemIndex={state.activeItemIndex}
+                activeItemIndex={stat.activeItemIndex}
                 requestToChangeActive={onChange}
                 chevronWidth={chevronWidth}
             >

@@ -8,7 +8,7 @@ import Image from "next/image";
 
 function Garanty() {
     return (
-        <Container className="callout-colors-example fs-4 w-100 pb-3">
+        <Container className="callout-colors-example fs-4 w-100 pb-3 text-white">
             <Head>
                 <title>Гарантия и возврат</title>
                 {/*<meta name='description' content={product.description}/>*/}

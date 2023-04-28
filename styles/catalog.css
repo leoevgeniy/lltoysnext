@@ -2,6 +2,18 @@
     font-size: small;
     min-width: 20%;
 }
+.catalog .offcanvas-header, .offcanvas-body{
+    color: white;
+    background-color: black;
+}
+.catalog .accordion-item, .accordion-header, .accordion-button.collapsed, .accordion-button{
+    color: black;
+    background-color: rgb(210 199 219);
+}
+.accordion-button:not(.collapsed) {
+    color: black !important;
+    background-color: rgb(210 199 219) !important;
+}
 .btn-close {
     color: #1f2326 !important;
 }

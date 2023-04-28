@@ -16,24 +16,10 @@ import axios from "axios";
 import {API_HOST} from "@/consts";
 
 function Index({pageProps}) {
-    // const [sizeChange, setSizeChange] = useState('')
 
     const router = useRouter()
-    // const productId = router.query
-    // const [amount, setAmount] = useState(0)
-    // const query = useSearchParams();
-    // const query = new URLSearchParams(location.search)
-    // const [qty, setQty] = useState(Number(query.get('qty')))
     const userLogin = useSelector(state => state.userLogin)
     const {loading, userInfo, error} = userLogin
-    // const qty = parseInt()
-    // const [color, setColor] = useState(query.get('color'))
-    // const [size, setSize] = useState(query.get('size'))
-
-
-    // const qty = location.search ? location.search.indexOf('&') !== -1 ? Number(location.search.split('&')[0].split('=')[1]) : Number(location.search.split('=')[1]) : 1
-    // const color = location.search.indexOf('color') !== -1 ? decodeURI(location.search.split('color')[1].split('=')[1]) :''
-    // const size = location.search.indexOf('size') !== -1 ? decodeURI(location.search.split('size')[1].split('=')[1]) :''
     const dispatch = useDispatch()
     const cart = useSelector(state => state.cart)
     const {cartItems} = cart
@@ -66,6 +52,8 @@ function Index({pageProps}) {
     const totalQty = (cartItems.reduce((acc, item) => acc + Number(item.qty), 0))
     const totalOldPrice = cartItems.reduce((acc, item) => acc + Number(item.qty) * ((Number(item.oldPrice) > Number(item.price)) ? Number(item.oldPrice) : Number(item.price)), 0).toFixed(0)
     const totalPrice = cartItems.reduce((acc, item) => acc + Number(item.qty) * Number(item.price), 0).toFixed(0)
+    const deliveryCost = (Number(totalPrice))>=3000 ? 0 :300
+    const finalCost = (Number(totalPrice)) + Number(deliveryCost)
     const disc = cart.cartItems
         .reduce((acc, item) => acc + item.price * item.qty, 0)
         .toFixed(0) - cart.cartItems
@@ -275,6 +263,16 @@ function Index({pageProps}) {
                                             {(totalOldPrice - totalPrice).toFixed(0)}
                                         </span>
                                         </div>}
+                                    <div className='d-flex justify-content-between'>
+                                        <span className='fs-6'>Доставка</span>
+                                        <span style={{
+                                            // 'color': '#808d9a',
+                                            'fontWeight': '700'
+                                        }}>
+                                            {deliveryCost}
+                                        </span>
+                                    </div>
+
 
 
                                 </ListGroupItem>
@@ -284,7 +282,7 @@ function Index({pageProps}) {
                                         <span style={{
                                             // 'color': '#808d9a',
                                             'fontWeight': '700'
-                                        }}>{totalPrice}
+                                        }}>{finalCost}
                                         </span>
                                     </div>
                                     <div className='d-flex justify-content-between'>
@@ -293,7 +291,7 @@ function Index({pageProps}) {
                                             'color': '#10C44C',
                                             'fontWeight': '700'
                                         }}>
-                                            {totalPrice - disc}
+                                            {finalCost - disc}
                                         </span>
                                     </div>
 

@@ -1,3 +1,10 @@
+#toCart {
+    background: rgb(255, 212, 3) linear-gradient(rgb(255 108 250), rgb(0 0 0));
+    color: white;
+}
+.card {
+    background: rgb(210 199 219);
+}
 .card .price {
     border-radius: 6px;
     font-size: 20px;
@@ -10,7 +17,7 @@
 
 .card .old-price {
     color: #707f8d;
-    font-size: 14px;
+    font-size: 17px;
     line-height: 18px;
     position: relative;
     white-space: nowrap;
@@ -316,19 +323,29 @@
 
 @media (max-width: 414px) {
     .card-text {
-        font-size: 20px;
+        font-size: 10px;
     }
     .card .cardimg .badge {
-        top: 50%;
-        right: 76%;
-        width: 24%;
-        height: 7%;
+        font-size: 12px;
+        top: 36%;
+        right: 70%;
+        width: 28%;
+        height: 5%;
 
+    }
+    .card .cardimg .badge-sale {
+        position: absolute;
+        top: 1%;
+        right: 40%;
+        font-size: 15px;
+        height: 5%;
+        width: 55%;
     }
     .rating,
     .card-title {
         text-decoration: none;
-        font-size: 25px;
+        line-height: 1;
+        font-size: 18px;
     }
 
     .cardstyle {
