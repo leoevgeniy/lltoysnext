@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime
+from unicodedata import decimal
 from xml.dom import minidom
 from xml.etree import ElementTree
 
@@ -453,7 +454,6 @@ def SBPRecreate(request, pk):
     payment = Payment.objects.get(order_id=order['_id'])
     if Payment.objects.filter(order_id=order['_id']).exists():
         if not order['isPaid'] and payment.payment_method == 'sbp':
-            print(payment.id)
             payment.delete()
             items = itemsCreate(order)
             res = yooRequest(order, user, items)
@@ -536,7 +536,9 @@ def PaymentRequest(request, pk):
     return Response(serializer.data)
 def itemsCreate(order):
     items = []
+    itemsTotalPrice = 0
     for item in order['orderItems']:
+        itemsTotalPrice += float(item['price'])
         item_to_add = {
             "description": item['name'],
             "quantity": item['qty'],
@@ -550,6 +552,21 @@ def itemsCreate(order):
             'payment_mode': 'full_payment',
         }
         items.append(item_to_add)
+    print(itemsTotalPrice, order['totalPrice'])
+    if float(order['totalPrice']) > itemsTotalPrice:
+        item_to_add = {
+            "description": 'доставка',
+            "quantity": 1,
+            "amount": {
+                "value": 300,
+                "currency": "RUB"
+            },
+            'vat_code': 1,
+            'measure': 'piece',
+            'payment_subject': 'commodity',
+            'payment_mode': 'full_payment',
+        }
+    items.append(item_to_add)
     return items
 
 def yooRequest(order, user, items):

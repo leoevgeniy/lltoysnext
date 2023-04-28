@@ -18,7 +18,7 @@ from baseresponse.serializers import ProductSerializer
 from rest_framework import status
 
 
-@api_view(['Get'])
+@api_view(['POST'])
 def getProducts(request, *args):
     query = request.query_params.get('keyword')
     # filterer = request.query_params.get('filter')
@@ -221,20 +221,13 @@ def getProducts(request, *args):
         })
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def getCategotyProducts(request, **args):
     query = request.query_params.get('keyword')
-    isSuperSale = request.query_params.get('isSuperSale')
+    isSuperSale = request.data['superSale']
 
-    try:
-
-        print(request.query_params)
-    except:
-        pass
     if query is None:
         query = ''
-    if isSuperSale:
-        print(isSuperSale)
 
     category = args['pk']
     try:
@@ -243,11 +236,15 @@ def getCategotyProducts(request, **args):
         subcategory = ''
     subCategoriesList = {}
     if isSuperSale:
-        products = Product.objects.filter(Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
-            category__category__icontains=category) & Q(assortiment__countInStock__gt=0) & Q(superSaleCost=True)).distinct().order_by('name')
+        products = Product.objects.filter(
+            Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
+                category__category__icontains=category) & Q(assortiment__countInStock__gt=0) & Q(
+                isSuperSale__iexact=1)).distinct().order_by('name')
     else:
-        products = Product.objects.filter(Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
-            category__category__icontains=category) & Q(assortiment__countInStock__gt=0)).distinct().order_by('name')
+        products = Product.objects.filter(
+            Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
+                category__category__icontains=category) & Q(assortiment__countInStock__gt=0)).distinct().order_by(
+            'name')
     productsLength = len(products)
 
     for product in products:
@@ -255,8 +252,14 @@ def getCategotyProducts(request, **args):
             categories = Category.objects.filter(product=product._id)
             for cat in categories:
                 if cat.subCategory not in subCategoriesList.keys():
-                    subCategoriesList[cat.subCategory] = len(Product.objects.filter(
-                        Q(category__subCategory__icontains=cat.subCategory) & Q(assortiment__countInStock__gt=0)))
+                    if isSuperSale:
+                        subCategoriesList[cat.subCategory] = len(Product.objects.filter(
+                            Q(category__subCategory__icontains=cat.subCategory) & Q(
+                                assortiment__countInStock__gt=0)) & Q(
+                            isSuperSale__iexact=1))
+                    else:
+                        subCategoriesList[cat.subCategory] = len(Product.objects.filter(
+                            Q(category__subCategory__icontains=cat.subCategory) & Q(assortiment__countInStock__gt=0)))
         except:
             pass
     page = request.query_params.get('page')
