@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import Link from 'next/link'
-import {Container} from "react-bootstrap";
+import {Container, NavDropdown} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFaceSmile, faHouse, faStream} from "@fortawesome/free-solid-svg-icons";
 import {useRouter} from "next/router";
@@ -122,6 +122,28 @@ function FooterSmall() {
                     {userInfo ? <span className='fs-6'>{userInfo.name.split(' ')[0]} </span> :
                         <span className='fs-6'>Войти</span>}
                 </div>}
+                {!isLoading && userInfo && userInfo.isAdmin && (
+                    <NavDropdown title="Админ" id="adminmenu" className='text-center d-block'>
+
+                        <NavDropdown.Item onClick={() => history.push("/admin/userlist")}>
+                            Пользователи
+                        </NavDropdown.Item>
+
+
+                        <NavDropdown.Item onClick={() => history.push("/admin/productlist")}>
+                            Товары
+                        </NavDropdown.Item>
+
+
+                        <NavDropdown.Item onClick={() => {
+                            history.push("/admin/orderlist")
+                        }}>
+                            Заказы
+                        </NavDropdown.Item>
+
+                    </NavDropdown>
+                )}
+
 
 
             </Container>
