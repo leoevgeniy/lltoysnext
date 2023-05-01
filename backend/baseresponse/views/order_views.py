@@ -566,7 +566,7 @@ def itemsCreate(order):
             'payment_subject': 'commodity',
             'payment_mode': 'full_payment',
         }
-    items.append(item_to_add)
+        items.append(item_to_add)
     return items
 
 def yooRequest(order, user, items):
