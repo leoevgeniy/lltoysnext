@@ -46,7 +46,6 @@ const Home = ({pageProps}) => {
 
 export const getServerSideProps = wrapper.getServerSideProps(store => async (ctx) => {
     const { keyword } = ctx.query;
-    console.log(keyword)
     const {data} = await axios.get(`${API_HOST}/api/products/top`);
     let search = null
     if (keyword) {search=keyword}

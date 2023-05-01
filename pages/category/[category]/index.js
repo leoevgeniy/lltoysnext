@@ -223,7 +223,6 @@ const Category = ({pageProps}) => {
 }
 
 export const getServerSideProps = async (context) => {
-    console.log(context)
     let {category, page, keyword, isSuperSale} = context.query
     if (page) {
         page = '?page=' + page

@@ -132,7 +132,6 @@ function Product({product}) {
                     <span
                         id='toCart'
                         className='picture asButton text-center mt-1 mb-1 pl-0'
-                        style={{'background-color': ''}}
                         onClick={addToCartHandler}
                     >В корзину</span>}
 
