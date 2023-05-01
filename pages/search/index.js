@@ -184,7 +184,7 @@ export const getServerSideProps = async (context) => {
     if (!page) {
         page = ''
     }
-    const {data} = await axios.get(`${API_HOST}/api/products/?keyword=${keyword}${page}`);
+    const {data} = await axios.post(`${API_HOST}/api/products/?keyword=${keyword}${page}`);
     const topData = await axios.get(`${API_HOST}/api/products/top`);
     if (!data) {
         return {

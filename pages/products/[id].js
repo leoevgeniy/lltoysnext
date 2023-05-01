@@ -150,7 +150,6 @@ function ProductScreen({pageProps}) {
                                 {product.name}
                             </Breadcrumb.Item>
                         </Breadcrumb>
-                        <div>
                             <Row itemScope itemType="http://schema.org/Product" className='w-100'>
                                 <Col xs={12} md={6}>
                                     <ProductImageCarousel product={product}/>
@@ -450,7 +449,6 @@ function ProductScreen({pageProps}) {
                             {/*    </Col>*/}
 
                             {/*</Row>*/}
-                        </div>
                         {(oppenedItems && oppenedItems.length > 0 && products) &&
                             <>
                                 <div className='popular my-3'>

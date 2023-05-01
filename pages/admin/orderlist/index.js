@@ -6,6 +6,9 @@ import Message from "@/components/Message";
 import { listOrders } from "@/redux/actions/orderActions";
 import {useRouter} from "next/router";
 import Link from "next/link";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCheck} from "@fortawesome/free-solid-svg-icons";
+
 
 function OrderListScreen() {
     const dispatch = useDispatch();
@@ -57,20 +60,16 @@ function OrderListScreen() {
                                     {order.isPaid ? (
                                         order.paidAt.substring(0, 10)
                                     ) : (
-                                        <i
-                                            className="fas fa-check"
-                                            style={{ color: "red" }}
-                                        ></i>
+                                        <FontAwesomeIcon icon={faCheck}
+                                            style={{ color: "red" }}/>
                                     )}
                                 </td>
                                 <td>
                                     {order.isDelivered ? (
                                         order.deliveredAt.substring(0, 10)
                                     ) : (
-                                        <i
-                                            className="fas fa-check"
-                                            style={{ color: "red" }}
-                                        ></i>
+                                        <FontAwesomeIcon icon={faCheck}
+                                                         style={{ color: "red" }}/>
                                     )}
                                 </td>
 
@@ -80,7 +79,7 @@ function OrderListScreen() {
                                     >
                                         <Button
                                             variant="light"
-                                            className="btn-sm text-white"
+                                            className="btn-sm"
 
                                         >
                                             Детали

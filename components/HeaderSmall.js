@@ -46,14 +46,14 @@ const HeaderSmall = () => {
                 </Link>
                 <Form onSubmit={() => history.push(`/search?keyword=${keyword}`)} className="d-flex w-100 mx-3">
                     <FormControl
-                        type="text"
-                        name='keyword'
-                        placeholder='Найти свой Кураж'
-                        // value=''
-                        onChange={(e) => {
-                            setKeyword(e.target.value)
-                        }}
-                    ></FormControl>
+                    type="text"
+                    name='keyword'
+                    placeholder='Найти свой Кураж'
+                    // value=''
+                    onChange={(e) => {
+                        setKeyword(e.target.value)
+                    }}
+                    />
 
                     <span onClick={() => {
                         if (keyword){
@@ -65,16 +65,6 @@ const HeaderSmall = () => {
                         icon={faMagnifyingGlass}/></span>
                 </Form>
 
-                {!isLoading &&
-                    <Link href={'/cart'} className='position-relative float-end cart text-white'>
-                        <FontAwesomeIcon id='cart' icon={faCartShopping} className='text-white'/>
-                        <span className='fs-6'>Корзина</span>
-                        {!isLoading && <Badge pill bg='danger' className='position-absolute'
-                                              style={{'top': '-5px', 'right': '0px', 'fontSize': '13px'}}>
-                            {cart && cart.cartItems ? cartItems.reduce((acc, item) => acc + Number(item.qty), 0) : '0'}
-                        </Badge>}
-                    </Link>
-                }
             </Container>
         </header-small>
     )

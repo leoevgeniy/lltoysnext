@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import Link from 'next/link'
-import {Container, NavDropdown} from "react-bootstrap";
+import {Badge, Container, NavDropdown} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faFaceSmile, faHouse, faStream} from "@fortawesome/free-solid-svg-icons";
+import {faCartShopping, faFaceSmile, faHouse, faStream} from "@fortawesome/free-solid-svg-icons";
 import {useRouter} from "next/router";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import Loader from "@/components/Loader";
@@ -28,9 +28,12 @@ function FooterSmall() {
     const history = useRouter()
     let a = 0;
     let catalogItems = {}
+    console.log(history)
     useEffect(() => {
         history.isReady ? setIsLoading(false) : ''
     }, [])
+    const cart = useSelector(state => state.cart)
+    const {cartItems} = cart
 
     if (catalog) {
         catalogItems = Object.entries(catalog)
@@ -111,6 +114,17 @@ function FooterSmall() {
                     <FontAwesomeIcon icon={faStream} style={{color: "#e5097f"}}/>
                     <span className='fs-6'>Каталог </span>
                 </div>}
+                {!isLoading &&
+                    <Link href={'/cart'} className='text-white position-relative d-flex footer-small-icons '>
+                        <FontAwesomeIcon id='cart' icon={faCartShopping} style={{color: "#e5097f"}}/>
+                        <span className='fs-6'>Корзина</span>
+                        {!isLoading && <Badge pill bg='danger' className='position-absolute'
+                                              style={{'top': '5px', 'right': '9px', 'fontSize': '10px'}}>
+                            {cart && cart.cartItems ? cartItems.reduce((acc, item) => acc + Number(item.qty), 0) : '0'}
+                        </Badge>}
+                    </Link>
+                }
+
                 {!isLoading && userInfo &&
 
                     <div

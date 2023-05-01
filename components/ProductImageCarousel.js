@@ -25,17 +25,17 @@ export default function ProductImageCarousel(products) {
     }
     return (
 
-        <div className='carousel-wrapper float-end'>
+        <div className='carousel-wrapper w-100'>
             <ImageModal
                 src = {source}
                 // backdrop="static"
                 // keyboard={false}
-                
+
                 show={modalShow}
                 onHide={() => setModalShow(false)}
                 // backdropClassName=''
             />
-            <Carousel showArrows infiniteLoop autoFocus dynamicHeight onClickItem={imageHandler} className='float-end'>
+            <Carousel showArrows infiniteLoop autoFocus dynamicHeight onClickItem={imageHandler} className='float-end w-100'>
                 {images.map((image, index) => {
                     return (
                 <div key={index} className='selectedImage d-inline-block justify-self-center' style={{'maxheight' : '400px'}}>

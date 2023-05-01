@@ -76,7 +76,7 @@ function ProfileScreen({pageProps}) {
         <Container>
             <Row>
                 {!myOrders &&
-                    <Col md={3}>
+                    <Col md={3} className='text-white'>
                     <h2>Профиль</h2>
                     {message && <Message variant='danger'>{message}</Message>}
                     {error && <Message variant='danger'>{error}</Message>}
@@ -145,16 +145,16 @@ function ProfileScreen({pageProps}) {
                         <Button type='submit' variant='primary'>Обновить</Button>
                     </Form>
                 </Col>}
-                <Col md={myOrders ? 12 : 9}>
+                <Col md={myOrders ? 12 : 9}  className='text-white'>
                     <h2>Заказы</h2>
                     {loadingOrders ? (
                         <Loader/>
                     ) : errorOrders ? (
                         <Message variant='danger'>{errorOrders}</Message>
                     ) : (
-                        <Table striped responsive className='table-sm'>
+                        <Table striped responsive className='table-sm w-100'>
                             <thead>
-                            <tr>
+                            <tr  className='text-white w-100'>
                                 <th>Номер</th>
                                 <th>Дата</th>
                                 <th>Итого</th>
@@ -165,17 +165,17 @@ function ProfileScreen({pageProps}) {
                             </thead>
                             <tbody>
                             {orders.map(order => (
-                                <tr key={order._id}>
-                                    <td>{order._id}</td>
-                                    <td>{order.createdAt.substring(0, 10)}</td>
-                                    <td>₽ {order.totalPrice}</td>
-                                    <td>{order.isPaid ? order.paidAt.substring(0, 10) : (
+                                <tr key={order._id}  className='text-white'>
+                                    <td className='text-white'>{order._id}</td>
+                                    <td className='text-white'>{order.createdAt.substring(0, 10)}</td>
+                                    <td className='text-white'>₽ {order.totalPrice}</td>
+                                    <td className='text-white'>{order.isPaid ? order.paidAt.substring(0, 10) : (
                                         <FontAwesomeIcon icon={faXmark} style={{color: 'red'}}/>
                                     )}</td>
-                                    <td>{order.isDelivered ? order.deliveredAt.substring(0, 10) : (
+                                    <td className='text-white'>{order.isDelivered ? order.deliveredAt.substring(0, 10) : (
                                         <FontAwesomeIcon icon={faXmark} style={{color: 'red'}}/>
                                     )}</td>
-                                    <td>
+                                    <td className='text-white'>
                                         <Link href={`/order/${order._id}`}>
                                             <Button className='btn-sm'>Подробнее</Button>
                                         </Link>
