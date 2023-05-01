@@ -106,13 +106,13 @@ const Category = ({pageProps}) => {
                               content='sexshop, сексшоп, магазин интимных товаров для взрослых, секс игрушки, sex toys, интимшоп, интим шоп, intimshop, секс, вибратор, фаллоимитатор, вагина, фаллос, клитор, стимулятор, мастурбатор, куклы, эротическое белье'/>
 
                     </Head>
-                    <h1 className='text-start fs-5 fs-'>{category}
+                    <h1 className='text-start text-white'>{category}
                         {productsLength > 0 &&
                             <span className='prod-length pl-2'>{productsLength} товаров</span>}
                     </h1>
 
                     <Row>
-                        <Col xs={0} md={3} className='d-none d-md-block'>
+                        <Col xs={0} md={3} className='d-none d-md-block text-white'>
                             <p className='fw-bolder fs-5'>Категория</p>
                             <p className='ml-5'>  {category}</p>
                             {Object.keys(subCategoriesList).map((item) =>

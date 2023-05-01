@@ -57,7 +57,7 @@ function FooterSmall() {
     return (
             <Container className='d-flex d-md-none justify-content-between footer-small'>
                 <Offcanvas show={show} onHide={handleClose} className='catalog'>
-                    <Offcanvas.Header closeButton>
+                    <Offcanvas.Header closeButton >
                         <Offcanvas.Title>Каталог</Offcanvas.Title>
                     </Offcanvas.Header>
                     {loading ? (
@@ -125,7 +125,7 @@ function FooterSmall() {
                     </Link>
                 }
 
-                {!isLoading && userInfo &&
+                {!isLoading &&
 
                     <div
                     onClick={() => history.push('/profile')}

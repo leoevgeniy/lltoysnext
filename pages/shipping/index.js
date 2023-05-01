@@ -11,7 +11,7 @@ import {
     Container,
     FormGroup,
     FormLabel,
-    FormCheck, ListGroup, ListGroupItem, Badge, Card,
+    FormCheck, ListGroup, ListGroupItem, Badge, Card, Nav,
 } from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
 import CheckoutSteps from "@/components/CheckoutSteps";
@@ -208,7 +208,7 @@ function ShippingScreen() {
 
     return (
 
-        <div className='fa-shipping-fast shipping'>
+        <div className='shipping'>
             {!isLoading &&
                 <>
                     <Head>
@@ -216,18 +216,18 @@ function ShippingScreen() {
                         <title>Куражи - Оформление заказа </title></Head>
                     <Container md="auto" className='w-100'>
                         <CheckoutSteps step1 step2/>
-                        <Link href='/cart'>Вернуться в корзину</Link>
-                        <h1 md="auto" className='fw-bolder'>
+                        <Link href='/cart' className='text-white'>Вернуться в корзину</Link>
+                        <h1 md="auto" className='fw-bolder text-white'>
                             Оформление заказа
                         </h1>
                         <Row>
-                            <Col ms={8}>
-                                <span className='fw-bolder fs-5'>Способ оплаты <span
+                            <Col xs={12} md={8}>
+                                <span className='fw-bolder fs-5 text-white'>Способ оплаты <span
                                     className='text-danger'>*</span></span>
 
                                 <ListGroup className='mt-3'>
-                                    <ListGroupItem className='d-block'>
-                                        <div className='d-flex'>
+                                    <ListGroupItem className=''>
+                                        <Nav>
                                             <Image
                                                 className={paymentMethod === 'bankCard' ? 'paymentBadge' : ''}
                                                 src={cards}
@@ -254,7 +254,7 @@ function ShippingScreen() {
                                                     setPaymentMethod('deliveryCard')
                                                 }></Image>
 
-                                        </div>
+                                        </Nav>
                                         <div className={paymentMethod === 'bankCard' ? 'text-success pt-3' : 'pt-3'}
                                              style={{'backgroundColor': '#f2f5f9'}}>
                                             <FontAwesomeIcon
@@ -264,34 +264,34 @@ function ShippingScreen() {
                                     </ListGroupItem>
 
                                 </ListGroup>
-                                <span className='fw-bolder fs-5 fw-bolder'>Доставка</span>
+                                <span className='fw-bolder fs-5 fw-bolder text-white'>Доставка</span>
 
                                 <ListGroup>
                                     <ListGroupItem className=''>
                                         <span className='fw-bolder fs-4'>Способ получения</span>
-                                        <div className='d-flex fs-4 my-3'>
+                                        <Nav className='d-flex fs-4 my-3 d-flex'>
                                             <Badge bg='primary'
                                                 // style={shippmentMethod === 'mskSelf' ? {'box-shadow': '6px 6px #989898, 12px 12px #6c6666'} : ''}
-                                                   className={shippmentMethod === 'mskSelf' ? 'deliveryBadge ms-3' : ' ms-3'}
+                                                   className={shippmentMethod === 'mskSelf' ? 'deliveryBadge ms-3 my-2' : ' ms-3 my-2'}
                                                    onClick={() => setShippmentMethod('mskSelf')}>
                                                 Самовывоз
                                             </Badge>
                                             <Badge bg='primary'
-                                                   className={shippmentMethod === 'pochtaRf' ? 'deliveryBadge ms-3' : ' ms-3'}
+                                                   className={shippmentMethod === 'pochtaRf' ? 'deliveryBadge ms-3 my-2' : ' ms-3 my-2'}
                                                    onClick={() => setShippmentMethod('pochtaRf')}>
                                                 Почтой РФ
                                             </Badge>
                                             <Badge bg='primary'
-                                                   className={shippmentMethod === 'sdek' ? 'deliveryBadge ms-3' : ' ms-3'}
+                                                   className={shippmentMethod === 'sdek' ? 'deliveryBadge ms-3 my-2' : ' ms-3 my-2'}
                                                    onClick={() => setShippmentMethod('sdek')}>
                                                 СДЭК
                                             </Badge>
                                             <Badge bg='primary'
-                                                   className={shippmentMethod === 'mskCur' ? 'deliveryBadge ms-3' : ' ms-3'}
+                                                   className={shippmentMethod === 'mskCur' ? 'deliveryBadge ms-3 my-2' : ' ms-3 my-2'}
                                                    onClick={() => setShippmentMethod('mskCur')}>
                                                 Курьером
                                             </Badge>
-                                        </div>
+                                        </Nav>
 
                                         {shippmentMethod === 'mskSelf' &&
                                             <div>

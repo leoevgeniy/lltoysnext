@@ -15,7 +15,8 @@
     background-color: rgb(210 199 219) !important;
 }
 .btn-close {
-    color: #1f2326 !important;
+    color: white !important;
+    background: white;
 }
 @media (max-width: 1200px) {
     .firstTitle {

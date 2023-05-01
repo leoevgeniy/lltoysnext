@@ -132,7 +132,7 @@ const Search = ({pageProps}) => {
                                     <Col
                                         className='px-0'
                                         key={product._id}
-                                        xs={12}
+                                        xs={6}
                                         sm={6}
                                         md={4}
                                         lg={3}

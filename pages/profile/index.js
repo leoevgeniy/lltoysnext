@@ -4,7 +4,7 @@ import {Form, Button, Row, Col, Table, Container} from 'react-bootstrap'
 import {useDispatch, useSelector} from 'react-redux'
 import Loader from '@/components/Loader'
 import Message from '@/components/Message'
-import {getUserDetails, updateUserProfile} from '@/redux/actions/userActions'
+import {getUserDetails, logout, updateUserProfile} from '@/redux/actions/userActions'
 import {USER_UPDATE_PROFILE_RESET} from '@/redux/typesUsers'
 import {listMyOrders} from '@/redux/actions/orderActions'
 import {useRouter} from "next/router";
@@ -71,6 +71,11 @@ function ProfileScreen({pageProps}) {
         }
 
     }
+    const logoutHendler = () => {
+        dispatch(logout())
+        history.push('/')
+
+    };
 
     return (
         <Container>
@@ -187,6 +192,8 @@ function ProfileScreen({pageProps}) {
                     )}
                 </Col>
             </Row>
+            <Button variant='primary' onClick={logoutHendler}>Выйти</Button>
+
         </Container>
     )
 }

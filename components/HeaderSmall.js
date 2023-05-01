@@ -1,4 +1,4 @@
-import {Navbar, Container, Nav, Badge, Form, FormControl} from "react-bootstrap";
+import {Navbar, Container, Nav, Badge, Form, FormControl, Modal, Offcanvas} from "react-bootstrap";
 import Image from "next/image";
 import kuragi from "@/public/Kuragi.png";
 import React, {useEffect, useState} from "react";
@@ -6,18 +6,15 @@ import {useRouter} from "next/router";
 import Link from "next/link";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
-    faBarsStaggered,
-    faBriefcase,
-    faCartShopping,
-    faFaceSmile,
+    faFilter,
     faMagnifyingGlass
 } from "@fortawesome/free-solid-svg-icons";
-import SearchBox from "@/components/SearchBox";
 import {useSelector} from "react-redux";
 import {useSearchParams} from "next/navigation";
 
 const HeaderSmall = () => {
     const history = useRouter()
+    const params = useSearchParams()
     const [isLoading, setIsLoading] = useState(true)
     const cart = useSelector(state => state.cart)
     const {cartItems} = cart
@@ -34,7 +31,7 @@ const HeaderSmall = () => {
         history.isReady ? setIsLoading(false) : ''
     }, [])
 
-
+    const [show, setShow] = useState(false);
     const submitHandler = () => {
 
     }
@@ -46,25 +43,39 @@ const HeaderSmall = () => {
                 </Link>
                 <Form onSubmit={() => history.push(`/search?keyword=${keyword}`)} className="d-flex w-100 mx-3">
                     <FormControl
-                    type="text"
-                    name='keyword'
-                    placeholder='Найти свой Кураж'
-                    // value=''
-                    onChange={(e) => {
-                        setKeyword(e.target.value)
-                    }}
+                        type="text"
+                        name='keyword'
+                        placeholder='Найти свой Кураж'
+                        // value=''
+                        onChange={(e) => {
+                            setKeyword(e.target.value)
+                        }}
                     />
 
                     <span onClick={() => {
-                        if (keyword){
-                        history.push(`/search?keyword=${keyword}`)}
-                        else {}
+                        if (keyword) {
+                            history.push(`/search?keyword=${keyword}`)
+                        } else {
+                        }
 
                     }} className='position-relative'
                           style={{'top': '8px', 'right': '30px', 'fontSize': '13px'}}><FontAwesomeIcon
                         icon={faMagnifyingGlass}/></span>
                 </Form>
+                {(history.pathname.includes('category') || history.pathname.includes('/search')) &&
+                    <FontAwesomeIcon icon={faFilter} onClick={() => setShow(true)}/>
+                }
+                <Offcanvas
+                    show={show}
+                    placement='bottom'
+                    onHide={() => setShow(false)}
+                    className='mh-75'
+                >
+                    <Offcanvas.Header>
+                        <Offcanvas.Title>Фильтры</Offcanvas.Title>
 
+                    </Offcanvas.Header >
+                </Offcanvas>
             </Container>
         </header-small>
     )

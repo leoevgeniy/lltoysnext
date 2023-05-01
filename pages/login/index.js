@@ -99,7 +99,7 @@ function LoginScreen() {
         }
     }
     return (
-        <Container className='login w-50'>
+        <Container className='login mw-80'>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Введите последние 4 цифры</Modal.Title>

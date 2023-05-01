@@ -30,7 +30,8 @@ import Link from "next/link";
 const SubCategory = ({pageProps}) => {
     const subCategory = pageProps.subCategory
     const category = pageProps.category
-    const {error, loading, products, productsLength, page, pages} = pageProps.data;
+    const {error, loading, products, productsLength, categoryList,  subCategoriesList, page, pages} = pageProps.data;
+    console.log(categoryList, subCategoriesList)
     const dispatch = useDispatch()
     // const [sort, setSort] = useState('')
     // const [priceSortUp, setPriceSortUp] = useState(false);
@@ -68,6 +69,23 @@ const SubCategory = ({pageProps}) => {
         dispatch(listTopProducts())
 
     }, [])
+    const [isSuperSale, setIsSuperSale] = useState(false)
+
+    useEffect(() => {
+        console.log(isSuperSale, history.asPath)
+        if (isSuperSale) {
+            if (history.asPath.includes('?')) {
+                history.push(history.asPath + '&isSuperSale=1')
+            } else {
+                history.push(history.asPath + '?isSuperSale=1')
+            }
+        } else {
+            if (history.asPath.includes('isSuperSale')) {
+                history.push(history.asPath.split('isSuperSale=')[0].slice(0, -1))
+            }
+        }
+    }, [isSuperSale])
+
     useEffect(() => {
         if (oppenedItems) {
             dispatch(listSeenProducts(oppenedItems))
@@ -95,36 +113,37 @@ const SubCategory = ({pageProps}) => {
                     <div className="content justify-content-center">
                         {/*{(filter || category) ? (*/}
 
-                        <h1 className='text-start'>{subCategory}
+                        <h1 className='text-start text-white'>{subCategory}
                             {productsLength > 0 && <span className='prod-length pl-2'>{productsLength} товаров</span>}
 
                         </h1>
                         <Row>
-                            <Col sm={0} md={3}>
-                                {/*<p className='fw-bolder fs-5'>Категория</p>*/}
-                                {/*<p className='ml-5'>  {category}</p>*/}
-                                {/*{Object.keys(subCategoriesList).map((item) =>*/}
-                                {/*    <ul key={item}>*/}
-                                {/*        <li>*/}
-                                {/*            <Link href={'/category/' + category + '/' + item}*/}
-                                {/*                  className='subCategory'>{item}</Link>*/}
-                                {/*            <span*/}
-                                {/*                className='prod-length pl-2'>{subCategoriesList[item]}</span>*/}
-                                {/*        </li>*/}
-                                {/*    </ul>*/}
-                                {/*)}*/}
-                                {/*<br/>*/}
-                                {/*<div className='d-flex justify-content-between'>*/}
-                                {/*<span>*/}
-                                {/*Распродажа</span>*/}
-                                {/*    <FormCheck*/}
-                                {/*        custom='true'*/}
-                                {/*        id='isSusperSale'*/}
-                                {/*        type='switch'*/}
-                                {/*        сhecked={isSuperSale ? 'true' : ''}*/}
-                                {/*        onChange={() => setIsSuperSale(!isSuperSale)}*/}
-                                {/*        className=''></FormCheck>*/}
-                                {/*</div>*/}
+                            <Col sm={0} md={3}  className='d-none d-md-block text-white'>
+                                <p className='fw-bolder fs-5 text-white'>Категория</p>
+                                <p><Link href={`/category/${category}`} className='ml-5 text-white'>  {category}</Link> </p>
+                                <p className='ml-8 text-white'>{subCategory}</p>
+                                {Object.keys(subCategoriesList).map((item) =>
+                                    <ul key={item}>
+                                        <li>
+                                            <Link href={'/category/' + category + '/' + item}
+                                                  className='subCategory'> {item}</Link>
+                                            <span
+                                                className='prod-length pl-2'>{subCategoriesList[item]}</span>
+                                        </li>
+                                    </ul>
+                                )}
+                                <br/>
+                                <div className='d-flex justify-content-between'>
+                                <span>
+                                Распродажа</span>
+                                    <FormCheck
+                                        custom='true'
+                                        id='isSusperSale'
+                                        type='switch'
+                                        сhecked={isSuperSale ? 'true' : ''}
+                                        onChange={() => setIsSuperSale(!isSuperSale)}
+                                        className=''></FormCheck>
+                                </div>
 
                             </Col>
                             <Col sm={12} md={9}>
@@ -161,7 +180,7 @@ const SubCategory = ({pageProps}) => {
                                                 <Col
                                                     className='px-0'
                                                     key={product._id}
-                                                    xs={12}
+                                                    xs={6}
                                                     sm={6}
                                                     md={4}
                                                     lg={3}
