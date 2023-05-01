@@ -235,6 +235,7 @@ def getCategotyProducts(request, **args):
     except:
         subcategory = ''
     subCategoriesList = {}
+    categoriesList = {}
     if isSuperSale:
         products = Product.objects.filter(
             Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
@@ -246,22 +247,40 @@ def getCategotyProducts(request, **args):
                 category__category__icontains=category) & Q(assortiment__countInStock__gt=0)).distinct().order_by(
             'name')
     productsLength = len(products)
-
-    for product in products:
+    if not subcategory:
+        for product in products:
+            try:
+                categories = Category.objects.filter(product=product._id)
+                for cat in categories:
+                    if cat.subCategory not in subCategoriesList.keys():
+                        if isSuperSale:
+                            subCategoriesList[cat.subCategory] = len(Product.objects.filter(
+                                Q(category__subCategory__icontains=cat.subCategory) & Q(
+                                    assortiment__countInStock__gt=0)) & Q(
+                                isSuperSale__iexact=1))
+                        else:
+                            subCategoriesList[cat.subCategory] = len(Product.objects.filter(
+                                Q(category__subCategory__icontains=cat.subCategory) & Q(assortiment__countInStock__gt=0)))
+            except:
+                pass
+    else:
         try:
-            categories = Category.objects.filter(product=product._id)
+            categories = Category.objects.all()
             for cat in categories:
-                if cat.subCategory not in subCategoriesList.keys():
-                    if isSuperSale:
-                        subCategoriesList[cat.subCategory] = len(Product.objects.filter(
-                            Q(category__subCategory__icontains=cat.subCategory) & Q(
-                                assortiment__countInStock__gt=0)) & Q(
-                            isSuperSale__iexact=1))
-                    else:
-                        subCategoriesList[cat.subCategory] = len(Product.objects.filter(
-                            Q(category__subCategory__icontains=cat.subCategory) & Q(assortiment__countInStock__gt=0)))
+                if cat.category == category:
+                    if cat.subCategory not in subCategoriesList:
+                        if isSuperSale:
+                            subCategoriesList[cat.subCategory] = len(Product.objects.filter(
+                                Q(category__subCategory__icontains=cat.subCategory) & Q(
+                                    assortiment__countInStock__gt=0)) & Q(
+                                isSuperSale__iexact=1))
+                        else:
+                            subCategoriesList[cat.subCategory] = len(Product.objects.filter(
+                                Q(category__subCategory__icontains=cat.subCategory) & Q(assortiment__countInStock__gt=0)))
         except:
             pass
+
+
     page = request.query_params.get('page')
     paginator = Paginator(products, 24)
     try:
