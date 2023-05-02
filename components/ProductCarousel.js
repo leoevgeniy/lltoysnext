@@ -1,34 +1,30 @@
+
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import ItemsCarousel from "react-items-carousel";
 import Link from "next/link";
 import {Container} from "react-bootstrap";
-
-
-
+import Image from "next/image";
+import Product from "@/components/Product";
 
 function ProductCarousel({data}) {
     const products = data
     let numberOfCards = 0
     const chevronWidth = 60;
-    const autoPlayDelay = 4000;
+    const autoPlayDelay = 2000;
 
     // const [activeItemIndex, setActiveItemIndex] = useState(0);
     const [stat, setStat] = useState({activeItemIndex: 0})
     useEffect(() => {
         const tick = () => setStat(prevState => ({
             activeItemIndex: (prevState.activeItemIndex + 1),
-          }));
-        let interval = setInterval(tick, autoPlayDelay);
-        return () => {
-            clearInterval(interval)
-        }
-        
+        }));
+
+
     }, [stat]);
     useEffect(() => {
         let pageWidth = 0
         if (typeof document !== 'undefined') {
-        pageWidth = document.documentElement.scrollWidth}
+            pageWidth = document.documentElement.scrollWidth}
         if (pageWidth < 1400 && pageWidth > 1200) {
             numberOfCards = 7
         } else if (pageWidth <= 1200 && pageWidth > 991) {
@@ -46,10 +42,6 @@ function ProductCarousel({data}) {
 
 
     return (
-        // loading?
-        // <Loader/>
-        // : error ?
-        // <Message/> :
         <Container style={{ padding: `0 `, width: '100%' }}>
             <ItemsCarousel
                 infiniteLoop
@@ -61,7 +53,10 @@ function ProductCarousel({data}) {
             >
                 {products && products.map((product, i) => (
                     <Link key={product._id} href={`/products/${product._id}`}>
-                        <img loading="lazy"  src={product.imageSmall} alt={product.name} />
+                        <Product
+                            product={product}
+                        />
+                        {/*<Image loading="lazy" width={150} height={150} src={product.imageSmall} alt={product.name} />*/}
                     </Link>
                 ))}
             </ItemsCarousel>

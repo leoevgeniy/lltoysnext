@@ -28,7 +28,6 @@ function FooterSmall() {
     const history = useRouter()
     let a = 0;
     let catalogItems = {}
-    console.log(history)
     useEffect(() => {
         history.isReady ? setIsLoading(false) : ''
     }, [])

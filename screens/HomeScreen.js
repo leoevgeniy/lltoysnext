@@ -8,7 +8,7 @@ import ProductCarousel from "@/components/ProductCarousel";
 import {listSeenProducts, listTopProducts} from "@/redux/actions/productAction";
 
 
-const HomeScreen = ({data}) => {
+const HomeScreen = ({data, bestSeller, novelties}) => {
     const {products: seenProducts} = useSelector((state) => state.productsSeen)
     const [oppenedItems, setOppenedItems] = useState([])
     const dispatch = useDispatch()
@@ -31,6 +31,13 @@ const HomeScreen = ({data}) => {
             <div className='mainlady w-100'>
                 {/*<Image src={mainlady} alt='Эротическая одежда'/>*/}
             </div>
+            <div className='popular my-3'>
+                <span className='mx-3 fs-4 text-white'>Лучшая цена</span>
+                <div className='line'></div>
+            </div>
+            <ProductCarousel data={data}/>
+
+
             <div className="w-100 pt-1">
                 <div className='categories'>
                     <Link className='category category1' href='/category/Эротическая одежда'>
@@ -51,10 +58,10 @@ const HomeScreen = ({data}) => {
                 </div>
             </div>
             <div className='popular my-3'>
-                <span className='mx-3 fs-4 text-white'>Популярное</span>
+                <span className='mx-3 fs-4 text-white'>Хиты продаж</span>
                 <div className='line'></div>
             </div>
-            <ProductCarousel data={data}/>
+            <ProductCarousel data={bestSeller}/>
 
             {/*<BannersCarousel/>*/}
             <div className="w-100 mt-3">
@@ -79,6 +86,12 @@ const HomeScreen = ({data}) => {
                     </Link>
                 </div>
             </div>
+            <div className='popular my-3'>
+                <span className='mx-3 fs-4 text-white'>Новинки</span>
+                <div className='line'></div>
+            </div>
+            <ProductCarousel data={novelties}/>
+
             {(oppenedItems && oppenedItems.length > 0 && seenProducts) &&
                 <>
                     <div className='popular my-3'>

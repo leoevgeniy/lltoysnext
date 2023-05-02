@@ -161,10 +161,10 @@ function ProfileScreen({pageProps}) {
                             <thead>
                             <tr  className='text-white w-100'>
                                 <th>Номер</th>
-                                <th>Дата</th>
+                                <th className='d-none d-md-block'>Дата</th>
                                 <th>Итого</th>
                                 <th>Оплачено</th>
-                                <th>Доставлено</th>
+                                <th className='d-none d-md-block'>Доставлено</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -172,17 +172,17 @@ function ProfileScreen({pageProps}) {
                             {orders.map(order => (
                                 <tr key={order._id}  className='text-white'>
                                     <td className='text-white'>{order._id}</td>
-                                    <td className='text-white'>{order.createdAt.substring(0, 10)}</td>
+                                    <td className='text-white d-none d-md-block'>{order.createdAt.substring(0, 10)}</td>
                                     <td className='text-white'>₽ {order.totalPrice}</td>
                                     <td className='text-white'>{order.isPaid ? order.paidAt.substring(0, 10) : (
                                         <FontAwesomeIcon icon={faXmark} style={{color: 'red'}}/>
                                     )}</td>
-                                    <td className='text-white'>{order.isDelivered ? order.deliveredAt.substring(0, 10) : (
+                                    <td className='text-white d-none d-md-block'>{order.isDelivered ? order.deliveredAt.substring(0, 10) : (
                                         <FontAwesomeIcon icon={faXmark} style={{color: 'red'}}/>
                                     )}</td>
                                     <td className='text-white'>
                                         <Link href={`/order/${order._id}`}>
-                                            <Button className='btn-sm'>Подробнее</Button>
+                                            <Button className='btn-sm'>Детали</Button>
                                         </Link>
                                     </td>
                                 </tr>

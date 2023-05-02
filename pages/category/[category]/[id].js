@@ -31,7 +31,6 @@ const SubCategory = ({pageProps}) => {
     const subCategory = pageProps.subCategory
     const category = pageProps.category
     const {error, loading, products, productsLength, categoryList,  subCategoriesList, page, pages} = pageProps.data;
-    console.log(categoryList, subCategoriesList)
     const dispatch = useDispatch()
     // const [sort, setSort] = useState('')
     // const [priceSortUp, setPriceSortUp] = useState(false);
@@ -72,7 +71,6 @@ const SubCategory = ({pageProps}) => {
     const [isSuperSale, setIsSuperSale] = useState(false)
 
     useEffect(() => {
-        console.log(isSuperSale, history.asPath)
         if (isSuperSale) {
             if (history.asPath.includes('?')) {
                 history.push(history.asPath + '&isSuperSale=1')

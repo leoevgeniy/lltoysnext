@@ -136,20 +136,20 @@
 }
 .category7 {
     grid-area: 1 / 2 / 3 / 2;
-    background: center no-repeat url("../public/women.jpg");
+    background: center no-repeat url("../public/women.webp");
 
     background-size: cover;
 }
 .category8 {
     grid-area: 1 / 3 / 2 / 4;
-    background: center no-repeat url("../public/men.jpg");
+    background: center no-repeat url("../public/men.webp");
     box-shadow: 10px 10px 50px gray;
 
     background-size: cover;
 }
 .category9 {
     grid-area: 2 / 1 / 3 / 2;
-    background: center no-repeat url("../public/nignee.jpg");
+    background: center no-repeat url("../public/nignee.webp");
     box-shadow: 10px 10px 50px gray;
 
     background-size: cover;
@@ -163,7 +163,7 @@
 }
 .category11 {
     grid-area: none;
-    background: center no-repeat url("../public/womenSmall.jpg");
+    background: center no-repeat url("../public/womenSmall.webp");
     box-shadow: 10px 10px 50px gray;
 
     background-size: cover;

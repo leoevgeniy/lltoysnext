@@ -20,6 +20,7 @@ import '@/styles/inputPD.css'
 import '@/styles/PageNotFound.css'
 import '@/styles/product.css'
 import '@fortawesome/fontawesome-svg-core/styles.css'
+import 'pure-react-carousel/dist/react-carousel.es.css';
 import {wrapper} from "@/redux/store";
 import Head from "next/head";
 

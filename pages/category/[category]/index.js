@@ -69,7 +69,6 @@ const Category = ({pageProps}) => {
 
     }, [])
     useEffect(() => {
-        console.log(isSuperSale, history.asPath)
         if (isSuperSale) {
             if (history.asPath.includes('?')) {
                 history.push(history.asPath + '&isSuperSale=1')

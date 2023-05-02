@@ -35,6 +35,8 @@ const Home = ({pageProps}) => {
             </Head>
             <HomeScreen
                 data={pageProps.topData}
+                bestSeller={pageProps.bestSeller}
+                novelties={pageProps.novelties}
             />
         </>
 
@@ -47,6 +49,8 @@ const Home = ({pageProps}) => {
 export const getServerSideProps = wrapper.getServerSideProps(store => async (ctx) => {
     const { keyword } = ctx.query;
     const {data} = await axios.get(`${API_HOST}/api/products/top`);
+    const {data:bestSeller} = await axios.get(`${API_HOST}/api/products/bestseller`);
+    const {data:novelties} = await axios.get(`${API_HOST}/api/products/new`);
     let search = null
     if (keyword) {search=keyword}
     if (!data) {
@@ -54,7 +58,7 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async (ctx
             notFound: true,
         }
     }
-    return {props: {topData: data, search:search}}
+    return {props: {topData: data, search:search, bestSeller, novelties}}
 })
 // export default connect(mapStateToProps, mapDispatchToProps)(Home)
 export default Home
