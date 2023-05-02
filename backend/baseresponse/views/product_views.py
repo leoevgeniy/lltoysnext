@@ -260,7 +260,8 @@ def getCategotyProducts(request, **args):
                                 isSuperSale__iexact=1))
                         else:
                             subCategoriesList[cat.subCategory] = len(Product.objects.filter(
-                                Q(category__subCategory__icontains=cat.subCategory) & Q(assortiment__countInStock__gt=0)))
+                                Q(category__subCategory__icontains=cat.subCategory) & Q(
+                                    assortiment__countInStock__gt=0)))
             except:
                 pass
     else:
@@ -276,10 +277,10 @@ def getCategotyProducts(request, **args):
                                 isSuperSale__iexact=1))
                         else:
                             subCategoriesList[cat.subCategory] = len(Product.objects.filter(
-                                Q(category__subCategory__icontains=cat.subCategory) & Q(assortiment__countInStock__gt=0)))
+                                Q(category__subCategory__icontains=cat.subCategory) & Q(
+                                    assortiment__countInStock__gt=0)))
         except:
             pass
-
 
     page = request.query_params.get('page')
     paginator = Paginator(products, 24)
@@ -320,6 +321,22 @@ def getCatalog(request):
             if category.subCategory not in catalog[category.category]:
                 catalog[category.category].append(category.subCategory)
     return Response(catalog)
+
+
+@api_view(['GET'])
+def getBestSellerProducts(request):
+    products = Product.objects.filter(Q(assortiment__countInStock__gt=0) & Q(isBestSeller__iexact=1)).distinct()
+    products = products.order_by('?')[:30]
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def getNewProducts(request):
+    products = Product.objects.filter(Q(assortiment__countInStock__gt=0) & Q(isNovelties__iexact=1)).distinct()
+    products = products.order_by('?')[:30]
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
 
 
 @api_view(['GET'])
