@@ -22,6 +22,13 @@
     position: relative;
     white-space: nowrap;
 }
+.product-carousel .old-price {
+    color: #aab3bb;
+    font-size: 12px;
+    line-height: 18px;
+    position: relative;
+    white-space: nowrap;
+}
 
 .card .cardimg .badge {
     position: absolute;
@@ -49,6 +56,17 @@
 }
 
 .card .old-price::before {
+    background: var(--bs-red);
+    content: "";
+    display: block;
+    height: 1px;
+    left: 0;
+    position: absolute;
+    top: 50%;
+    transform: rotate(-3deg);
+    width: 100%;
+}
+.product-carousel .old-price::before {
     background: var(--bs-red);
     content: "";
     display: block;

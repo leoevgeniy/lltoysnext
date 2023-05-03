@@ -15,9 +15,12 @@ import {useRouter} from "next/router";
 const Home = ({pageProps}) => {
     const history = useRouter()
     try {
-        if (pageProps.search) {history.push(`/search?keyword=${pageProps.search}`)}
+        if (pageProps.search) {
+            history.push(`/search?keyword=${pageProps.search}`)
+        }
 
-    } catch {}
+    } catch {
+    }
     return (
         <>
             <Head>
@@ -47,18 +50,31 @@ const Home = ({pageProps}) => {
 
 
 export const getServerSideProps = wrapper.getServerSideProps(store => async (ctx) => {
-    const { keyword } = ctx.query;
-    const {data} = await axios.get(`${API_HOST}/api/products/top`);
-    const {data:bestSeller} = await axios.get(`${API_HOST}/api/products/bestseller`);
-    const {data:novelties} = await axios.get(`${API_HOST}/api/products/new`);
+    const {keyword} = ctx.query;
+    let {data} = await axios.get(`${API_HOST}/api/products/top`);
+
+    const topData = data
+    data = {}
+    const {data: bestSeller} = await axios.get(`${API_HOST}/api/products/bestseller`);
+    const {data: novelties} = await axios.get(`${API_HOST}/api/products/new`);
     let search = null
-    if (keyword) {search=keyword}
-    if (!data) {
+    if (keyword) {
+        search = keyword
+    }
+
+    if (!topData) {
         return {
             notFound: true,
         }
     }
-    return {props: {topData: data, search:search, bestSeller, novelties}}
+    return {
+        props: {
+            topData,
+            search,
+            bestSeller,
+            novelties
+        }
+    }
 })
 // export default connect(mapStateToProps, mapDispatchToProps)(Home)
 export default Home

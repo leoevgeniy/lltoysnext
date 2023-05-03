@@ -6,9 +6,22 @@ import BannersCarousel from '@/components/BannersCarousel'
 import SeenProductCarousel from "@/components/SeenProductCarousel";
 import ProductCarousel from "@/components/ProductCarousel";
 import {listSeenProducts, listTopProducts} from "@/redux/actions/productAction";
+import Image from "next/image";
+import mainlady from '@/public/mainlady.webp'
+import sexmebel from '@/public/sexmebel.webp'
+import erotic from '@/public/erotic.webp'
+import bdsm from '@/public/bdsm.webp'
+import lubricants from '@/public/lubricants.webp'
+import toys from '@/public/toys.webp'
+import things from '@/public/things.webp'
+import women from '@/public/women.webp'
+import womenSmall from '@/public/womenSmall.webp'
+import men from '@/public/men.webp'
+import nignee from '@/public/nignee.webp'
+import kupalniki from '@/public/kupalniki.webp'
 
-
-const HomeScreen = ({data, bestSeller, novelties}) => {
+const HomeScreen = (pageProps) => {
+    const {data, bestSeller, novelties} = pageProps
     const {products: seenProducts} = useSelector((state) => state.productsSeen)
     const [oppenedItems, setOppenedItems] = useState([])
     const dispatch = useDispatch()
@@ -18,9 +31,6 @@ const HomeScreen = ({data, bestSeller, novelties}) => {
         }
 
     },[])
-    const componentDidMount = (() => {
-
-    })
     useEffect(() => {
         if (oppenedItems) {
             dispatch(listSeenProducts(oppenedItems))
@@ -28,32 +38,35 @@ const HomeScreen = ({data, bestSeller, novelties}) => {
     }, [oppenedItems])
     return (
         <Container className='homescreen'>
-            <div className='mainlady w-100'>
-                {/*<Image src={mainlady} alt='Эротическая одежда'/>*/}
+            <div className='w-100'>
+                <Image
+                    className='mainlady'
+                    src={mainlady}
+                    alt='Эротическая одежда'
+                    loading='lazy'
+                />
             </div>
             <div className='popular my-3'>
                 <span className='mx-3 fs-4 text-white'>Лучшая цена</span>
                 <div className='line'></div>
             </div>
             <ProductCarousel data={data}/>
-
-
-            <div className="w-100 pt-1">
-                <div className='categories'>
-                    <Link className='category category1' href='/category/Эротическая одежда'>
-                        {/*<Image placeholder='blur' loading="lazy" src={erotic} alt='Эротическая одежда'/>*/}
+            <div className="w-100 pt-4">
+                <div className='categories relative'>
+                    <Link className='category category1 position-relative h-100' href='/category/Эротическая одежда'>
+                        <Image placeholder='blur' fill style={{objectFit:"contain"}} loading="lazy" src={erotic} alt='Эротическая одежда'/>
                     </Link>
-                    <Link className='category category2' href='/category/BDSM, садо-мазо товары'>
-                        {/*<Image placeholder='blur' loading="lazy" src={bdsm} alt='BDSM, садо-мазо товары'/>*/}
+                    <Link className='category category2 position-relative w-full' href='/category/BDSM, садо-мазо товары'>
+                        <Image placeholder='blur' fill style={{objectFit:"contain"}} object-fit="cover" loading="lazy" src={bdsm} alt='BDSM, садо-мазо товары'/>
                     </Link>
-                    <Link className='category category3' href='/category/Смазки, лубриканты'>
-                        {/*<Image placeholder='blur' loading="lazy" src={lubricants} alt='Смазки, лубриканты'/>*/}
+                    <Link className='category category3 position-relative w-full' href='/category/Смазки, лубриканты'>
+                        <Image placeholder='blur' fill style={{objectFit:"contain"}} loading="lazy" src={lubricants} alt='Смазки, лубриканты'/>
                     </Link>
-                    <Link className='category category4' href='/category/Анальные игрушки'>
-                        {/*<Image placeholder='blur' loading="lazy" src={toys} alt='Анальные игрушки'/>*/}
+                    <Link className='category category4 position-relative w-full' href='/category/Анальные игрушки'>
+                        <Image placeholder='blur' fill style={{objectFit:"contain"}} loading="lazy" src={toys} alt='Анальные игрушки'/>
                     </Link>
-                    <Link className='category category5' href='/category/Приятные мелочи'>
-                        {/*<Image placeholder='blur' loading="lazy" src={things} alt='Приятные мелочи'/>*/}
+                    <Link className='category category5 position-relative w-full' href='/category/Приятные мелочи'>
+                        <Image placeholder='blur' fill style={{objectFit:"contain"}} loading="lazy" src={things} alt='Приятные мелочи'/>
                     </Link>
                 </div>
             </div>
@@ -65,28 +78,28 @@ const HomeScreen = ({data, bestSeller, novelties}) => {
 
             {/*<BannersCarousel/>*/}
             <div className="w-100 mt-3">
-                <div className='categories2'>
-                    <Link className='category category6' href='/category/Секс-мебель и качели'>
-                        {/*<Image placeholder='blur' loading="lazy" src={sexmebel} alt='Секс-мебель и качели' className='h-auto'/>*/}
+                <div className='categories2 '>
+                    <Link className='category category6 position-relative w-full' href='/category/Секс-мебель и качели'>
+                        <Image placeholder='blur' fill style={{objectFit:"contain"}} loading="lazy" src={sexmebel} alt='Секс-мебель и качели'/>
                     </Link>
-                    <Link className='category category7' href='/category/Секс-товары для женщин'>
-                        {/*<Image placeholder='blur' loading="lazy" src={women} alt='Секс-товары для женщин'/>*/}
+                    <Link className='category category7 position-relative w-full' href='/category/Секс-товары для женщин'>
+                        <Image placeholder='blur'  fill style={{objectFit:"contain"}} loading="lazy" src={women} alt='Секс-товары для женщин' className=''/>
                     </Link>
-                    <Link className='category category11' href='/category/Секс-товары для женщин'>
-                        {/*<Image placeholder='blur' loading="lazy" src={womenSmall} alt='Секс-товары для женщин'/>*/}
+                    <Link className='category category11 position-relative w-full' href='/category/Секс-товары для женщин'>
+                        <Image placeholder='blur' fill style={{objectFit:"contain"}} loading="lazy" src={womenSmall} alt='Секс-товары для женщин'/>
                     </Link>
-                    <Link className='category category8' href='/category/Секс-товары для мужчин'>
-                        {/*<Image placeholder='blur' loading="lazy" src={men} alt='Секс-товары для мужчин'/>*/}
+                    <Link className='category category8 position-relative w-full' href='/category/Секс-товары для мужчин'>
+                        <Image placeholder='blur' fill style={{objectFit:"contain"}} loading="lazy" src={men} alt='Секс-товары для мужчин'/>
                     </Link>
-                    <Link className='category category9' href='/category/Нижнее белье'>
-                        {/*<Image placeholder='blur' loading="lazy" src={nignee} alt='Нижнее белье'/>*/}
+                    <Link className='category category9 position-relative w-full' href='/category/Нижнее белье'>
+                        <Image placeholder='blur' fill style={{objectFit:"contain"}} loading="lazy" src={nignee} alt='Нижнее белье'/>
                     </Link>
-                    <Link className='category category10' href='/category/Купальники'>
-                        {/*<Image placeholder='blur' loading="lazy" src={kupalniki} alt='Купальники'/>*/}
+                    <Link className='category category10 position-relative w-full' href='/category/Купальники'>
+                        <Image placeholder='blur' fill style={{objectFit:"contain"}} loading="lazy" src={kupalniki} alt='Купальники'/>
                     </Link>
                 </div>
             </div>
-            <div className='popular my-3'>
+            <div className='popular mt-5 mb-3'>
                 <span className='mx-3 fs-4 text-white'>Новинки</span>
                 <div className='line'></div>
             </div>
