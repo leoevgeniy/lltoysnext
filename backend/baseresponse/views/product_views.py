@@ -326,7 +326,7 @@ def getCatalog(request):
 @api_view(['GET'])
 def getBestSellerProducts(request):
     products = Product.objects.filter(Q(assortiment__countInStock__gt=0) & Q(isBestSeller__iexact=1)).distinct()
-    products = products.order_by('?')[:30]
+    products = products.order_by('?')[:10]
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data)
 
@@ -334,7 +334,7 @@ def getBestSellerProducts(request):
 @api_view(['GET'])
 def getNewProducts(request):
     products = Product.objects.filter(Q(assortiment__countInStock__gt=0) & Q(isNovelties__iexact=1)).distinct()
-    products = products.order_by('?')[:30]
+    products = products.order_by('?')[:10]
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data)
 
@@ -342,7 +342,7 @@ def getNewProducts(request):
 @api_view(['GET'])
 def getTopProducts(request):
     products = Product.objects.filter(Q(assortiment__countInStock__gt=0) & Q(isSuperSale__iexact=1)).distinct()
-    products = products.order_by('?')[:30]
+    products = products.order_by('?')[:10]
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data)
 
