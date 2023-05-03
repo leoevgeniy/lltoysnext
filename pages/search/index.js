@@ -61,6 +61,9 @@ const Search = ({pageProps}) => {
     // const [priceUp, setPriceUp] = useState(productList.priceUpApi)
     const searchParams = useSearchParams();
     let keyword = searchParams.get('keyword')
+    let supersale = searchParams.get('supersale')
+    let bestseller = searchParams.get('bestsellers')
+    let novelties = searchParams.get('novelties')
     //
     useEffect(() => {
         if (localStorage.getItem('oppenedItems')) {
@@ -93,20 +96,45 @@ const Search = ({pageProps}) => {
                           content='sexshop, сексшоп, магазин интимных товаров для взрослых, секс игрушки, sex toys, интимшоп, интим шоп, intimshop, секс, вибратор, фаллоимитатор, вагина, фаллос, клитор, стимулятор, мастурбатор, куклы, эротическое белье'/>
 
                 </Head>
-                <div className="content justify-content-center">
+                <div className="content justify-content-center text-white">
                     {products.length > 0 ?
                         <div className='d-inline-block'>
                             <span className='mb-2'> Найдено <strong>{categoryList[Object.keys(categoryList)[0]]}</strong> в категории <Link
                             href={'/category/' + Object.keys(categoryList)[0] + '?keyword=' + keyword}>{Object.keys(categoryList)[0]}</Link><br/> </span>
                             <span> <strong>{subCategoryList[Object.keys(subCategoryList)[0]]}</strong> в категории <Link
                                 href={'/category/' + Object.keys(categoryList)[0] + '/' + Object.keys(subCategoryList)[0] + '?keyword=' + keyword}>{Object.keys(subCategoryList)[0]}</Link><br/></span>
-                            <Badge>
+                            {keyword &&
+                                <Badge>
                                 {keyword}
                                 <Badge onClick={() => history.push(`/`)}>
                                     x
                                 </Badge>
 
-                            </Badge>
+                            </Badge>}
+                            {bestseller &&
+                                <Badge>
+                                Хиты продаж
+                                <Badge onClick={() => history.push(`/`)}>
+                                    x
+                                </Badge>
+
+                            </Badge>}
+                            {supersale &&
+                                <Badge>
+                                Распродажа
+                                <Badge onClick={() => history.push(`/`)}>
+                                    x
+                                </Badge>
+
+                            </Badge>}
+                            {novelties &&
+                                <Badge>
+                                Новинки
+                                <Badge onClick={() => history.push(`/`)}>
+                                    x
+                                </Badge>
+
+                            </Badge>}
 
                         </div>
                         : <span>К сожалению по Вашему запросу ничего не нашлось.</span>
@@ -126,7 +154,7 @@ const Search = ({pageProps}) => {
                         {/*                    </Breadcrumb.Item>*/}
 
                         {/*                </Breadcrumb>*/}
-                        <Row className='mb-4 mx-0 w-100 justify-content-center text-center'>
+                        <Row className='mb-4 mx-0 w-100 justify-content-center text-center  text-white'>
                             {Array.from(products).map(
                                 (product) => (
                                     <Col
@@ -159,14 +187,14 @@ const Search = ({pageProps}) => {
             {(oppenedItems && oppenedItems.length > 0 && seenProducts) &&
                 <>
                     <div className='popular my-3'>
-                        <span className='mx-3 fs-4'>Вы смотрели</span>
+                        <span className='mx-3 fs-4  text-white'>Вы смотрели</span>
                         <div className='line'></div>
                     </div>
                     <SeenProductCarousel/>
                 </>
             }
             <div className='popular my-3'>
-                <span className='mx-3 fs-4'>Популярное</span>
+                <span className='mx-3 fs-4  text-white'>Распродажа</span>
                 <div className='line'></div>
             </div>
             <ProductCarousel data={pageProps.topData}/>
@@ -176,15 +204,25 @@ const Search = ({pageProps}) => {
 }
 
 export const getServerSideProps = async (context) => {
-    let {keyword, page} = context.query
-    // let {category, page} = context.query
+    let {keyword, page, novelties, supersale, bestsellers} = context.query
+    let res = {}
+    let data = {'supersale': false, 'novelties' : false, 'bestsellers': false}
+    if (supersale) {
+        data['supersale'] = true
+    }
+    if (novelties) {
+        data['novelties'] = true
+    }
+    if (bestsellers) {
+        data['bestsellers'] = true
+    }
     if (keyword) {
         page = '&page=' + page
     }
     if (!page) {
         page = ''
     }
-    const {data} = await axios.post(`${API_HOST}/api/products/?keyword=${keyword}${page}`);
+    res = await axios.post(`${API_HOST}/api/products/?keyword=${keyword}${page}`, data);
     const topData = await axios.get(`${API_HOST}/api/products/top`);
     if (!data) {
         return {
@@ -192,7 +230,7 @@ export const getServerSideProps = async (context) => {
         }
     }
 
-    return {props: {data, topData: topData.data}}
+    return {props: {data: res.data, topData: topData.data}}
 
 
 }

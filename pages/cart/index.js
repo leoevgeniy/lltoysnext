@@ -313,7 +313,7 @@ function Index({pageProps}) {
             {seenProducts && seenProducts.length >0 &&
                 <>
                     <div className='popular my-3'>
-                        <span className='mx-3 fs-4'>Вы смотрели</span>
+                        <span className='mx-3 fs-4 text-white'>Вы смотрели</span>
                         <div className='line'></div>
                     </div>
                     <SeenProductCarousel/>
@@ -322,7 +322,7 @@ function Index({pageProps}) {
             {pageProps.topData &&
                 <>
                     <div className='popular my-3'>
-                        <span className='mx-3 fs-4'>Популярное</span>
+                        <span className='mx-3 fs-4 text-white'>Популярное</span>
                         <div className='line'></div>
                     </div>
                     <ProductCarousel data={pageProps.topData}/>

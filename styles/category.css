@@ -6,7 +6,7 @@
     -moz-osx-font-smoothing: grayscale;
     font-family: "GTEestiPro",arial,sans-serif;
 }
-.categ {
+.categ, .productscreen-container, .homescreen {
     background: #e5097f linear-gradient(#e5097f, rgb(0 0 0));
 
 }
@@ -18,4 +18,11 @@
 }
 .categ .breadcrumb-item.active, .breadcrumb-item.active::before {
     color: black;
+}
+.category-filter-icon {
+
+    /*position: absolute;*/
+    /*z-index: 10000;*/
+    /*top: -43px;*/
+    /*right: 12px;*/
 }

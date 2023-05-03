@@ -19,8 +19,10 @@ import womenSmall from '@/public/womenSmall.webp'
 import men from '@/public/men.webp'
 import nignee from '@/public/nignee.webp'
 import kupalniki from '@/public/kupalniki.webp'
+import {useRouter} from "next/router";
 
 const HomeScreen = (pageProps) => {
+    const history = useRouter()
     const {data, bestSeller, novelties} = pageProps
     const {products: seenProducts} = useSelector((state) => state.productsSeen)
     const [oppenedItems, setOppenedItems] = useState([])
@@ -46,12 +48,12 @@ const HomeScreen = (pageProps) => {
                     loading='lazy'
                 />
             </div>
-            <div className='popular my-3'>
-                <span className='mx-3 fs-4 text-white'>Лучшая цена</span>
+            <div className='popular my-2'>
+                <span onClick={() => history.push('/search?supersale=1')} className='mx-3 fs-4 text-white'>Распродажа</span>
                 <div className='line'></div>
             </div>
             <ProductCarousel data={data}/>
-            <div className="w-100 pt-4">
+            <div className="w-100 pt-3">
                 <div className='categories relative'>
                     <Link className='category category1 position-relative h-100' href='/category/Эротическая одежда'>
                         <Image placeholder='blur' fill style={{objectFit:"contain"}} loading="lazy" src={erotic} alt='Эротическая одежда'/>
@@ -70,14 +72,14 @@ const HomeScreen = (pageProps) => {
                     </Link>
                 </div>
             </div>
-            <div className='popular my-3'>
-                <span className='mx-3 fs-4 text-white'>Хиты продаж</span>
+            <div className='popular my-1'>
+                <span onClick={() => history.push('/search?bestsellers=1')} className='mx-3 fs-4 text-white'>Хиты продаж</span>
                 <div className='line'></div>
             </div>
             <ProductCarousel data={bestSeller}/>
 
             {/*<BannersCarousel/>*/}
-            <div className="w-100 mt-3">
+            <div className="w-100">
                 <div className='categories2 '>
                     <Link className='category category6 position-relative w-full' href='/category/Секс-мебель и качели'>
                         <Image placeholder='blur' fill style={{objectFit:"contain"}} loading="lazy" src={sexmebel} alt='Секс-мебель и качели'/>
@@ -99,8 +101,8 @@ const HomeScreen = (pageProps) => {
                     </Link>
                 </div>
             </div>
-            <div className='popular mt-5 mb-3'>
-                <span className='mx-3 fs-4 text-white'>Новинки</span>
+            <div className='popular my-3'>
+                <span onClick={() => history.push('/search?novelties=1')} className='mx-3 fs-4 text-white'>Новинки</span>
                 <div className='line'></div>
             </div>
             <ProductCarousel data={novelties}/>

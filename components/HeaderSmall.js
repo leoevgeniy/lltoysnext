@@ -44,7 +44,7 @@ const HeaderSmall = () => {
                 <Form onSubmit={() => history.push(`/search?keyword=${keyword}`)} className="d-flex w-100 mx-3">
                     <FormControl
                         type="text"
-                        name='keyword'
+                        name={`keyword`}
                         placeholder='Найти свой Кураж'
                         // value=''
                         onChange={(e) => {
@@ -62,20 +62,6 @@ const HeaderSmall = () => {
                           style={{'top': '8px', 'right': '30px', 'fontSize': '13px'}}><FontAwesomeIcon
                         icon={faMagnifyingGlass}/></span>
                 </Form>
-                {(history.pathname.includes('category') || history.pathname.includes('/search')) &&
-                    <FontAwesomeIcon icon={faFilter} onClick={() => setShow(true)}/>
-                }
-                <Offcanvas
-                    show={show}
-                    placement='bottom'
-                    onHide={() => setShow(false)}
-                    className='mh-75'
-                >
-                    <Offcanvas.Header>
-                        <Offcanvas.Title>Фильтры</Offcanvas.Title>
-
-                    </Offcanvas.Header >
-                </Offcanvas>
             </Container>
         </header-small>
     )

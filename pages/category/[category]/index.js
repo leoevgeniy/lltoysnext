@@ -1,6 +1,16 @@
 import Head from 'next/head'
 import React from "react";
-import {Row, Col, Container, Badge, FormCheck} from 'react-bootstrap'
+import {
+    Row,
+    Col,
+    Container,
+    Badge,
+    FormCheck,
+    Offcanvas,
+    ListGroup,
+    ListGroupItem,
+    OffcanvasBody
+} from 'react-bootstrap'
 import {useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Product from '@/components/Product'
@@ -25,6 +35,8 @@ import axios from "axios";
 import {API_HOST} from "@/consts";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import Link from "next/link";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faFilter} from "@fortawesome/free-solid-svg-icons";
 
 
 const Category = ({pageProps}) => {
@@ -88,7 +100,9 @@ const Category = ({pageProps}) => {
 
 
     }, [dispatch, oppenedItems])
+
     const brCategory = `/category/${category}`
+    const [show, setShow] = useState(false)
     return (
         <Container className='categ'>
             {loading ? (
@@ -105,10 +119,46 @@ const Category = ({pageProps}) => {
                               content='sexshop, сексшоп, магазин интимных товаров для взрослых, секс игрушки, sex toys, интимшоп, интим шоп, intimshop, секс, вибратор, фаллоимитатор, вагина, фаллос, клитор, стимулятор, мастурбатор, куклы, эротическое белье'/>
 
                     </Head>
-                    <h1 className='text-start text-white'>{category}
-                        {productsLength > 0 &&
-                            <span className='prod-length pl-2'>{productsLength} товаров</span>}
-                    </h1>
+                    <div className='d-flex justify-content-between'>
+                        <h1 className='text-start text-white'>{category}
+                            {productsLength > 0 &&
+                                <span className='prod-length pl-2'>{productsLength} товаров</span>}
+                        </h1>
+                        {(history.pathname.includes('/category') || history.pathname.includes('/search')) &&
+                            <FontAwesomeIcon className='d-block d-md-none category-filter-icon my-auto mr-2 text-white' icon={faFilter}
+                                             onClick={() => setShow(true)}/>
+                        }
+                    </div>
+                    <Offcanvas
+                        show={show}
+                        placement='bottom'
+                        onHide={() => setShow(false)}
+                        className='h-75'
+                    >
+                        <Offcanvas.Header>
+                            <Offcanvas.Title>Фильтры</Offcanvas.Title>
+                        </Offcanvas.Header>
+                        <OffcanvasBody>
+                            <ListGroup>
+                                <ListGroupItem>
+                                    <span className='fw-bolder fs-5'>Категория</span> <br/>
+                                    <span className='ml-5'>  {category}</span> <br/>
+                                    {Object.keys(subCategoriesList).map((item) =>
+                                        <ul key={item} className='lh-1'>
+                                            <li>
+                                                <Link href={'/category/' + category + '/' + item}
+                                                      className='subCategory'>{item}</Link>
+                                                <span
+                                                    className='prod-length pl-2'>{subCategoriesList[item]}</span>
+                                            </li>
+                                        </ul>
+                                    )}
+                                    <br/>
+                                </ListGroupItem>
+                            </ListGroup>
+
+                        </OffcanvasBody>
+                    </Offcanvas>
 
                     <Row>
                         <Col xs={0} md={3} className='d-none d-md-block text-white'>
@@ -117,7 +167,8 @@ const Category = ({pageProps}) => {
                             {Object.keys(subCategoriesList).map((item) =>
                                 <ul key={item}>
                                     <li>
-                                        <Link href={'/category/' + category + '/' + item} className='subCategory'>{item}</Link>
+                                        <Link href={'/category/' + category + '/' + item}
+                                              className='subCategory'>{item}</Link>
                                         <span
                                             className='prod-length pl-2'>{subCategoriesList[item]}</span>
                                     </li>
@@ -131,7 +182,7 @@ const Category = ({pageProps}) => {
                                     custom='true'
                                     id='isSusperSale'
                                     type='switch'
-                                    сhecked={isSuperSale?'true': ''}
+                                    сhecked={isSuperSale ? 'true' : ''}
                                     onChange={() => setIsSuperSale(!isSuperSale)}
                                     className=''></FormCheck>
                             </div>
@@ -141,7 +192,7 @@ const Category = ({pageProps}) => {
 
 
                                 <div>
-                                    <Breadcrumb >
+                                    <Breadcrumb>
                                         <Breadcrumb.Item
                                             href='/'
 

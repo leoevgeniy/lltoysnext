@@ -1,6 +1,16 @@
 import Head from 'next/head'
 import React from "react";
-import {Row, Col, Container, Badge, FormCheck} from 'react-bootstrap'
+import {
+    Row,
+    Col,
+    Container,
+    Badge,
+    FormCheck,
+    Offcanvas,
+    OffcanvasBody,
+    ListGroup,
+    ListGroupItem
+} from 'react-bootstrap'
 import {useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Product from '@/components/Product'
@@ -25,19 +35,31 @@ import axios from "axios";
 import {API_HOST} from "@/consts";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import Link from "next/link";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faFilter} from "@fortawesome/free-solid-svg-icons";
 
 
 const SubCategory = ({pageProps}) => {
     const subCategory = pageProps.subCategory
     const category = pageProps.category
-    const {error, loading, products, productsLength, categoryList,  subCategoriesList, page, pages} = pageProps.data;
+    const {
+        error,
+        loading,
+        products,
+        productsLength,
+        categoryList,
+        subCategoriesList,
+        vendorList,
+        page,
+        pages
+    } = pageProps.data;
     const dispatch = useDispatch()
     // const [sort, setSort] = useState('')
     // const [priceSortUp, setPriceSortUp] = useState(false);
     // const [priceSortDown, setPriceSortDown] = useState(false);
     // const [nameSortDown, setNameSortDown] = useState(false);
     // const [nameSortUp, setNameSortUp] = useState(false);
-    // const [vendorSelected, setVendorSelected] = useState([])
+    const [vendor, setVendor] = useState('')
     // const [collectionSelected, setCollectionSelected] = useState([])
     // const [materialSelected, setMaterialSelected] = useState([])
     // const [colorSelected, setColorSelected] = useState([])
@@ -66,8 +88,9 @@ const SubCategory = ({pageProps}) => {
     useEffect(() => {
         // dispatch(listCategoryProducts(id))
         dispatch(listTopProducts())
-
+        setVendor(searchParams.get('vendor'))
     }, [])
+
     const [isSuperSale, setIsSuperSale] = useState(false)
 
     useEffect(() => {
@@ -92,6 +115,20 @@ const SubCategory = ({pageProps}) => {
     }, [dispatch, oppenedItems])
     const brCategory = `/category/${category}`
     const brSubCategory = `/category/${category}/${subCategory}`
+    const [show, setShow] = useState(false)
+    const searchParams = useSearchParams()
+    const vendorRemove = () => {
+        const startIndex = history.asPath.indexOf('vendor=')-1
+        let after
+        if ((history.asPath.substring(0, startIndex) + history.asPath.split('vendor=')[1].substring(history.asPath.split('vendor=')[1].indexOf('&',1))).includes('?')) {
+            after = history.asPath.split('vendor=')[1].substring(history.asPath.split('vendor=')[1].indexOf('&', 1))
+        } else {
+            after = '?' + history.asPath.split('vendor=')[1].substring(history.asPath.split('vendor=')[1].indexOf('&', 1)+1)
+
+        }
+        const vendorMinusString = history.asPath.substring(0, startIndex) + after
+        history.push(vendorMinusString)
+    }
     return (
         <Container className='categ'>
             {loading ? (
@@ -110,26 +147,82 @@ const SubCategory = ({pageProps}) => {
                     </Head>
                     <div className="content justify-content-center">
                         {/*{(filter || category) ? (*/}
+                        <div className='d-flex justify-content-between'>
 
-                        <h1 className='text-start text-white'>{subCategory}
-                            {productsLength > 0 && <span className='prod-length pl-2'>{productsLength} товаров</span>}
+                            <h1 className='text-start text-white'>{subCategory}
+                                {productsLength > 0 &&
+                                    <span className='prod-length pl-2'>{productsLength} товаров</span>}
 
-                        </h1>
+                            </h1>
+                            {(history.pathname.includes('/category') || history.pathname.includes('/search')) &&
+                                <FontAwesomeIcon
+                                    className='d-block d-md-none category-filter-icon my-auto mr-2 text-white'
+                                    icon={faFilter}
+                                    onClick={() => setShow(true)}/>
+                            }
+                        </div>
+                        <Offcanvas
+                            show={show}
+                            placement='bottom'
+                            onHide={() => setShow(false)}
+                            className='h-75'
+                        >
+                            <Offcanvas.Header>
+                                <Offcanvas.Title>Фильтры</Offcanvas.Title>
+                            </Offcanvas.Header>
+                            <OffcanvasBody>
+                                <ListGroup className='text-white mh-25'>
+                                    <span className='fw-bolder fs-5'>Категория</span><br/>
+                                    <span><Link href={`/category/${category}`}
+                                                className='ml-5 text-white'>  {category}</Link>
+                                        </span><br/>
+                                    <span className='ml-8'>{subCategory}</span><br/>
+                                    <ul className='lh-1 text-white'>
+
+                                    {Object.keys(subCategoriesList).map((item, i) =>
+                                            <li key={i}>
+                                                <Link href={'/category/' + category + '/' + item}
+                                                      className='subCategory text-white'> {item}</Link>
+                                                <span
+                                                    className='prod-length pl-2 text-light'>{subCategoriesList[item]}</span>
+                                            </li>
+
+                                    )}
+                                    </ul>
+                                    <br/>
+                                </ListGroup>
+                                <ListGroup>
+                                    <span>Бренды</span>
+                                    {
+                                        vendorList.map((vendor) =>
+                                            // eslint-disable-next-line react/jsx-key
+                                            <Badge key={vendor}>
+                                                {vendor}
+                                            </Badge>
+                                        )
+                                    }
+                                </ListGroup>
+                            </OffcanvasBody>
+                        </Offcanvas>
+
                         <Row>
-                            <Col sm={0} md={3}  className='d-none d-md-block text-white'>
+                            <Col sm={0} md={3} className='d-none d-md-block text-white'>
                                 <p className='fw-bolder fs-5 text-white'>Категория</p>
-                                <p><Link href={`/category/${category}`} className='ml-5 text-white'>  {category}</Link> </p>
+                                <p><Link href={`/category/${category}`} className='ml-5 text-white'>  {category}</Link>
+                                </p>
                                 <p className='ml-8 text-white'>{subCategory}</p>
-                                {Object.keys(subCategoriesList).map((item) =>
-                                    <ul key={item}>
-                                        <li>
+                                <ul>
+
+                                {Object.keys(subCategoriesList).map((item,i) =>
+                                        <li key={item}>
                                             <Link href={'/category/' + category + '/' + item}
                                                   className='subCategory'> {item}</Link>
                                             <span
                                                 className='prod-length pl-2'>{subCategoriesList[item]}</span>
                                         </li>
-                                    </ul>
+
                                 )}
+                                </ul>
                                 <br/>
                                 <div className='d-flex justify-content-between'>
                                 <span>
@@ -142,6 +235,39 @@ const SubCategory = ({pageProps}) => {
                                         onChange={() => setIsSuperSale(!isSuperSale)}
                                         className=''></FormCheck>
                                 </div>
+                                <div className='d-flex justify-content-between'>
+                                    <span>Бренды</span>
+                                    {searchParams.get('vendor') &&
+                                        <span
+                                            onClick={vendorRemove}
+                                        >
+                                            X
+                                        </span>}
+                                </div>
+                                <br/>
+                                <div className='d-inline-block' style={{'maxHeight': '200px', 'overflowY': 'scroll'}}>
+
+                                    {
+                                        vendorList.map((vendor) =>
+                                            // eslint-disable-next-line react/jsx-key
+                                            <Badge
+                                                key={vendor}
+                                                bg='secondary'
+                                                className='mx-1'
+                                                onClick={() => {
+                                                    if (history.asPath.includes('?')) {
+                                                        history.push(history.asPath + '&vendor=' + vendor)
+                                                    } else {
+                                                        history.push(history.asPath + '?vendor=' + vendor)
+                                                    }
+                                                }}
+                                            >
+                                                {vendor}
+                                            </Badge>
+                                        )
+                                    }
+                                </div>
+
 
                             </Col>
                             <Col sm={12} md={9}>
@@ -205,37 +331,42 @@ const SubCategory = ({pageProps}) => {
                 </div>
             }
 
+
+            <div className='popular my-3'>
+                <span className='mx-3 fs-4 text-white'>Распродажа</span>
+                <div className='line'></div>
+            </div>
+            <ProductCarousel data={pageProps.topData}/>
             {(oppenedItems && oppenedItems.length > 0 && seenProducts) &&
                 <>
                     <div className='popular my-3'>
-                        <span className='mx-3 fs-4'>Вы смотрели</span>
+                        <span className='mx-3 fs-4 text-white'>Вы смотрели</span>
                         <div className='line'></div>
                     </div>
                     <SeenProductCarousel/>
                 </>
             }
-            <div className='popular my-3'>
-                <span className='mx-3 fs-4'>Популярное</span>
-                <div className='line'></div>
-            </div>
-            <ProductCarousel data={pageProps.topData}/>
         </Container>
 
     )
 }
 
 export const getServerSideProps = async (context) => {
-    let {category, page, keyword, isSuperSale} = context.query
+    let {category, page, keyword, isSuperSale, vendor} = context.query
     let subCategory = context.params.id
     if (page) {
         page = '?page=' + page
     } else {
         page = ''
     }
+
     let res = {}
-    let data = {'superSale': false}
+    let data = {'superSale': false, 'vendor': ''}
     if (isSuperSale) {
         data['superSale'] = true
+    }
+    if (vendor) {
+        data['vendor'] = vendor
     }
 
     if (keyword && page) {

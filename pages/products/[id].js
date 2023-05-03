@@ -108,7 +108,7 @@ function ProductScreen({pageProps}) {
                     <PageNotFound/>
                 ) : (
                     product &&
-                    <Container>
+                    <Container className='productscreen-container'>
                         <Modal
                             show={modalShow}
                             onHide={onHide}
@@ -146,16 +146,16 @@ function ProductScreen({pageProps}) {
                             <Breadcrumb.Item href={brSubCategory}>
                                 {subCategory}
                             </Breadcrumb.Item>
-                            <Breadcrumb.Item active>
+                            <Breadcrumb.Item active className='text-black'>
                                 {product.name}
                             </Breadcrumb.Item>
                         </Breadcrumb>
-                            <Row itemScope itemType="http://schema.org/Product" className='w-100'>
+                            <Row itemScope itemType="http://schema.org/Product" className='w-100 bg-transparent'>
                                 <Col xs={12} md={6}>
                                     <ProductImageCarousel product={product}/>
                                 </Col>
-                                <Col xs={12} md={6}>
-                                    <ListGroup variant="flush">
+                                <Col xs={12} md={6} className='bg-opacity-0'>
+                                    <ListGroup variant="flush" className='bg-opacity-0'>
                                         <ListGroup.Item className="small">
                                             <h1 itemProp="name">{product.name}</h1>
                                         </ListGroup.Item>
@@ -452,7 +452,7 @@ function ProductScreen({pageProps}) {
                         {(oppenedItems && oppenedItems.length > 0 && products) &&
                             <>
                                 <div className='popular my-3'>
-                                    <span className='mx-3 fs-4'>Вы смотрели</span>
+                                    <span className='mx-3 fs-4 text-white'>Вы смотрели</span>
                                     <div className='line'></div>
                                 </div>
                                 <SeenProductCarousel/>
