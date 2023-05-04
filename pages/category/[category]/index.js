@@ -273,19 +273,26 @@ const Category = ({pageProps}) => {
 }
 
 export const getServerSideProps = async (context) => {
-    let {category, page, keyword, isSuperSale} = context.query
+    let {category, page, keyword, isSuperSale, vendor, material} = context.query
     if (page) {
         page = '?page=' + page
     } else {
         page = ''
     }
     let res = {}
-    let data = {'superSale': false}
+    let data = {'superSale': false, 'vendor': '', 'material':''}
     if (isSuperSale) {
         data['superSale'] = true
     } else {
         isSuperSale = false
     }
+    if (vendor) {
+        data['vendor'] = vendor
+    }
+    if (material) {
+        data['material'] = material
+    }
+
 
     if (keyword && page) {
         res = await axios.post(`${API_HOST}/api/products/category/${category}${page}&keyword=${keyword}`, data);

@@ -56,7 +56,7 @@ function Product({product}) {
     }
     const addToCartHandler = (e) => {
         e.preventDefault()
-        const sendColor = Object.keys(product.colors[0])[0] || ''
+        const sendColor = product.availability[0][0] || ''
         dispatch(addToCart(product._id, qty, sendColor,'', 'undefined', 0.1))
         dispatch({type: PRODUCT_DETAILS_RESET})
 
@@ -76,18 +76,21 @@ function Product({product}) {
     return (
         <Card itemScope itemType="http://schema.org/Product" className='my-1 py-0 h-100 rounded cardstyle head'
         >
-            <div className='cardimg'>
+            <div className='cardimg position-relative w-full '>
                 <Card.Img
                     onClick={() => history.push(`/products/${product._id}`)}
+                    // loading='lazy'
+                    // placeholder='blur'
+                    // width={'100%'}
+                    // fill
+                    style={{objectFit: 'cover'}}
                     src={srcLink}
                     alt={product.name}
                 >
                 </Card.Img>
 
 
-                {(rPrice > price && (1 - (price / rPrice)) > 0.04) && <Badge pill bg='danger' className='badge'>
-                    - {((1 - (price / oldPrice)) * 100).toFixed(0)} %
-                </Badge>}
+
                 {product.superSaleCost &&
                     <Badge pill bg='danger' className='badge-sale'>
                         Распродажа
@@ -98,15 +101,18 @@ function Product({product}) {
 
             <Card.Body itemProp="offers" itemScope itemType="http://schema.org/Offer"
 
-                       className='py-1 body'>
+                       className='py-1 body justify-content-start'>
                 {/*<Card.Title*/}
 
                 {/*    // style={{'font-size' : '1vw', 'font-weight': 'bold'}}*/}
 
                 {/*>*/}
-                <p className='text-lowercase fw-bold card-buy d-inline-block text-start py-3 fs-6 '
+                <p className='text-lowercase fw-bold card-buy d-inline-block text-start pt-3 fs-6 '
                    onClick={() => history.push(`/products/${product._id}`)}
                 >
+                    {(rPrice > price && (1 - (price / rPrice)) > 0.04) && <Badge pill bg='danger' className='badge-discount'>
+                        - {((1 - (price / oldPrice)) * 100).toFixed(0)} %
+                    </Badge>}
                     <meta itemProp="price" content={price.toFixed(0)}/>
                     <meta itemProp="priceCurrency" content="RUB"/>
                     <span
@@ -122,21 +128,22 @@ function Product({product}) {
                 </p>
                 {/*</Card.Title>*/}
                 <span onClick={() => history.push(`/products/${product._id}`)}
-                      className='fw-bold card-buy d-inline-block text-start py-0 mb-0 fs-6 align-text-top'>
+                      className='fw-bold card-name d-inline-block text-start py-0 mb-0 fs-6 '>
 
-                    <span itemProp="name" className='card-title fw-bold text-black'>{product.name}</span>
+                    <span itemProp="name" className='card-name fw-bold text-black '>{product.name}</span>
 
 
                 </span>
-                {!product.colors[0] || product.colors[0][Object.keys(product.colors[0])][0] === '' &&
-                    <span
-                        id='toCart'
-                        className='picture asButton text-center mt-1 mb-1 pl-0'
-                        onClick={addToCartHandler}
-                    >В корзину</span>}
 
 
             </Card.Body>
+            {(product.availability[1].length === 0 || product.availability[0].length <=1) && product.assortiment.length>0 &&
+                <span
+                    id='toCart'
+                    className='picture asButton mb-2 w-75 mx-auto'
+                    onClick={addToCartHandler}
+                >В корзину</span>}
+
         </Card>
     )
 }

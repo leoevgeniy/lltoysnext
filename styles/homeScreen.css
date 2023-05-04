@@ -7,7 +7,7 @@
     /*background-color: #1281e3;*/
     background-color: #e5097f;
 }
-.popular span {
+.popular a {
     width: 15%;
 }
 .homescreen {
@@ -261,13 +261,13 @@
     .category10 {
         grid-area: 2 / 2 / 3 / 3;
     }
-    .popular span {
-        width: 65%;
+    .popular a {
+        width: 70%;
     }
 }
 
 @media (max-width: 376px) {
-    .popular span {
+    .popular a {
         width: 75%;
     }
     .categories{

@@ -96,7 +96,8 @@ function Index({pageProps}) {
                                                 </Col>
                                                 <Col md={3}>
                                                     <Link href={`/products/${item.product}`}>{item.name}</Link>
-                                                    {(((item.color && item.color !== 'цвет не указан')) || (Object.keys(item.colors[0]) && item.color !== 'цвет не указан')) &&
+                                                    {console.log(item)}
+                                                    {(((item.color && item.color !== 'цвет не указан')) || (item.color && Object.keys(item.colors[0]) && item.color !== 'цвет не указан')) &&
                                                         <Form.Control
                                                             as="select"
                                                             value={item.color}

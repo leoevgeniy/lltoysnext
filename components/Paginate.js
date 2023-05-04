@@ -1,9 +1,5 @@
 import React from "react";
-import {NavLink, PageItem, Pagination} from "react-bootstrap";
-// import {LinkContainer} from "react-router-bootstrap";
-import {useRouter} from "next/router";
-import Link from "next/link";
-import {useSearchParams} from "next/navigation";
+import {PageItem, Pagination} from "react-bootstrap";
 
 function Paginate({pages, page, keyword = "", isAdmin = false}) {
     // let filter = ''

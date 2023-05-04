@@ -49,7 +49,7 @@ const HomeScreen = (pageProps) => {
                 />
             </div>
             <div className='popular my-2'>
-                <span onClick={() => history.push('/search?supersale=1')} className='mx-3 fs-4 text-white'>Распродажа</span>
+                <Link href='/search?supersale=1' className='mx-3 fs-4 text-white text-decoration-none'>Распродажа</Link>
                 <div className='line'></div>
             </div>
             <ProductCarousel data={data}/>
@@ -73,7 +73,7 @@ const HomeScreen = (pageProps) => {
                 </div>
             </div>
             <div className='popular my-1'>
-                <span onClick={() => history.push('/search?bestsellers=1')} className='mx-3 fs-4 text-white'>Хиты продаж</span>
+                <Link href='/search?bestsellers=1' className='mx-3 fs-4 text-white text-decoration-none'>Хиты продаж</Link>
                 <div className='line'></div>
             </div>
             <ProductCarousel data={bestSeller}/>
@@ -102,7 +102,7 @@ const HomeScreen = (pageProps) => {
                 </div>
             </div>
             <div className='popular my-3'>
-                <span onClick={() => history.push('/search?novelties=1')} className='mx-3 fs-4 text-white'>Новинки</span>
+                <Link href='/search?novelties=1' className='mx-3 fs-4 text-white text-decoration-none'>Новинки</Link>
                 <div className='line'></div>
             </div>
             <ProductCarousel data={novelties}/>

@@ -32,7 +32,7 @@ import {Router, useRouter, withRouter} from "next/router";
 import ReactPaginate from 'react-paginate';
 import App, {AppContext} from "next/app";
 import axios from "axios";
-import {API_HOST} from "@/consts";
+import {API_HOST, LOCATION} from "@/consts";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import Link from "next/link";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -50,6 +50,7 @@ const SubCategory = ({pageProps}) => {
         categoryList,
         subCategoriesList,
         vendorList,
+        materialList,
         page,
         pages
     } = pageProps.data;
@@ -61,7 +62,7 @@ const SubCategory = ({pageProps}) => {
     // const [nameSortUp, setNameSortUp] = useState(false);
     const [vendor, setVendor] = useState('')
     // const [collectionSelected, setCollectionSelected] = useState([])
-    // const [materialSelected, setMaterialSelected] = useState([])
+    const [material, setMaterial] = useState([])
     // const [colorSelected, setColorSelected] = useState([])
     // const [sizeSelected, setSizeSelected] = useState([])
     // const [categorySelected, setCategorySelected] = useState([])
@@ -79,6 +80,8 @@ const SubCategory = ({pageProps}) => {
     const history = useRouter()
     // const searchParams = useSearchParams();
     let keyword = pageProps.keyword
+    const newUrl = new URL(history.asPath, LOCATION)
+
     useEffect(() => {
         if (localStorage.getItem('oppenedItems')) {
             setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))
@@ -95,18 +98,19 @@ const SubCategory = ({pageProps}) => {
 
     useEffect(() => {
         if (isSuperSale) {
-            if (history.asPath.includes('?')) {
-                history.push(history.asPath + '&isSuperSale=1')
-            } else {
-                history.push(history.asPath + '?isSuperSale=1')
-            }
-        } else {
-            if (history.asPath.includes('isSuperSale')) {
-                history.push(history.asPath.split('isSuperSale=')[0].slice(0, -1))
-            }
-        }
-    }, [isSuperSale])
+            newUrl.searchParams.append('isSuperSale', '1')
 
+            // if (history.asPath.includes('?')) {
+            //     history.push(history.asPath + '&isSuperSale=1')
+            // } else {
+            //     history.push(history.asPath + '?isSuperSale=1')
+            // }
+        } else {
+            newUrl.searchParams.delete('isSuperSale')
+
+        }
+            history.push(newUrl.href)
+    }, [isSuperSale])
     useEffect(() => {
         if (oppenedItems) {
             dispatch(listSeenProducts(oppenedItems))
@@ -117,17 +121,18 @@ const SubCategory = ({pageProps}) => {
     const brSubCategory = `/category/${category}/${subCategory}`
     const [show, setShow] = useState(false)
     const searchParams = useSearchParams()
+    // const superSaleToggle = () => {
+    //     setIsSuperSale(!isSuperSale)
+    // }
     const vendorRemove = () => {
-        const startIndex = history.asPath.indexOf('vendor=')-1
-        let after
-        if ((history.asPath.substring(0, startIndex) + history.asPath.split('vendor=')[1].substring(history.asPath.split('vendor=')[1].indexOf('&',1))).includes('?')) {
-            after = history.asPath.split('vendor=')[1].substring(history.asPath.split('vendor=')[1].indexOf('&', 1))
-        } else {
-            after = '?' + history.asPath.split('vendor=')[1].substring(history.asPath.split('vendor=')[1].indexOf('&', 1)+1)
-
-        }
-        const vendorMinusString = history.asPath.substring(0, startIndex) + after
-        history.push(vendorMinusString)
+        setVendor('')
+        newUrl.searchParams.delete('vendor')
+        history.push(newUrl.href)
+    }
+    const materialRemove = () => {
+        setMaterial('')
+        newUrl.searchParams.delete('material')
+        history.push(newUrl.href)
     }
     return (
         <Container className='categ'>
@@ -213,7 +218,7 @@ const SubCategory = ({pageProps}) => {
                                 <p className='ml-8 text-white'>{subCategory}</p>
                                 <ul>
 
-                                {Object.keys(subCategoriesList).map((item,i) =>
+                                {subCategoriesList && Object.keys(subCategoriesList).map((item,i) =>
                                         <li key={item}>
                                             <Link href={'/category/' + category + '/' + item}
                                                   className='subCategory'> {item}</Link>
@@ -244,25 +249,56 @@ const SubCategory = ({pageProps}) => {
                                             X
                                         </span>}
                                 </div>
-                                <br/>
-                                <div className='d-inline-block' style={{'maxHeight': '200px', 'overflowY': 'scroll'}}>
+                                <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
 
-                                    {
-                                        vendorList.map((vendor) =>
+                                    {vendorList &&
+                                        vendorList.map((ven) =>
                                             // eslint-disable-next-line react/jsx-key
                                             <Badge
-                                                key={vendor}
-                                                bg='secondary'
+                                                key={ven}
+                                                bg={searchParams.get('vendor')===ven ? 'primary':'secondary'}
                                                 className='mx-1'
                                                 onClick={() => {
                                                     if (history.asPath.includes('?')) {
-                                                        history.push(history.asPath + '&vendor=' + vendor)
+                                                        history.push(history.asPath + '&vendor=' + ven)
                                                     } else {
-                                                        history.push(history.asPath + '?vendor=' + vendor)
+                                                        history.push(history.asPath + '?vendor=' + ven)
                                                     }
                                                 }}
                                             >
-                                                {vendor}
+                                                {ven}
+                                            </Badge>
+                                        )
+                                    }
+                                </div>
+                                <div className='d-flex justify-content-between'>
+                                    <span>Материал</span>
+                                    {searchParams.get('material') &&
+                                        <span
+                                            onClick={materialRemove}
+                                        >
+                                            X
+                                        </span>}
+                                </div>
+
+                                <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
+
+                                    {materialList &&
+                                        materialList.map((ven) =>
+                                            // eslint-disable-next-line react/jsx-key
+                                            <Badge
+                                                key={ven}
+                                                bg={searchParams.get('material')===ven ? 'primary':'secondary'}
+                                                className='mx-1'
+                                                onClick={() => {
+                                                    if (history.asPath.includes('?')) {
+                                                        history.push(history.asPath + '&material=' + ven)
+                                                    } else {
+                                                        history.push(history.asPath + '?material=' + ven)
+                                                    }
+                                                }}
+                                            >
+                                                {ven}
                                             </Badge>
                                         )
                                     }
@@ -352,7 +388,7 @@ const SubCategory = ({pageProps}) => {
 }
 
 export const getServerSideProps = async (context) => {
-    let {category, page, keyword, isSuperSale, vendor} = context.query
+    let {category, page, keyword, isSuperSale, vendor, material} = context.query
     let subCategory = context.params.id
     if (page) {
         page = '?page=' + page
@@ -361,12 +397,15 @@ export const getServerSideProps = async (context) => {
     }
 
     let res = {}
-    let data = {'superSale': false, 'vendor': ''}
+    let data = {'superSale': false, 'vendor': '', 'material':''}
     if (isSuperSale) {
         data['superSale'] = true
     }
     if (vendor) {
         data['vendor'] = vendor
+    }
+    if (material) {
+        data['material'] = material
     }
 
     if (keyword && page) {

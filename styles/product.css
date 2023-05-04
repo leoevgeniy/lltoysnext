@@ -30,12 +30,13 @@
     white-space: nowrap;
 }
 
-.card .cardimg .badge {
+.card .badge-discount {
     position: absolute;
-    top: 40%;
-    right: 76%;
+    transform: translate(-10px, -35px);
+    /*top: -10%;*/
+    /*right: 76%;*/
     font-size: 15px;
-    height: 5%;
+    height: 6%;
     width: 25%;
 }
 .card .cardimg .badge-sale {
@@ -43,7 +44,7 @@
     top: 1%;
     right: 50%;
     font-size: 15px;
-    height: 7%;
+    height: 10%;
     width: 50%;
 }
 .card .cardimg .badgeCard {
@@ -257,9 +258,7 @@
     .card-text {
         font-size: 25px;
     }
-    .card .cardimg .badge {
-        top: 35%;
-        right: 70%;
+    .card .badge-discount {
         width: 28%;
 
     }
@@ -313,9 +312,7 @@
     .card-text {
         font-size: 20px;
     }
-    .card .cardimg .badge {
-        top: 65%;
-        right: 76%;
+    .card .badge-discount {
         height: 6%;
         width: 23%;
         font-size: 20px;
@@ -343,10 +340,8 @@
     .card-text {
         font-size: 10px;
     }
-    .card .cardimg .badge {
+    .card .badge-discount {
         font-size: 12px;
-        top: 36%;
-        right: 70%;
         width: 28%;
         height: 5%;
 
@@ -363,7 +358,20 @@
     .card-title {
         text-decoration: none;
         line-height: 1;
-        font-size: 18px;
+        font-size: 15px;
+    }
+    .card-body .card-name {
+        text-decoration: none;
+        line-height: 1;
+        font-size: 15px;
+        display: block;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* количество строк */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+
     }
 
     .cardstyle {

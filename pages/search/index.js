@@ -5,27 +5,16 @@ import {useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Product from '@/components/Product'
 import Paginate from '@/components/Paginate'
-import Message from '@/components/Message'
-import Loader from '@/components/Loader'
 import {
-    listCatalog,
     listTopProducts,
-    listProducts,
-    listCategoryProducts,
     listSeenProducts
 } from '@/redux/actions/productAction'
 import ProductCarousel from '@/components/ProductCarousel'
 import SeenProductCarousel from '@/components/SeenProductCarousel'
 import {useSearchParams} from "next/navigation";
-import {PRODUCT_DETAILS_RESET} from '@/redux/types'
-import {Router, useRouter, withRouter} from "next/router";
-import ReactPaginate from 'react-paginate';
-import App, {AppContext} from "next/app";
+import {useRouter} from "next/router";
 import axios from "axios";
 import {API_HOST} from "@/consts";
-import Breadcrumb from "react-bootstrap/Breadcrumb";
-import PaginateSearch from "@/components/PaginateSearch";
-import category from "@/pages/category/[category]";
 import Link from "next/link";
 
 
@@ -60,10 +49,21 @@ const Search = ({pageProps}) => {
     // const [priceLow, setPriceLow] = useState(productList.priceLowApi)
     // const [priceUp, setPriceUp] = useState(productList.priceUpApi)
     const searchParams = useSearchParams();
+
     let keyword = searchParams.get('keyword')
     let supersale = searchParams.get('supersale')
     let bestseller = searchParams.get('bestsellers')
     let novelties = searchParams.get('novelties')
+    let paginPath = ''
+    if (supersale) {
+        paginPath = 'search?supersale=1'
+    } else if (bestseller) {
+        paginPath = 'search?bestsellers=1'
+    } else if (novelties) {
+        paginPath = 'search?novelties=1'
+    } else {
+        paginPath = 'search?keyword='+keyword
+    }
     //
     useEffect(() => {
         if (localStorage.getItem('oppenedItems')) {
@@ -99,10 +99,10 @@ const Search = ({pageProps}) => {
                 <div className="content justify-content-center text-white">
                     {products.length > 0 ?
                         <div className='d-inline-block'>
-                            <span className='mb-2'> Найдено <strong>{categoryList[Object.keys(categoryList)[0]]}</strong> в категории <Link
-                            href={'/category/' + Object.keys(categoryList)[0] + '?keyword=' + keyword}>{Object.keys(categoryList)[0]}</Link><br/> </span>
-                            <span> <strong>{subCategoryList[Object.keys(subCategoryList)[0]]}</strong> в категории <Link
-                                href={'/category/' + Object.keys(categoryList)[0] + '/' + Object.keys(subCategoryList)[0] + '?keyword=' + keyword}>{Object.keys(subCategoryList)[0]}</Link><br/></span>
+                            {/*<span className='mb-2'> Найдено <strong>{categoryList[Object.keys(categoryList)[0]]}</strong> в категории <Link*/}
+                            {/*href={'/category/' + Object.keys(categoryList)[0] + '?keyword=' + keyword}>{Object.keys(categoryList)[0]}</Link><br/> </span>*/}
+                            {/*<span> <strong>{subCategoryList[Object.keys(subCategoryList)[0]]}</strong> в категории <Link*/}
+                            {/*    href={'/category/' + Object.keys(categoryList)[0] + '/' + Object.keys(subCategoryList)[0] + '?keyword=' + keyword}>{Object.keys(subCategoryList)[0]}</Link><br/></span>*/}
                             {keyword &&
                                 <Badge>
                                 {keyword}
@@ -177,7 +177,7 @@ const Search = ({pageProps}) => {
                             className='mt-2'
                             page={page}
                             pages={pages}
-                            keyword={brCategory}
+                            keyword={paginPath}
                         />
                     </div>
                 </div>
@@ -193,11 +193,11 @@ const Search = ({pageProps}) => {
                     <SeenProductCarousel/>
                 </>
             }
-            <div className='popular my-3'>
-                <span className='mx-3 fs-4  text-white'>Распродажа</span>
-                <div className='line'></div>
-            </div>
-            <ProductCarousel data={pageProps.topData}/>
+            {/*<div className='popular my-3'>*/}
+            {/*    <span className='mx-3 fs-4  text-white'>Распродажа</span>*/}
+            {/*    <div className='line'></div>*/}
+            {/*</div>*/}
+            {/*<ProductCarousel data={pageProps.topData}/>*/}
         </Container>
 
     )
@@ -217,14 +217,21 @@ export const getServerSideProps = async (context) => {
         data['bestsellers'] = true
     }
     if (keyword) {
-        page = '&page=' + page
+        keyword = '?keyword='+keyword
+    } else{keyword=''}
+    // if (!page) {page=''}
+    if (page) {
+        if (keyword) {
+            page = '&page='+page
+        } else {
+            page = '?page='+page
+        }
+    } else {
+        page =''
     }
-    if (!page) {
-        page = ''
-    }
-    res = await axios.post(`${API_HOST}/api/products/?keyword=${keyword}${page}`, data);
+    res = await axios.post(`${API_HOST}/api/products/${keyword}${page}`, data);
     const topData = await axios.get(`${API_HOST}/api/products/top`);
-    if (!data) {
+    if (!topData) {
         return {
             notFound: true,
         }
