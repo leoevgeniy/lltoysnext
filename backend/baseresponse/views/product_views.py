@@ -21,77 +21,23 @@ from rest_framework import status
 @api_view(['POST'])
 def getProducts(request, *args):
     query = request.query_params.get('keyword')
-    # filterer = request.query_params.get('filter')
-    # category = request.query_params.get('category')
-    # sorts = request.query_params.get('sort')
-    # vendor = request.query_params.get('vendor')
-    # collection = request.query_params.get('collection')
-    # material = request.query_params.get('material') || ''
-    # color = request.query_params.get('color')
-    # size = request.query_params.get('size')
-    # priceLow = request.query_params.get('priceLow')
-    # priceUp = request.query_params.get('priceUp')
-    sort = []
-    # print('filterer', args[0]['filterer'], 'category', args[0]['category'])
-    # if 'filterer' not in args[0].keys():
-    #     filterer = ''
-    # else:
-    #     filterer = args[0]['filterer']
     if query is None:
         query = ''
-    # else:
-    #     query = args[0]['query']
-    #
-    # if 'category' not in args[0].keys():
-    #     category = ''
-    # else:
-    #     category = args[0]['category']
-    #
-    # if 'vendor' not in args[0].keys():
-    #     vendor = ''
-    # else:
-    #     vendor = args[0]['vendor']
-    #
-    # if 'collection' not in args[0].keys():
-    #     collection = ''
-    # else:
-    #     collection = args[0]['collection']
-    #
-    # if 'material' not in args[0].keys():
-    #     material = ''
-    # else:
-    #     material = args[0]['material']
-    #
-    # if 'color' not in args[0].keys():
-    #     color = ''
-    # else:
-    #     color = args[0]['color']
-    #
-    # if 'size' not in args[0].keys():
-    #     size = ''
-    # else:
-    #     size = args[0]['size']
-    #
-    # if 'priceLow' not in args[0].keys():
-    #     priceLow = 1
-    # else:
-    #     priceLow = float(args[0]['priceLow'])
-    # if 'priceUp' not in args[0].keys() or args[0]['priceUp'] == 0 or args[0]['priceUp'] == '':
-    #     priceUp = 100000000
-    # else:
-    #     priceUp = float(args[0]['priceUp'])
-
-    # if filterer == '' and query == '' and category == '':
-    #     products = Product.objects.filter(Q(isSuperSale=True) & Q(assortiment__countInStock__gt=0)).distinct().order_by(
-    #         'name')
-    #     maxPrice = \
-    #         Product.objects.filter(Q(isSuperSale=True) & Q(assortiment__countInStock__gt=0)).aggregate(
-    #             Max('retailPrice'))[
-    #             'retailPrice__max']
-    # else:
-    products = Product.objects.filter(
-        Q(name__icontains=query) & Q(assortiment__countInStock__gt=0) | Q(category__category__icontains=query) | Q(
-            category__subCategory__icontains=query)).distinct().order_by('name')
+    print(request.data.get('novelties'), request.data.get('supersale'), request.data.get('bestsellers'))
+    if request.data.get('novelties'):
+        products = Product.objects.filter(
+            Q(assortiment__countInStock__gt=0) & Q(isNovelties__iexact=1)).distinct().order_by('name')
+    elif request.data.get('supersale'):
+        products = Product.objects.filter(
+            Q(isSuperSale__exact=1) & Q(assortiment__countInStock__gt=0)).distinct().order_by('name')
+    elif request.data.get('bestsellers'):
+        products = Product.objects.filter(
+            Q(isBestSeller__iexact=1) & Q(assortiment__countInStock__gt=0)).distinct().order_by('name')
+    else:
+        products = Product.objects.filter(
+            Q(assortiment__countInStock__gt=0) & Q(name__icontains=query) | Q(category__category__icontains=query) | Q(
+                category__subCategory__icontains=query)).distinct().order_by('name')
+    print(len(products))
     #                               & Q(category__category__icontains=category) & Q(
     # category__subCategory__icontains=filterer) & Q(retailPrice__gte=priceLow) & Q(retailPrice__lte=priceUp) &
     #                               Q(assortiment__countInStock__gt=0) & Q(brand__icontains=vendor) & Q(
@@ -117,22 +63,22 @@ def getProducts(request, *args):
     categoryList = {}
     subCategoryList = {}
 
-    if query:
-        for product in products:
-            try:
-                categoryRecords = Category.objects.filter(product=product._id)
-                for categoryRecord in categoryRecords:
-                    if categoryRecord.category not in categoryList.keys():
-                        categoryList[categoryRecord.category] = 1
-                    else:
-                        categoryList[categoryRecord.category] += 1
-                    if categoryRecord.subCategory not in subCategoryList.keys():
-                        subCategoryList[categoryRecord.subCategory] = 1
-                    else:
-                        subCategoryList[categoryRecord.subCategory] += 1
-
-            except:
-                pass
+    # if query:
+    #     for product in products:
+    #         try:
+    #             categoryRecords = Category.objects.filter(product=product._id)
+    #             for categoryRecord in categoryRecords:
+    #                 if categoryRecord.category not in categoryList.keys():
+    #                     categoryList[categoryRecord.category] = 1
+    #                 else:
+    #                     categoryList[categoryRecord.category] += 1
+    #                 if categoryRecord.subCategory not in subCategoryList.keys():
+    #                     subCategoryList[categoryRecord.subCategory] = 1
+    #                 else:
+    #                     subCategoryList[categoryRecord.subCategory] += 1
+    #
+    #         except:
+    #             pass
     if categoryList and subCategoryList:
         sortedCategoryTuple = sorted(categoryList.items(), key=operator.itemgetter(1), reverse=True)
         sortedCategoryList = {k: v for k, v in sortedCategoryTuple}
@@ -225,6 +171,8 @@ def getProducts(request, *args):
 def getCategotyProducts(request, **args):
     query = request.query_params.get('keyword')
     isSuperSale = request.data['superSale']
+    vendor = request.data['vendor']
+    material = request.data['material']
 
     if query is None:
         query = ''
@@ -240,15 +188,25 @@ def getCategotyProducts(request, **args):
         products = Product.objects.filter(
             Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
                 category__category__icontains=category) & Q(assortiment__countInStock__gt=0) & Q(
-                isSuperSale__iexact=1)).distinct().order_by('name')
+                isSuperSale__iexact=1) & Q(brand__icontains=vendor) &
+            Q(material__icontains=material)).distinct().order_by('name')
     else:
         products = Product.objects.filter(
             Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
-                category__category__icontains=category) & Q(assortiment__countInStock__gt=0)).distinct().order_by(
+                category__category__icontains=category) & Q(assortiment__countInStock__gt=0) & Q(
+                brand__icontains=vendor) &
+            Q(material__icontains=material)).distinct().order_by(
             'name')
     productsLength = len(products)
+    vendorList = []
+    materialList = []
     if not subcategory:
         for product in products:
+            if product.brand not in vendorList:
+                vendorList.append(product.brand)
+            if product.material not in materialList:
+                materialList.append(product.material)
+
             try:
                 categories = Category.objects.filter(product=product._id)
                 for cat in categories:
@@ -265,6 +223,12 @@ def getCategotyProducts(request, **args):
             except:
                 pass
     else:
+        for product in products:
+            if product.brand not in vendorList:
+                vendorList.append(product.brand)
+            if product.material not in materialList:
+                materialList.append(product.material)
+
         try:
             categories = Category.objects.all()
             for cat in categories:
@@ -301,10 +265,15 @@ def getCategotyProducts(request, **args):
          'productsLength': productsLength,
          'subCategoriesList': subCategoriesList,
 
-         # 'vendorList': vendorList,
-         # 'collectionList': collectionList, 'colorUrlList': colorUrlList, 'materialList': materialList,
-         # 'colorList': colorList, 'sizeList': sizeList,
-         # 'priceUpApi': priceUpApi, 'priceLowApi': priceLowApi, 'maxPrice': maxPrice
+         'vendorList': vendorList,
+         # 'collectionList': collectionList,
+         # 'colorUrlList': colorUrlList,
+         'materialList': materialList,
+         # 'colorList': colorList,
+         # 'sizeList': sizeList,
+         # 'priceUpApi': priceUpApi,
+         # 'priceLowApi': priceLowApi,
+         # 'maxPrice': maxPrice
          }
     )
 
@@ -431,9 +400,21 @@ def migrateProduct(request):
         productsArr = {product.prodId: product for product in Product.objects.all()}
         product_assortiment = {p_assortiment.aID: p_assortiment for p_assortiment in Assortiment.objects.all()}
         for row in reader:
-
+            if row[40] or row[42]:
+                print(row[40], row[42])
             if productsArr.get(row[0]):
-                productsToUpdate.append(Product(_id=row[0], retailPrice=row[14]))
+                if row[42] == 1 and row[40] == 1:
+                    productsToUpdate.append(
+                        Product(_id=row[0], retailPrice=row[14], isBestSeller=True, isNovelties=True))
+                elif row[42] == 1 and row[40] == 0:
+                    productsToUpdate.append(
+                        Product(_id=row[0], retailPrice=row[14], isBestSeller=True, isNovelties=False))
+                elif row[40] == 1 and row[42] == 0:
+                    productsToUpdate.append(
+                        Product(_id=row[0], retailPrice=row[14], isBestSeller=False, isNovelties=True))
+                else:
+                    productsToUpdate.append(
+                        Product(_id=row[0], retailPrice=row[14], isBestSeller=False, isNovelties=False))
                 if product_assortiment.get(row[1]):
                     assortToUpdate.append(
                         Assortiment(id=row[1], countInStock=row[16], shippingDate=row[17])
@@ -476,6 +457,8 @@ def migrateProduct(request):
                     brutto=row[19],
                     prodId=row[0],
                     vendorCode=row[4],
+                    isBestSeller=row[42],
+                    isNovelties=row[40],
                     imageSmall='/'.join(row[61].split('/')[:-1]).replace('big', 'small').replace('http://',
                                                                                                  'https://') + '/small_' +
                                row[0] + '.jpg',

@@ -149,7 +149,7 @@ class ProductSerializer(serializers.ModelSerializer):
         return serializer.data
 
     def get_assortiment(self, obj):
-        assortiment = obj.assortiment_set.all()
+        assortiment = obj.assortiment_set.filter(countInStock__gt=0)
         serializer = AssortimentSerializer(assortiment, many=True)
         return serializer.data
 
@@ -199,18 +199,15 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_availability(self, obj):
         assortiment = obj.assortiment_set.all()
         colors = []
+        sizes = []
         availability = []
         for item in assortiment:
             if item.countInStock > 0:
                 if item.color not in colors:
                     colors.append(item.color)
-                    tempcolor = item.color
-                    availability.append({tempcolor: [item.size]})
-                else:
-                    for dict in availability:
-                        if dict == item.color:
-                            availability[dict].append(item.size)
-        return availability
+                if item.size not in sizes:
+                    sizes.append(item.size)
+        return colors, sizes
 
 
 class ShippingAddressSerializer(serializers.ModelSerializer):

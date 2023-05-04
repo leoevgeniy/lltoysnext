@@ -38,7 +38,19 @@ def migrateProduct(request):
         for row in reader:
 
             if productsArr.get(row[0]):
-                productsToUpdate.append(Product(_id=row[0], retailPrice=row[14]))
+                if row[42] == '1' and row[40] == '1':
+                    productsToUpdate.append(
+                        Product(_id=row[0], retailPrice=row[14], isBestSeller=True, isNovelties=True))
+                elif row[42] == '1' and row[40] == '0':
+
+                    productsToUpdate.append(
+                        Product(_id=row[0], retailPrice=row[14], isBestSeller=True, isNovelties=False))
+                elif row[40] == '1' and row[42] == '0':
+                    productsToUpdate.append(
+                        Product(_id=row[0], retailPrice=row[14], isBestSeller=False, isNovelties=True))
+                else:
+                    productsToUpdate.append(
+                        Product(_id=row[0], retailPrice=row[14], isBestSeller=False, isNovelties=False))
                 if product_assortiment.get(row[1]):
                     assortToUpdate.append(
                         Assortiment(id=row[1], countInStock=row[16], shippingDate=row[17])
@@ -81,6 +93,8 @@ def migrateProduct(request):
                     brutto=row[19],
                     prodId=row[0],
                     vendorCode=row[4],
+                    isBestSeller=row[42],
+                    isNovelties=row[40],
                     imageSmall='/'.join(row[61].split('/')[:-1]).replace('big', 'small').replace('http://',
                                                                                                  'https://') + '/small_' +
                                row[0] + '.jpg',
@@ -127,7 +141,7 @@ def migrateProduct(request):
                 updatedvar = 0
                 Product.objects.bulk_create(products)
                 Assortiment.objects.bulk_create(assort)
-                Product.objects.bulk_update(productsToUpdate, fields=['retailPrice'])
+                Product.objects.bulk_update(productsToUpdate, fields=['retailPrice', 'isBestSeller', 'isNovelties'])
                 Assortiment.objects.bulk_update(assortToUpdate, fields=['countInStock', 'shippingDate'])
                 Category.objects.bulk_create(category)
                 db.close_old_connections()
@@ -138,7 +152,7 @@ def migrateProduct(request):
                 assortToUpdate = []
     Product.objects.bulk_create(products)
     Assortiment.objects.bulk_create(assort)
-    Product.objects.bulk_update(productsToUpdate, fields=['retailPrice'])
+    Product.objects.bulk_update(productsToUpdate, fields=['retailPrice', 'isBestSeller', 'isNovelties'])
     Assortiment.objects.bulk_update(assortToUpdate, fields=['countInStock', 'shippingDate'])
     Category.objects.bulk_create(category)
     db.close_old_connections()
