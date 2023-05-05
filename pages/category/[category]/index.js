@@ -32,7 +32,7 @@ import {Router, useRouter, withRouter} from "next/router";
 import ReactPaginate from 'react-paginate';
 import App, {AppContext} from "next/app";
 import axios from "axios";
-import {API_HOST} from "@/consts";
+import {API_HOST, LOCATION} from "@/consts";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import Link from "next/link";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -44,16 +44,27 @@ const Category = ({pageProps}) => {
     // const id = history.query.id
     // const productList = useSelector((state) => state.categoryproduct);
     const category = pageProps.category
-    const {error, loading, products, productsLength, subCategoriesList, page, pages} = pageProps.data;
+    let {
+        error,
+        loading,
+        products,
+        productsLength,
+        subCategoriesList,
+        page,
+        pages,
+        isSuperSale,
+        vendorList,
+        materialList,
+    } = pageProps.data;
     const dispatch = useDispatch()
     // const [sort, setSort] = useState('')
     // const [priceSortUp, setPriceSortUp] = useState(false);
     // const [priceSortDown, setPriceSortDown] = useState(false);
     // const [nameSortDown, setNameSortDown] = useState(false);
     // const [nameSortUp, setNameSortUp] = useState(false);
-    // const [vendorSelected, setVendorSelected] = useState([])
+    const [vendor, setVendor] = useState([])
     // const [collectionSelected, setCollectionSelected] = useState([])
-    // const [materialSelected, setMaterialSelected] = useState([])
+    const [material, setMaterial] = useState([])
     // const [colorSelected, setColorSelected] = useState([])
     // const [sizeSelected, setSizeSelected] = useState([])
     // const [categorySelected, setCategorySelected] = useState([])
@@ -70,29 +81,27 @@ const Category = ({pageProps}) => {
     // const [priceUp, setPriceUp] = useState(productList.priceUpApi)
     // const searchParams = useSearchParams();
     let keyword = pageProps.keyword
-    const [isSuperSale, setIsSuperSale] = useState(false)
-
+    const [isSuper, setIsSuper] = useState(isSuperSale)
+    const newUrl = new URL(history.asPath, LOCATION)
+    const searchParams = useSearchParams()
     useEffect(() => {
         if (localStorage.getItem('oppenedItems')) {
             setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))
         }
         dispatch(listTopProducts())
+        setVendor(searchParams.get('vendor'))
+        setMaterial(searchParams.get('material'))
 
 
     }, [])
     useEffect(() => {
-        if (isSuperSale) {
-            if (history.asPath.includes('?')) {
-                history.push(history.asPath + '&isSuperSale=1')
-            } else {
-                history.push(history.asPath + '?isSuperSale=1')
-            }
+        if (isSuper) {
+            newUrl.searchParams.append('isSuperSale', '1')
         } else {
-            if (history.asPath.includes('isSuperSale')) {
-                history.push(history.asPath.split('isSuperSale=')[0].slice(0, -1))
-            }
+            newUrl.searchParams.delete('isSuperSale')
         }
-    }, [isSuperSale])
+        history.push(newUrl.href)
+    }, [isSuper])
     useEffect(() => {
         if (oppenedItems) {
             dispatch(listSeenProducts(oppenedItems))
@@ -103,6 +112,17 @@ const Category = ({pageProps}) => {
 
     const brCategory = `/category/${category}`
     const [show, setShow] = useState(false)
+    const vendorRemove = () => {
+        setVendor('')
+        newUrl.searchParams.delete('vendor')
+        history.push(newUrl.href)
+    }
+    const materialRemove = () => {
+        setMaterial('')
+        newUrl.searchParams.delete('material')
+        history.push(newUrl.href)
+    }
+
     return (
         <Container className='categ'>
             {loading ? (
@@ -125,7 +145,8 @@ const Category = ({pageProps}) => {
                                 <span className='prod-length pl-2'>{productsLength} товаров</span>}
                         </h1>
                         {(history.pathname.includes('/category') || history.pathname.includes('/search')) &&
-                            <FontAwesomeIcon className='d-block d-md-none category-filter-icon my-auto mr-2 text-white' icon={faFilter}
+                            <FontAwesomeIcon className='d-block d-md-none category-filter-icon my-auto mr-2 text-white'
+                                             icon={faFilter}
                                              onClick={() => setShow(true)}/>
                         }
                     </div>
@@ -175,17 +196,83 @@ const Category = ({pageProps}) => {
                                 </ul>
                             )}
                             <br/>
+                            {/*<div className='d-flex justify-content-between'>*/}
+                            {/*    <span>*/}
+                            {/*    Распродажа</span>*/}
+                            {/*    {console.log(isSuper)}*/}
+                            {/*    {isSuper &&*/}
+                            {/*        <FormCheck*/}
+                            {/*        custom='true'*/}
+                            {/*        id='isSusperSale'*/}
+                            {/*        type='switch'*/}
+                            {/*        сhecked={isSuper ? 'true' : ''}*/}
+                            {/*        onChange={() => setIsSuper(!isSuper)}*/}
+                            {/*        className=''></FormCheck>}*/}
+                            {/*</div>*/}
                             <div className='d-flex justify-content-between'>
-                                <span>
-                                Распродажа</span>
-                                <FormCheck
-                                    custom='true'
-                                    id='isSusperSale'
-                                    type='switch'
-                                    сhecked={isSuperSale ? 'true' : ''}
-                                    onChange={() => setIsSuperSale(!isSuperSale)}
-                                    className=''></FormCheck>
+                                <span>Бренды</span>
+                                {searchParams.get('vendor') &&
+                                    <span
+                                        onClick={vendorRemove}
+                                    >
+                                            X
+                                        </span>}
                             </div>
+                            <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
+
+                                {vendorList &&
+                                    vendorList.map((ven) =>
+                                        // eslint-disable-next-line react/jsx-key
+                                        <Badge
+                                            key={ven}
+                                            bg={searchParams.get('vendor')===ven ? 'primary':'secondary'}
+                                            className='mx-1'
+                                            onClick={() => {
+                                                if (history.asPath.includes('?')) {
+                                                    history.push(history.asPath + '&vendor=' + ven)
+                                                } else {
+                                                    history.push(history.asPath + '?vendor=' + ven)
+                                                }
+                                            }}
+                                        >
+                                            {ven}
+                                        </Badge>
+                                    )
+                                }
+                            </div>
+                            <div className='d-flex justify-content-between'>
+                                <span>Материал</span>
+                                {searchParams.get('material') &&
+                                    <span
+                                        onClick={materialRemove}
+                                    >
+                                            X
+                                        </span>}
+                            </div>
+
+                            <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
+
+                                {materialList &&
+                                    materialList.map((ven) =>
+                                        // eslint-disable-next-line react/jsx-key
+                                        <Badge
+                                            key={ven}
+                                            bg={searchParams.get('material')===ven ? 'primary':'secondary'}
+                                            className='mx-1'
+                                            onClick={() => {
+                                                if (history.asPath.includes('?')) {
+                                                    history.push(history.asPath + '&material=' + ven)
+                                                } else {
+                                                    history.push(history.asPath + '?material=' + ven)
+                                                }
+                                            }}
+                                        >
+                                            {ven}
+                                        </Badge>
+                                    )
+                                }
+                            </div>
+
                         </Col>
                         <Col xs={12} md={9}>
                             <div className="content">
@@ -280,9 +367,10 @@ export const getServerSideProps = async (context) => {
         page = ''
     }
     let res = {}
-    let data = {'superSale': false, 'vendor': '', 'material':''}
+    let data = {'superSale': false, 'vendor': '', 'material': ''}
     if (isSuperSale) {
         data['superSale'] = true
+        isSuperSale = true
     } else {
         isSuperSale = false
     }

@@ -81,17 +81,14 @@ const SubCategory = ({pageProps}) => {
     // const searchParams = useSearchParams();
     let keyword = pageProps.keyword
     const newUrl = new URL(history.asPath, LOCATION)
-
     useEffect(() => {
         if (localStorage.getItem('oppenedItems')) {
             setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))
         }
-
-    }, [])
-    useEffect(() => {
-        // dispatch(listCategoryProducts(id))
         dispatch(listTopProducts())
         setVendor(searchParams.get('vendor'))
+
+
     }, [])
 
     const [isSuperSale, setIsSuperSale] = useState(false)
@@ -109,7 +106,7 @@ const SubCategory = ({pageProps}) => {
             newUrl.searchParams.delete('isSuperSale')
 
         }
-            history.push(newUrl.href)
+        history.push(newUrl.href)
     }, [isSuperSale])
     useEffect(() => {
         if (oppenedItems) {
@@ -127,12 +124,94 @@ const SubCategory = ({pageProps}) => {
     const vendorRemove = () => {
         setVendor('')
         newUrl.searchParams.delete('vendor')
+        setShow(false)
+
         history.push(newUrl.href)
     }
     const materialRemove = () => {
         setMaterial('')
         newUrl.searchParams.delete('material')
+        setShow(false)
+
         history.push(newUrl.href)
+    }
+    const Filters = () => {
+
+        return (
+            <>
+                <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
+                    <div className='d-flex justify-content-between'>
+                        <span>Бренды</span>
+                        {searchParams.get('vendor') &&
+                            <span
+                                onClick={vendorRemove}
+                            >
+                                            X
+                                        </span>}
+                    </div>
+
+                    {vendorList &&
+                        vendorList.map((ven) =>
+                            // eslint-disable-next-line react/jsx-key
+                            <Badge
+                                key={ven}
+                                bg={searchParams.get('vendor') === ven ? 'primary' : 'secondary'}
+                                className='mx-1'
+                                onClick={() => {
+                                    if (history.asPath.includes('?')) {
+                                        history.push(history.asPath + '&vendor=' + ven)
+                                    } else {
+                                        history.push(history.asPath + '?vendor=' + ven)
+                                    }
+                                    setShow(false)
+                                }}
+                            >
+                                {ven}
+                            </Badge>
+                        )
+                    }
+                </div>
+                <div className='d-flex justify-content-between'>
+                    <span>Материал</span>
+                    {searchParams.get('material') &&
+                        <span
+                            onClick={materialRemove}
+                        >
+                                            X
+                                        </span>}
+                </div>
+
+                <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
+
+                    {materialList &&
+                        materialList.map((ven) =>
+                            // eslint-disable-next-line react/jsx-key
+                            <Badge
+                                key={ven}
+                                bg={searchParams.get('material') === ven ? 'primary' : 'secondary'}
+                                className='mx-1'
+                                onClick={() => {
+                                    if (history.asPath.includes('?')) {
+                                        history.push(history.asPath + '&material=' + ven)
+                                    } else {
+                                        history.push(history.asPath + '?material=' + ven)
+                                    }
+                                    setShow(false)
+
+                                }}
+                            >
+                                {ven}
+                            </Badge>
+                        )
+                    }
+                </div>
+
+            </>
+        )
+    }
+    const clearFilters = () => {
+        materialRemove()
+        vendorRemove()
     }
     return (
         <Container className='categ'>
@@ -171,41 +250,37 @@ const SubCategory = ({pageProps}) => {
                             placement='bottom'
                             onHide={() => setShow(false)}
                             className='h-75'
+
                         >
-                            <Offcanvas.Header>
-                                <Offcanvas.Title>Фильтры</Offcanvas.Title>
+                            <Offcanvas.Header style={{backgroundColor: '#e5097f', color: 'white'}}>
+                                <Offcanvas.Title className='w-100'>
+                                    <span>Фильтры</span>
+                                    {console.log(vendor, material)}
+                                    {(searchParams.get('material') || searchParams.get('vendor')) ? <span onClick={clearFilters} className='float-end'>Отмена</span>:''}
+                                </Offcanvas.Title>
                             </Offcanvas.Header>
-                            <OffcanvasBody>
+                            <OffcanvasBody style={{background: '#e5097f linear-gradient(#e5097f, rgb(0 0 0))'}} >
                                 <ListGroup className='text-white mh-25'>
                                     <span className='fw-bolder fs-5'>Категория</span><br/>
-                                    <span><Link href={`/category/${category}`}
+                                    <span><Link href={`/category/${category}`}onClick={() => setShow(false)}
                                                 className='ml-5 text-white'>  {category}</Link>
                                         </span><br/>
-                                    <span className='ml-8'>{subCategory}</span><br/>
                                     <ul className='lh-1 text-white'>
 
-                                    {Object.keys(subCategoriesList).map((item, i) =>
+                                        {Object.keys(subCategoriesList).map((item, i) =>
                                             <li key={i}>
                                                 <Link href={'/category/' + category + '/' + item}
-                                                      className='subCategory text-white'> {item}</Link>
+                                                      onClick={() => setShow(false)}
+                                                      className={item === subCategory ? 'text-decoration-none subCategory text-white' : 'subCategory text-white' }> {item}</Link>
                                                 <span
                                                     className='prod-length pl-2 text-light'>{subCategoriesList[item]}</span>
                                             </li>
-
-                                    )}
+                                        )}
                                     </ul>
                                     <br/>
                                 </ListGroup>
                                 <ListGroup>
-                                    <span>Бренды</span>
-                                    {
-                                        vendorList.map((vendor) =>
-                                            // eslint-disable-next-line react/jsx-key
-                                            <Badge key={vendor}>
-                                                {vendor}
-                                            </Badge>
-                                        )
-                                    }
+                                    <Filters/>
                                 </ListGroup>
                             </OffcanvasBody>
                         </Offcanvas>
@@ -218,92 +293,28 @@ const SubCategory = ({pageProps}) => {
                                 <p className='ml-8 text-white'>{subCategory}</p>
                                 <ul>
 
-                                {subCategoriesList && Object.keys(subCategoriesList).map((item,i) =>
+                                    {subCategoriesList && Object.keys(subCategoriesList).map((item, i) =>
                                         <li key={item}>
                                             <Link href={'/category/' + category + '/' + item}
                                                   className='subCategory'> {item}</Link>
                                             <span
                                                 className='prod-length pl-2'>{subCategoriesList[item]}</span>
                                         </li>
-
-                                )}
+                                    )}
                                 </ul>
                                 <br/>
-                                <div className='d-flex justify-content-between'>
-                                <span>
-                                Распродажа</span>
-                                    <FormCheck
-                                        custom='true'
-                                        id='isSusperSale'
-                                        type='switch'
-                                        сhecked={isSuperSale ? 'true' : ''}
-                                        onChange={() => setIsSuperSale(!isSuperSale)}
-                                        className=''></FormCheck>
-                                </div>
-                                <div className='d-flex justify-content-between'>
-                                    <span>Бренды</span>
-                                    {searchParams.get('vendor') &&
-                                        <span
-                                            onClick={vendorRemove}
-                                        >
-                                            X
-                                        </span>}
-                                </div>
-                                <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
-
-                                    {vendorList &&
-                                        vendorList.map((ven) =>
-                                            // eslint-disable-next-line react/jsx-key
-                                            <Badge
-                                                key={ven}
-                                                bg={searchParams.get('vendor')===ven ? 'primary':'secondary'}
-                                                className='mx-1'
-                                                onClick={() => {
-                                                    if (history.asPath.includes('?')) {
-                                                        history.push(history.asPath + '&vendor=' + ven)
-                                                    } else {
-                                                        history.push(history.asPath + '?vendor=' + ven)
-                                                    }
-                                                }}
-                                            >
-                                                {ven}
-                                            </Badge>
-                                        )
-                                    }
-                                </div>
-                                <div className='d-flex justify-content-between'>
-                                    <span>Материал</span>
-                                    {searchParams.get('material') &&
-                                        <span
-                                            onClick={materialRemove}
-                                        >
-                                            X
-                                        </span>}
-                                </div>
-
-                                <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
-
-                                    {materialList &&
-                                        materialList.map((ven) =>
-                                            // eslint-disable-next-line react/jsx-key
-                                            <Badge
-                                                key={ven}
-                                                bg={searchParams.get('material')===ven ? 'primary':'secondary'}
-                                                className='mx-1'
-                                                onClick={() => {
-                                                    if (history.asPath.includes('?')) {
-                                                        history.push(history.asPath + '&material=' + ven)
-                                                    } else {
-                                                        history.push(history.asPath + '?material=' + ven)
-                                                    }
-                                                }}
-                                            >
-                                                {ven}
-                                            </Badge>
-                                        )
-                                    }
-                                </div>
-
+                                {/*<div className='d-flex justify-content-between'>*/}
+                                {/*<span>*/}
+                                {/*Распродажа</span>*/}
+                                {/*    <FormCheck*/}
+                                {/*        custom='true'*/}
+                                {/*        id='isSusperSale'*/}
+                                {/*        type='switch'*/}
+                                {/*        сhecked={isSuperSale ? 'true' : ''}*/}
+                                {/*        onChange={() => setIsSuperSale(!isSuperSale)}*/}
+                                {/*        className=''></FormCheck>*/}
+                                {/*</div>*/}
+                                <Filters/>
 
                             </Col>
                             <Col sm={12} md={9}>
@@ -385,6 +396,8 @@ const SubCategory = ({pageProps}) => {
         </Container>
 
     )
+
+
 }
 
 export const getServerSideProps = async (context) => {
@@ -395,9 +408,9 @@ export const getServerSideProps = async (context) => {
     } else {
         page = ''
     }
-
+    let itemsList = []
     let res = {}
-    let data = {'superSale': false, 'vendor': '', 'material':''}
+    let data = {'superSale': false, 'vendor': '', 'material': ''}
     if (isSuperSale) {
         data['superSale'] = true
     }

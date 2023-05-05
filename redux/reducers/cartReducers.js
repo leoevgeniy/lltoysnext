@@ -9,14 +9,13 @@ import {
 } from '@/redux/typesCart'
 
 
-export const cartReducer = (state={cartItems:[], shippingAddress : {}}, action) => {
+export const cartReducer = (state={cartItems:[], itemsList:[], shippingAddress : {}}, action) => {
     switch(action.type){
         case CART_ADD_ITEM:
             const item = action.payload
             const existItem = state.cartItems.find((x, i) =>
                 i === item.ind
             )
-
             // const existSizeChange = state.cartItems.find((x, i) => i===item.ind)
             if (existItem) {
                 return{
@@ -34,6 +33,7 @@ export const cartReducer = (state={cartItems:[], shippingAddress : {}}, action) 
             {
                 return{
                     ...state,
+                    // itemsList: [...state.itemsList, item.product],
                     cartItems:[...state.cartItems, item]
                 }
             }
@@ -42,6 +42,7 @@ export const cartReducer = (state={cartItems:[], shippingAddress : {}}, action) 
 
             return {
                 ...state,
+                // itemsList: state.itemsList.filter((x) => x.product !== action.payload.product),
                 cartItems: state.cartItems.filter((x, ind) => ind !== action.payload[0])
             }
         

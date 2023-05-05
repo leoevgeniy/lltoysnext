@@ -27,6 +27,7 @@ function Index({pageProps}) {
 
     useEffect(() => {
         router.isReady ? setIsLoading(false) : ''
+
     }, [])
 
     const removeFromCartHandler = (id) => {
@@ -52,7 +53,12 @@ function Index({pageProps}) {
     const totalQty = (cartItems.reduce((acc, item) => acc + Number(item.qty), 0))
     const totalOldPrice = cartItems.reduce((acc, item) => acc + Number(item.qty) * ((Number(item.oldPrice) > Number(item.price)) ? Number(item.oldPrice) : Number(item.price)), 0).toFixed(0)
     const totalPrice = cartItems.reduce((acc, item) => acc + Number(item.qty) * Number(item.price), 0).toFixed(0)
-    const deliveryCost = (Number(totalPrice))>=3000 ? 0 :300
+    let deliveryCost = 0
+    if (cartItems.length === 0 || (Number(totalPrice)) >= 3000) {
+        deliveryCost = 0
+    } else {
+        deliveryCost = 300
+    }
     const finalCost = (Number(totalPrice)) + Number(deliveryCost)
     const disc = cart.cartItems
         .reduce((acc, item) => acc + item.price * item.qty, 0)
@@ -79,10 +85,7 @@ function Index({pageProps}) {
                             cartItems &&
                             cartItems.length === 0 ? (
                                 <Message variant='info'>
-                                    Корзина пуста <Link href='/' onClick={(e) => {
-                                    e.preventDefault()
-                                    history.back()
-                                }}>Назад</Link>
+                                    Корзина пуста
                                 </Message>
                             ) : (
                                 <ListGroup variant='flush'>
@@ -96,7 +99,6 @@ function Index({pageProps}) {
                                                 </Col>
                                                 <Col md={3}>
                                                     <Link href={`/products/${item.product}`}>{item.name}</Link>
-                                                    {console.log(item)}
                                                     {(((item.color && item.color !== 'цвет не указан')) || (item.color && Object.keys(item.colors[0]) && item.color !== 'цвет не указан')) &&
                                                         <Form.Control
                                                             as="select"
@@ -112,7 +114,7 @@ function Index({pageProps}) {
                                                                     }
 
                                                                 })
-                                                                dispatch(addToCart(item.product, item.qty, e.target.value, defSize, ind,0.1))
+                                                                dispatch(addToCart(item.product, item.qty, e.target.value, defSize, ind, 0.1))
 
                                                             }}
                                                         >
@@ -139,7 +141,7 @@ function Index({pageProps}) {
                                                             onChange={(e) => {
                                                                 // setColor(e.target.value)
                                                                 // setSize(e.target.value.split(' / ')[1])
-                                                                dispatch(addToCart(item.product, item.qty, item.color, e.target.value, ind,0.1))
+                                                                dispatch(addToCart(item.product, item.qty, item.color, e.target.value, ind, 0.1))
 
                                                             }}
                                                         >
@@ -174,27 +176,55 @@ function Index({pageProps}) {
                                                     </Badge>
                                                 </Col>
                                                 <Col md={3}>
-                                                    <Form.Control
-                                                        as='select'
-                                                        // as="select"
-                                                        value={Number(item.qty)}
-                                                        onChange={(e) => {
-                                                            // setQty(Number(e.target.value))
-                                                            dispatch(addToCart(item.product, Number(e.target.value), item.color, item.size, ind, 0.1))
-
+                                                    <div className='mb-2 float-end'>
+                                                        <span
+                                                            className='asButton'
+                                                            onClick={() =>{
+                                                                if (item.qty > 1) {
+                                                                dispatch(addToCart(item.product, item.qty-1, item.color, item.size, ind, 0.1))}
+                                                            }
                                                         }
-                                                        }
-                                                    >
-                                                        {
+                                                        >
+                                                            -
+                                                        </span>
+                                                        <span className='asButton'>
+                                                            {item.qty}
+                                                        </span>
+                                                        <span
+                                                            className='asButton'
 
-                                                            [...Array(item.countInStock).keys()].map((x) => (
-                                                                <option key={x + 1} value={x + 1}>
-                                                                    {x + 1}
-                                                                </option>
-                                                            ))
-                                                        }
+                                                            onClick={() => {
+                                                                if (item.countInStock > item.qty) {
+                                                                    dispatch(addToCart(item.product, item.qty+1, item.color, item.size, ind, 0.1))
+                                                                }
+                                                            }}
+                                                        >
+                                                            +
+                                                        </span>
 
-                                                    </Form.Control>
+                                                    </div>
+
+                                                    {/*<Form.Control*/}
+                                                    {/*    as='select'*/}
+                                                    {/*    // as="select"*/}
+                                                    {/*    value={Number(item.qty)}*/}
+                                                    {/*    onChange={(e) => {*/}
+                                                    {/*        // setQty(Number(e.target.value))*/}
+                                                    {/*        dispatch(addToCart(item.product, Number(e.target.value), item.color, item.size, ind, 0.1))*/}
+
+                                                    {/*    }*/}
+                                                    {/*    }*/}
+                                                    {/*>*/}
+                                                    {/*    {*/}
+
+                                                    {/*        [...Array(item.countInStock).keys()].map((x) => (*/}
+                                                    {/*            <option key={x + 1} value={x + 1}>*/}
+                                                    {/*                {x + 1}*/}
+                                                    {/*            </option>*/}
+                                                    {/*        ))*/}
+                                                    {/*    }*/}
+
+                                                    {/*</Form.Control>*/}
 
                                                 </Col>
 
@@ -254,7 +284,7 @@ function Index({pageProps}) {
                                             {cartItems.reduce((acc, item) => acc + Number(item.qty) * ((Number(item.oldPrice) > Number(item.price)) ? Number(item.oldPrice) : Number(item.price)), 0).toFixed(0)}
                                         </span>
                                     </div>
-                                    { Number(totalOldPrice) > Number(totalPrice) &&
+                                    {Number(totalOldPrice) > Number(totalPrice) &&
                                         <div className='d-flex justify-content-between'>
                                             <span className='fs-6'>Скидка</span>
                                             <span style={{
@@ -273,7 +303,6 @@ function Index({pageProps}) {
                                             {deliveryCost}
                                         </span>
                                     </div>
-
 
 
                                 </ListGroupItem>
@@ -311,7 +340,7 @@ function Index({pageProps}) {
                     </Col>
                 }
             </Row>
-            {seenProducts && seenProducts.length >0 &&
+            {seenProducts && seenProducts.length > 0 &&
                 <>
                     <div className='popular my-3'>
                         <span className='mx-3 fs-4 text-white'>Вы смотрели</span>
@@ -331,6 +360,7 @@ function Index({pageProps}) {
         </Container>
     )
 }
+
 export const getServerSideProps = wrapper.getServerSideProps(store => async (ctx) => {
     const {data} = await axios.get(`${API_HOST}/api/products/top`);
     if (!data) {
