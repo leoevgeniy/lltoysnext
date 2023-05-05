@@ -16,8 +16,8 @@ from django.core.mail import send_mail
 
 def migrateProduct(request):
     destination = str(settings.BASE_DIR) + "/fullTotal.csv"
-    # url = 'http://feed.p5s.ru/smartFeedBuild/63986a106b1f49.24135419'
-    # urllib.request.urlretrieve(url, destination)
+    url = 'http://feed.p5s.ru/smartFeedBuild/63986a106b1f49.24135419'
+    urllib.request.urlretrieve(url, destination)
     created = 0
     createdvar = 0
     updated = 0
