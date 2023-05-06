@@ -173,6 +173,7 @@ def getCategotyProducts(request, **args):
     isSuperSale = request.data['superSale']
     vendor = request.data['vendor']
     material = request.data['material']
+    collection = request.data['collection']
 
     if query is None:
         query = ''
@@ -199,6 +200,7 @@ def getCategotyProducts(request, **args):
             'name')
     productsLength = len(products)
     vendorList = []
+    collectionList = []
     materialList = []
     if not subcategory:
         for product in products:
@@ -206,6 +208,8 @@ def getCategotyProducts(request, **args):
                 vendorList.append(product.brand)
             if product.material not in materialList:
                 materialList.append(product.material)
+            if product.CollectionName not in collectionList:
+                collectionList.append(product.CollectionName)
 
             try:
                 categories = Category.objects.filter(product=product._id)
@@ -228,6 +232,9 @@ def getCategotyProducts(request, **args):
                 vendorList.append(product.brand)
             if product.material not in materialList:
                 materialList.append(product.material)
+            if product.CollectionName not in collectionList:
+                collectionList.append(product.CollectionName)
+
 
         try:
             categories = Category.objects.all()
@@ -266,7 +273,7 @@ def getCategotyProducts(request, **args):
          'subCategoriesList': subCategoriesList,
 
          'vendorList': vendorList,
-         # 'collectionList': collectionList,
+         'collectionList': collectionList,
          # 'colorUrlList': colorUrlList,
          'materialList': materialList,
          # 'colorList': colorList,
