@@ -122,6 +122,118 @@ const Category = ({pageProps}) => {
         newUrl.searchParams.delete('material')
         history.push(newUrl.href)
     }
+    const Filters = () => {
+
+        return (
+            <>
+                <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
+                    {vendorList[0] &&
+                        <div className='d-flex justify-content-between'>
+                            <span>Бренды</span>
+                            {searchParams.get('vendor') &&
+                                <span
+                                    onClick={vendorRemove}
+                                >
+                                            X
+                                        </span>}
+                        </div>
+                    }
+                    {vendorList[0] &&
+                        vendorList.map((ven) =>
+                            // eslint-disable-next-line react/jsx-key
+                            <Badge
+                                key={ven}
+                                bg={searchParams.get('vendor') === ven ? 'primary' : 'secondary'}
+                                className='mx-1'
+                                onClick={() => {
+                                    if (history.asPath.includes('?')) {
+                                        history.push(history.asPath + '&vendor=' + ven)
+                                    } else {
+                                        history.push(history.asPath + '?vendor=' + ven)
+                                    }
+                                    setShow(false)
+                                }}
+                            >
+                                {ven}
+                            </Badge>
+                        )
+                    }
+                </div>
+                {materialList[0] &&
+                    <div className='d-flex justify-content-between'>
+                        <span>Материал</span>
+                        {searchParams.get('material') &&
+                            <span
+                                onClick={materialRemove}
+                            >
+                                            X
+                                        </span>}
+                    </div>
+                }
+                <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
+
+                    {materialList[0] &&
+                        materialList.map((ven) =>
+                            // eslint-disable-next-line react/jsx-key
+                            <Badge
+                                key={ven}
+                                bg={searchParams.get('material') === ven ? 'primary' : 'secondary'}
+                                className='mx-1'
+                                onClick={() => {
+                                    if (history.asPath.includes('?')) {
+                                        history.push(history.asPath + '&material=' + ven)
+                                    } else {
+                                        history.push(history.asPath + '?material=' + ven)
+                                    }
+                                    setShow(false)
+
+                                }}
+                            >
+                                {ven}
+                            </Badge>
+                        )
+                    }
+                </div>
+                {collectionList[0] &&
+                    <div className='d-flex justify-content-between'>
+                        <span>Коллекции</span>
+                        {searchParams.get('collection') &&
+                            <span
+                                onClick={materialRemove}
+                            >
+                                            X
+                                        </span>}
+                    </div>
+                }
+                <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
+
+                    {collectionList[0] &&
+                        collectionList.map((ven) =>
+                            // eslint-disable-next-line react/jsx-key
+                            <Badge
+                                key={ven}
+                                bg={searchParams.get('material') === ven ? 'primary' : 'secondary'}
+                                className='mx-1'
+                                onClick={() => {
+                                    if (history.asPath.includes('?')) {
+                                        history.push(history.asPath + '&collection=' + ven)
+                                    } else {
+                                        history.push(history.asPath + '?collection=' + ven)
+                                    }
+                                    setShow(false)
+
+                                }}
+                            >
+                                {ven}
+                            </Badge>
+                        )
+                    }
+                </div>
+
+
+            </>
+        )
+    }
 
     return (
         <Container className='categ'>
@@ -154,28 +266,28 @@ const Category = ({pageProps}) => {
                         show={show}
                         placement='bottom'
                         onHide={() => setShow(false)}
-                        className='h-75'
+                        style={{height: '90%'}}
                     >
-                        <Offcanvas.Header>
-                            <Offcanvas.Title>Фильтры</Offcanvas.Title>
+                        <Offcanvas.Header style={{backgroundColor: '#e5097f', color: 'white'}} >
+                            <Offcanvas.Title className='mb-0 pb-0'>Фильтры</Offcanvas.Title>
                         </Offcanvas.Header>
-                        <OffcanvasBody>
-                            <ListGroup>
-                                <ListGroupItem>
-                                    <span className='fw-bolder fs-5'>Категория</span> <br/>
-                                    <span className='ml-5'>  {category}</span> <br/>
+                        <OffcanvasBody style={{background: '#e5097f linear-gradient(#e5097f, rgb(0 0 0))', lineHeight: '15px'}}>
+                            <ListGroup className='text-white mh-25' style={{lineHeight : '18px'}}>
+                                    <span className='fw-bolder fs-5'>Категория</span>
+                                    <span className='ml-5'>  {category}</span>
+                                <div style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
                                     {Object.keys(subCategoriesList).map((item) =>
-                                        <ul key={item} className='lh-1'>
+                                        <ul key={item} style={{lineHeight : '10px', marginBottom: '0.5rem'}}>
                                             <li>
                                                 <Link href={'/category/' + category + '/' + item}
-                                                      className='subCategory'>{item}</Link>
+                                                      className={'subCategory text-white lh-1'}>{item}</Link>
                                                 <span
                                                     className='prod-length pl-2'>{subCategoriesList[item]}</span>
                                             </li>
                                         </ul>
                                     )}
-                                    <br/>
-                                </ListGroupItem>
+                                </div>
+                                    <Filters/>
                             </ListGroup>
 
                         </OffcanvasBody>
@@ -209,70 +321,7 @@ const Category = ({pageProps}) => {
                             {/*        onChange={() => setIsSuper(!isSuper)}*/}
                             {/*        className=''></FormCheck>}*/}
                             {/*</div>*/}
-                            <div className='d-flex justify-content-between'>
-                                <span>Бренды</span>
-                                {searchParams.get('vendor') &&
-                                    <span
-                                        onClick={vendorRemove}
-                                    >
-                                            X
-                                        </span>}
-                            </div>
-                            <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
-
-                                {vendorList &&
-                                    vendorList.map((ven) =>
-                                        // eslint-disable-next-line react/jsx-key
-                                        <Badge
-                                            key={ven}
-                                            bg={searchParams.get('vendor')===ven ? 'primary':'secondary'}
-                                            className='mx-1'
-                                            onClick={() => {
-                                                if (history.asPath.includes('?')) {
-                                                    history.push(history.asPath + '&vendor=' + ven)
-                                                } else {
-                                                    history.push(history.asPath + '?vendor=' + ven)
-                                                }
-                                            }}
-                                        >
-                                            {ven}
-                                        </Badge>
-                                    )
-                                }
-                            </div>
-                            <div className='d-flex justify-content-between'>
-                                <span>Материал</span>
-                                {searchParams.get('material') &&
-                                    <span
-                                        onClick={materialRemove}
-                                    >
-                                            X
-                                        </span>}
-                            </div>
-
-                            <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
-
-                                {materialList &&
-                                    materialList.map((ven) =>
-                                        // eslint-disable-next-line react/jsx-key
-                                        <Badge
-                                            key={ven}
-                                            bg={searchParams.get('material')===ven ? 'primary':'secondary'}
-                                            className='mx-1'
-                                            onClick={() => {
-                                                if (history.asPath.includes('?')) {
-                                                    history.push(history.asPath + '&material=' + ven)
-                                                } else {
-                                                    history.push(history.asPath + '?material=' + ven)
-                                                }
-                                            }}
-                                        >
-                                            {ven}
-                                        </Badge>
-                                    )
-                                }
-                            </div>
-
+                            <Filters/>
                         </Col>
                         <Col xs={12} md={9}>
                             <div className="content">
@@ -338,65 +387,65 @@ const Category = ({pageProps}) => {
                         </Col>
                     </Row>
                 </>
-            }
+                }
 
             {(oppenedItems && oppenedItems.length > 0 && seenProducts) &&
                 <>
-                    <div className='popular my-3'>
-                        <span className='mx-3 fs-4 text-white'>Вы смотрели</span>
-                        <div className='line'></div>
-                    </div>
-                    <SeenProductCarousel/>
+                <div className='popular my-3'>
+                <span className='mx-3 fs-4 text-white'>Вы смотрели</span>
+                <div className='line'></div>
+                </div>
+                <SeenProductCarousel/>
                 </>
             }
-            <div className='popular my-3'>
+                <div className='popular my-3'>
                 <span className='mx-3 fs-4 text-white'>Популярное</span>
                 <div className='line'></div>
-            </div>
-            <ProductCarousel data={pageProps.topData}/>
-        </Container>
+                </div>
+                <ProductCarousel data={pageProps.topData}/>
+                </Container>
 
-    )
-}
+                )
+            }
 
-export const getServerSideProps = async (context) => {
-    let {category, page, keyword, isSuperSale, vendor, material} = context.query
-    if (page) {
-        page = '?page=' + page
-    } else {
-        page = ''
-    }
-    let res = {}
-    let data = {'superSale': false, 'vendor': '', 'material': ''}
-    if (isSuperSale) {
-        data['superSale'] = true
-        isSuperSale = true
-    } else {
-        isSuperSale = false
-    }
-    if (vendor) {
-        data['vendor'] = vendor
-    }
-    if (material) {
-        data['material'] = material
-    }
+            export const getServerSideProps = async (context) => {
+            let {category, page, keyword, isSuperSale, vendor, material} = context.query
+            if (page) {
+            page = '?page=' + page
+        } else {
+            page = ''
+        }
+            let res = {}
+            let data = {'superSale': false, 'vendor': '', 'material': ''}
+            if (isSuperSale) {
+            data['superSale'] = true
+            isSuperSale = true
+        } else {
+            isSuperSale = false
+        }
+            if (vendor) {
+            data['vendor'] = vendor
+        }
+            if (material) {
+            data['material'] = material
+        }
 
 
-    if (keyword && page) {
-        res = await axios.post(`${API_HOST}/api/products/category/${category}${page}&keyword=${keyword}`, data);
-    } else if (keyword && !page) {
-        res = await axios.post(`${API_HOST}/api/products/category/${category}?keyword=${keyword}`, data);
-    } else {
-        keyword = null
-        res = await axios.post(`${API_HOST}/api/products/category/${category}${page}`, data);
-    }
-    const topData = await axios.get(`${API_HOST}/api/products/top`);
-    if (!res.data) {
-        return {
+            if (keyword && page) {
+            res = await axios.post(`${API_HOST}/api/products/category/${category}${page}&keyword=${keyword}`, data);
+        } else if (keyword && !page) {
+            res = await axios.post(`${API_HOST}/api/products/category/${category}?keyword=${keyword}`, data);
+        } else {
+            keyword = null
+            res = await axios.post(`${API_HOST}/api/products/category/${category}${page}`, data);
+        }
+            const topData = await axios.get(`${API_HOST}/api/products/top`);
+            if (!res.data) {
+            return {
             notFound: true,
         }
-    }
-    return {props: {data: res.data, topData: topData.data, category, keyword, isSuperSale}}
-}
+        }
+            return {props: {data: res.data, topData: topData.data, category, keyword, isSuperSale}}
+        }
 
-export default Category
+            export default Category

@@ -51,6 +51,9 @@ const SubCategory = ({pageProps}) => {
         subCategoriesList,
         vendorList,
         materialList,
+        colorList,
+        collectionList,
+        sizeList,
         page,
         pages
     } = pageProps.data;
@@ -140,17 +143,18 @@ const SubCategory = ({pageProps}) => {
         return (
             <>
                 <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
-                    <div className='d-flex justify-content-between'>
-                        <span>Бренды</span>
-                        {searchParams.get('vendor') &&
-                            <span
-                                onClick={vendorRemove}
-                            >
+                    {vendorList[0] &&
+                        <div className='d-flex justify-content-between'>
+                            <span>Бренды</span>
+                            {searchParams.get('vendor') &&
+                                <span
+                                    onClick={vendorRemove}
+                                >
                                             X
                                         </span>}
-                    </div>
-
-                    {vendorList &&
+                        </div>
+                    }
+                    {vendorList[0] &&
                         vendorList.map((ven) =>
                             // eslint-disable-next-line react/jsx-key
                             <Badge
@@ -171,19 +175,20 @@ const SubCategory = ({pageProps}) => {
                         )
                     }
                 </div>
-                <div className='d-flex justify-content-between'>
-                    <span>Материал</span>
-                    {searchParams.get('material') &&
-                        <span
-                            onClick={materialRemove}
-                        >
+                {materialList[0] &&
+                    <div className='d-flex justify-content-between'>
+                        <span>Материал</span>
+                        {searchParams.get('material') &&
+                            <span
+                                onClick={materialRemove}
+                            >
                                             X
                                         </span>}
-                </div>
-
+                    </div>
+                }
                 <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
 
-                    {materialList &&
+                    {materialList[0] &&
                         materialList.map((ven) =>
                             // eslint-disable-next-line react/jsx-key
                             <Badge
@@ -195,6 +200,41 @@ const SubCategory = ({pageProps}) => {
                                         history.push(history.asPath + '&material=' + ven)
                                     } else {
                                         history.push(history.asPath + '?material=' + ven)
+                                    }
+                                    setShow(false)
+
+                                }}
+                            >
+                                {ven}
+                            </Badge>
+                        )
+                    }
+                </div>
+                {collectionList[0] &&
+                    <div className='d-flex justify-content-between'>
+                        <span>Коллекции</span>
+                        {searchParams.get('collection') &&
+                            <span
+                                onClick={materialRemove}
+                            >
+                                            X
+                                        </span>}
+                    </div>
+                }
+                <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
+
+                    {collectionList[0] &&
+                        collectionList.map((ven) =>
+                            // eslint-disable-next-line react/jsx-key
+                            <Badge
+                                key={ven}
+                                bg={searchParams.get('material') === ven ? 'primary' : 'secondary'}
+                                className='mx-1'
+                                onClick={() => {
+                                    if (history.asPath.includes('?')) {
+                                        history.push(history.asPath + '&collection=' + ven)
+                                    } else {
+                                        history.push(history.asPath + '?collection=' + ven)
                                     }
                                     setShow(false)
 
@@ -249,28 +289,29 @@ const SubCategory = ({pageProps}) => {
                             show={show}
                             placement='bottom'
                             onHide={() => setShow(false)}
-                            className='h-75'
+                            style={{height: '90%'}}
 
                         >
-                            <Offcanvas.Header style={{backgroundColor: '#e5097f', color: 'white'}}>
+                            <Offcanvas.Header style={{backgroundColor: '#e5097f', color: 'white'}} className={'my-0 py-0'}>
                                 <Offcanvas.Title className='w-100'>
                                     <span>Фильтры</span>
-                                    {(searchParams.get('material') || searchParams.get('vendor')) ? <span onClick={clearFilters} className='float-end'>Отмена</span>:''}
+                                    {(searchParams.get('material') || searchParams.get('vendor')) ?
+                                        <span onClick={clearFilters} className='float-end'>Отмена</span> : ''}
                                 </Offcanvas.Title>
                             </Offcanvas.Header>
-                            <OffcanvasBody style={{background: '#e5097f linear-gradient(#e5097f, rgb(0 0 0))'}} >
+                            <OffcanvasBody className={'my-0 py-0'} style={{background: '#e5097f linear-gradient(#e5097f, rgb(0 0 0))'}}>
                                 <ListGroup className='text-white mh-25'>
-                                    <span className='fw-bolder fs-5'>Категория</span><br/>
-                                    <span><Link href={`/category/${category}`}onClick={() => setShow(false)}
-                                                className='ml-5 text-white'>  {category}</Link>
-                                        </span><br/>
-                                    <ul className='lh-1 text-white'>
+                                    <span className='fw-bolder fs-5'>Категория</span>
+                                    <span><Link href={`/category/${category}`} onClick={() => setShow(false)}
+                                                className='ml-5 text-white mb-0'>  {category}</Link>
+                                        </span>
+                                    <ul className='lh-1 text-white ' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
 
                                         {Object.keys(subCategoriesList).map((item, i) =>
                                             <li key={i}>
                                                 <Link href={'/category/' + category + '/' + item}
                                                       onClick={() => setShow(false)}
-                                                      className={item === subCategory ? 'text-decoration-none subCategory text-white' : 'subCategory text-white' }> {item}</Link>
+                                                      className={item === subCategory ? 'text-decoration-none subCategory text-white' : 'subCategory text-white'}> {item}</Link>
                                                 <span
                                                     className='prod-length pl-2 text-light'>{subCategoriesList[item]}</span>
                                             </li>
