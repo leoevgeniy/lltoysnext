@@ -64,7 +64,7 @@ const SubCategory = ({pageProps}) => {
     // const [nameSortDown, setNameSortDown] = useState(false);
     // const [nameSortUp, setNameSortUp] = useState(false);
     const [vendor, setVendor] = useState('')
-    // const [collectionSelected, setCollectionSelected] = useState([])
+    const [collection, setCollection] = useState([])
     const [material, setMaterial] = useState([])
     // const [colorSelected, setColorSelected] = useState([])
     // const [sizeSelected, setSizeSelected] = useState([])
@@ -138,11 +138,18 @@ const SubCategory = ({pageProps}) => {
 
         history.push(newUrl.href)
     }
+    const collectionRemove = () => {
+        setCollection('')
+        newUrl.searchParams.delete('collection')
+        setShow(false)
+
+        history.push(newUrl.href)
+    }
     const Filters = () => {
 
         return (
             <>
-                <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
+                <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
                     {vendorList[0] &&
                         <div className='d-flex justify-content-between'>
                             <span>Бренды</span>
@@ -186,7 +193,7 @@ const SubCategory = ({pageProps}) => {
                                         </span>}
                     </div>
                 }
-                <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
+                <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
 
                     {materialList[0] &&
                         materialList.map((ven) =>
@@ -215,20 +222,20 @@ const SubCategory = ({pageProps}) => {
                         <span>Коллекции</span>
                         {searchParams.get('collection') &&
                             <span
-                                onClick={materialRemove}
+                                onClick={collectionRemove}
                             >
                                             X
                                         </span>}
                     </div>
                 }
-                <div className='d-inline-block' style={{'maxHeight': '150px', 'overflowY': 'scroll'}}>
+                <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
 
                     {collectionList[0] &&
                         collectionList.map((ven) =>
                             // eslint-disable-next-line react/jsx-key
                             <Badge
                                 key={ven}
-                                bg={searchParams.get('material') === ven ? 'primary' : 'secondary'}
+                                bg={searchParams.get('collection') === ven ? 'primary' : 'secondary'}
                                 className='mx-1'
                                 onClick={() => {
                                     if (history.asPath.includes('?')) {
@@ -305,7 +312,7 @@ const SubCategory = ({pageProps}) => {
                                     <span><Link href={`/category/${category}`} onClick={() => setShow(false)}
                                                 className='ml-5 text-white mb-0'>  {category}</Link>
                                         </span>
-                                    <ul className='lh-1 text-white ' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
+                                    <ul className='lh-1 text-white ' style={{'maxHeight': '50px', 'overflowY': 'scroll'}}>
 
                                         {Object.keys(subCategoriesList).map((item, i) =>
                                             <li key={i}>
@@ -451,7 +458,7 @@ export const getServerSideProps = async (context) => {
     }
     let itemsList = []
     let res = {}
-    let data = {'superSale': false, 'vendor': '', 'material': '', 'collection': ''}
+    let data = {'superSale': false, 'vendor': '', 'material': '', 'collection': '', 'color': '', 'size':''}
     if (collection) {
         data['collection'] = collection
     }
