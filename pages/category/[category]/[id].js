@@ -93,27 +93,27 @@ const SubCategory = ({pageProps}) => {
 
     const [isSuperSale, setIsSuperSale] = useState(false)
 
-    useEffect(() => {
-        if (isSuperSale) {
-            newUrl.searchParams.append('isSuperSale', '1')
-
-            // if (history.asPath.includes('?')) {
-            //     history.push(history.asPath + '&isSuperSale=1')
-            // } else {
-            //     history.push(history.asPath + '?isSuperSale=1')
-            // }
-        } else {
-            newUrl.searchParams.delete('isSuperSale')
-
-        }
-        history.push(newUrl.href)
-    }, [isSuperSale])
+    // useEffect(() => {
+    //     if (isSuperSale) {
+    //         newUrl.searchParams.append('isSuperSale', '1')
+    //
+    //         // if (history.asPath.includes('?')) {
+    //         //     history.push(history.asPath + '&isSuperSale=1')
+    //         // } else {
+    //         //     history.push(history.asPath + '?isSuperSale=1')
+    //         // }
+    //     } else {
+    //         newUrl.searchParams.delete('isSuperSale')
+    //
+    //     }
+    //     history.push(newUrl.href)
+    // }, [isSuperSale])
     useEffect(() => {
         if (oppenedItems) {
             dispatch(listSeenProducts(oppenedItems))
         }
 
-    }, [oppenedItems])
+    }, [])
     const brCategory = `/category/${category}`
     const brSubCategory = `/category/${category}/${subCategory}`
     const [show, setShow] = useState(false)

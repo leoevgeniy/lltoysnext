@@ -60,15 +60,19 @@ function Product({product}) {
 
     const addToCartHandler = () => {
         const sendColor = product.availability[0][0] || ''
-        dispatch(addToCart(product._id, qty, sendColor, '', 'undefined', 0.1))
+        const sendSize = product.availability[1][0] || ''
+
+        dispatch(addToCart(product._id, qty, sendColor, sendSize, 'undefined', 0.1))
         dispatch({type: PRODUCT_DETAILS_RESET})
         // move_to_cart('toCart', 'cart')
     }
     const qtyChangePlus = () => {
         const sendColor = product.availability[0][0] || ''
+        const sendSize = product.availability[1][0] || ''
+
         cartItems.map((item, ind) => {
             if (item.product === product._id && item.countInStock > item.qty) {
-                dispatch(addToCart(product._id, item.qty + 1, sendColor, '', ind, 0.1))
+                dispatch(addToCart(product._id, item.qty + 1, sendColor, sendSize, ind, 0.1))
             }
         })
         dispatch({type: PRODUCT_DETAILS_RESET})
@@ -76,9 +80,11 @@ function Product({product}) {
     }
     const qtyChangeMinus = () => {
         const sendColor = product.availability[0][0] || ''
+        const sendSize = product.availability[1][0] || ''
+
         cartItems.map((item, ind) => {
             if (item.product === product._id && item.qty > 1) {
-                dispatch(addToCart(product._id, item.qty - 1, sendColor, '', ind, 0.1))
+                dispatch(addToCart(product._id, item.qty - 1, sendColor, sendSize, ind, 0.1))
             }
         })
         dispatch({type: PRODUCT_DETAILS_RESET})
@@ -167,13 +173,13 @@ function Product({product}) {
 
 
             </Card.Body>
-            {(((product.availability[1].length === 0 || product.availability[0].length <= 1) && product.assortiment.length > 0)) && (!Object.keys(productList).includes(String(product._id))) ?
+            {((!product.availability[1][0] && product.availability[0].length <= 1) && (!Object.keys(productList).includes(String(product._id)))) ?
                 <span
                     id='toCart'
                     className='picture asButton mb-2 w-75 mx-auto'
                     onClick={addToCartHandler}
                 >В корзину</span>
-                :
+                : Object.keys(productList).includes(String(product._id)) ?
                 <div className='mb-2'>
                     <span
                         className='asButton'
@@ -192,7 +198,7 @@ function Product({product}) {
                         +
                     </span>
 
-                </div>
+                </div> :''
             }
 
         </Card>

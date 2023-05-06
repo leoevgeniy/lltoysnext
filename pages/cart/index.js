@@ -103,7 +103,7 @@ function Index({pageProps}) {
                                                         <Form.Control
                                                             as="select"
                                                             value={item.color}
-                                                            // disabled={Object.keys(item.colors).length === 1 && item.colors[0][Object.keys(item.colors[0])].length === 1}
+                                                            disabled={Object.keys(item.colors).length === 1}
                                                             onChange={(e) => {
                                                                 // setColor(e.target.value.split(' / ')[0])
                                                                 // setSize(e.target.value.split(' / ')[1])
@@ -135,9 +135,9 @@ function Index({pageProps}) {
                                                         <Form.Control
                                                             as="select"
                                                             value={item.size}
-                                                            //     disabled={
-                                                            //         desabledSizes(item)
-                                                            // }
+                                                                disabled={
+                                                                    item.colors[0][Object.keys(item.colors[0])].length === 1
+                                                            }
                                                             onChange={(e) => {
                                                                 // setColor(e.target.value)
                                                                 // setSize(e.target.value.split(' / ')[1])
