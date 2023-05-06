@@ -190,13 +190,13 @@ def getCategotyProducts(request, **args):
             Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
                 category__category__icontains=category) & Q(assortiment__countInStock__gt=0) & Q(
                 isSuperSale__iexact=1) & Q(brand__icontains=vendor) &
-            Q(material__icontains=material)).distinct().order_by('name')
+            Q(material__icontains=material) & Q(CollectionName__icontains=collection)).distinct().order_by('name')
     else:
         products = Product.objects.filter(
             Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
                 category__category__icontains=category) & Q(assortiment__countInStock__gt=0) & Q(
                 brand__icontains=vendor) &
-            Q(material__icontains=material)).distinct().order_by(
+            Q(material__icontains=material) & Q(CollectionName__icontains=collection)).distinct().order_by(
             'name')
     productsLength = len(products)
     vendorList = []
@@ -208,7 +208,7 @@ def getCategotyProducts(request, **args):
                 vendorList.append(product.brand)
             if product.material not in materialList:
                 materialList.append(product.material)
-            if product.CollectionName not in collectionList:
+            if product.CollectionName != '' and product.CollectionName not in collectionList:
                 collectionList.append(product.CollectionName)
 
             try:
@@ -232,9 +232,8 @@ def getCategotyProducts(request, **args):
                 vendorList.append(product.brand)
             if product.material not in materialList:
                 materialList.append(product.material)
-            if product.CollectionName not in collectionList:
+            if product.CollectionName != '' and product.CollectionName not in collectionList:
                 collectionList.append(product.CollectionName)
-
 
         try:
             categories = Category.objects.all()
