@@ -174,6 +174,8 @@ def getCategotyProducts(request, **args):
     vendor = request.data['vendor']
     material = request.data['material']
     collection = request.data['collection']
+    color = request.data['color']
+    size = request.data['size']
 
     if query is None:
         query = ''
@@ -190,27 +192,40 @@ def getCategotyProducts(request, **args):
             Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
                 category__category__icontains=category) & Q(assortiment__countInStock__gt=0) & Q(
                 isSuperSale__iexact=1) & Q(brand__icontains=vendor) &
-            Q(material__icontains=material) & Q(CollectionName__icontains=collection)).distinct().order_by('name')
+            Q(material__icontains=material) & Q(CollectionName__icontains=collection) & Q(
+                assortiment__color__icontains=color) & Q(assortiment__size__icontains=size)).distinct().order_by('name')
     else:
         products = Product.objects.filter(
             Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
                 category__category__icontains=category) & Q(assortiment__countInStock__gt=0) & Q(
                 brand__icontains=vendor) &
-            Q(material__icontains=material) & Q(CollectionName__icontains=collection)).distinct().order_by(
+            Q(material__icontains=material) & Q(CollectionName__icontains=collection) & Q(
+                assortiment__color__icontains=color) & Q(assortiment__size__icontains=size)).distinct().order_by(
             'name')
     productsLength = len(products)
     vendorList = []
     collectionList = []
     materialList = []
+    colorList = []
+    sizeList = []
     if not subcategory:
         for product in products:
-            if product.brand not in vendorList:
+            if product.brand != '' and product.brand not in vendorList:
                 vendorList.append(product.brand)
-            if product.material not in materialList:
+            if product.material!= '' and product.material not in materialList:
                 materialList.append(product.material)
             if product.CollectionName != '' and product.CollectionName not in collectionList:
                 collectionList.append(product.CollectionName)
+            try:
+                assortiment = Assortiment.objects.filter(product=product._id)
+                for assort in assortiment:
+                    if assort.color != '' and assort.color != 'цвет не указан' and assort.color not in colorList:
+                        colorList.append(assort.color)
+                    if assort.size != '' and assort.size not in sizeList:
+                        sizeList.append(assort.size)
 
+            except:
+                pass
             try:
                 categories = Category.objects.filter(product=product._id)
                 for cat in categories:
@@ -228,12 +243,22 @@ def getCategotyProducts(request, **args):
                 pass
     else:
         for product in products:
-            if product.brand not in vendorList:
+            if product.brand != '' and product.brand not in vendorList:
                 vendorList.append(product.brand)
-            if product.material not in materialList:
+            if product.material!= '' and product.material not in materialList:
                 materialList.append(product.material)
             if product.CollectionName != '' and product.CollectionName not in collectionList:
                 collectionList.append(product.CollectionName)
+            try:
+                assortiment = Assortiment.objects.filter(product=product._id)
+                for assort in assortiment:
+                    if assort.color != ''  and assort.color != 'цвет не указан' and assort.color not in colorList:
+                        colorList.append(assort.color)
+                    if assort.size != '' and assort.size not in sizeList:
+                        sizeList.append(assort.size)
+            except:
+                pass
+
 
         try:
             categories = Category.objects.all()
@@ -275,8 +300,8 @@ def getCategotyProducts(request, **args):
          'collectionList': collectionList,
          # 'colorUrlList': colorUrlList,
          'materialList': materialList,
-         # 'colorList': colorList,
-         # 'sizeList': sizeList,
+         'colorList': colorList,
+         'sizeList': sizeList,
          # 'priceUpApi': priceUpApi,
          # 'priceLowApi': priceLowApi,
          # 'maxPrice': maxPrice
