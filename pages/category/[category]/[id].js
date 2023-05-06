@@ -66,8 +66,8 @@ const SubCategory = ({pageProps}) => {
     const [vendor, setVendor] = useState('')
     const [collection, setCollection] = useState([])
     const [material, setMaterial] = useState([])
-    // const [colorSelected, setColorSelected] = useState([])
-    // const [sizeSelected, setSizeSelected] = useState([])
+    const [color, setColor] = useState([])
+    const [size, setSize] = useState([])
     // const [categorySelected, setCategorySelected] = useState([])
     // const [vendorCanvasShow, setVendorCanvasShow] = useState(false)
     // const [collectionCanvasShow, setCollectionCanvasShow] = useState(false)
@@ -145,6 +145,20 @@ const SubCategory = ({pageProps}) => {
 
         history.push(newUrl.href)
     }
+    const colorRemove = () => {
+        setColor('')
+        newUrl.searchParams.delete('color')
+        setShow(false)
+
+        history.push(newUrl.href)
+    }
+    const sizeRemove = () => {
+        setSize('')
+        newUrl.searchParams.delete('size')
+        setShow(false)
+
+        history.push(newUrl.href)
+    }
     const Filters = () => {
 
         return (
@@ -207,6 +221,76 @@ const SubCategory = ({pageProps}) => {
                                         history.push(history.asPath + '&material=' + ven)
                                     } else {
                                         history.push(history.asPath + '?material=' + ven)
+                                    }
+                                    setShow(false)
+
+                                }}
+                            >
+                                {ven}
+                            </Badge>
+                        )
+                    }
+                </div>
+                {colorList[0] &&
+                    <div className='d-flex justify-content-between'>
+                        <span>Цвета</span>
+                        {searchParams.get('color') &&
+                            <span
+                                onClick={colorRemove}
+                            >
+                                            X
+                                        </span>}
+                    </div>
+                }
+                <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
+
+                    {colorList[0] &&
+                        colorList.map((ven) =>
+                            // eslint-disable-next-line react/jsx-key
+                            <Badge
+                                key={ven}
+                                bg={searchParams.get('color') === ven ? 'primary' : 'secondary'}
+                                className='mx-1'
+                                onClick={() => {
+                                    if (history.asPath.includes('?')) {
+                                        history.push(history.asPath + '&color=' + ven)
+                                    } else {
+                                        history.push(history.asPath + '?color=' + ven)
+                                    }
+                                    setShow(false)
+
+                                }}
+                            >
+                                {ven}
+                            </Badge>
+                        )
+                    }
+                </div>
+                {sizeList[0] &&
+                    <div className='d-flex justify-content-between'>
+                        <span>Размеры</span>
+                        {searchParams.get('size') &&
+                            <span
+                                onClick={sizeRemove}
+                            >
+                                            X
+                                        </span>}
+                    </div>
+                }
+                <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
+
+                    {sizeList[0] &&
+                        sizeList.map((ven) =>
+                            // eslint-disable-next-line react/jsx-key
+                            <Badge
+                                key={ven}
+                                bg={searchParams.get('size') === ven ? 'primary' : 'secondary'}
+                                className='mx-1'
+                                onClick={() => {
+                                    if (history.asPath.includes('?')) {
+                                        history.push(history.asPath + '&size=' + ven)
+                                    } else {
+                                        history.push(history.asPath + '?size=' + ven)
                                     }
                                     setShow(false)
 
@@ -461,6 +545,12 @@ export const getServerSideProps = async (context) => {
     let data = {'superSale': false, 'vendor': '', 'material': '', 'collection': '', 'color': '', 'size':''}
     if (collection) {
         data['collection'] = collection
+    }
+    if (color) {
+        data['color'] = color
+    }
+    if (size) {
+        data['size'] = size
     }
     if (isSuperSale) {
         data['superSale'] = true
