@@ -441,7 +441,8 @@ const SubCategory = ({pageProps}) => {
 }
 
 export const getServerSideProps = async (context) => {
-    let {category, page, keyword, isSuperSale, vendor, material} = context.query
+    let {category, page, keyword, isSuperSale, vendor, material, collection, color, size} = context.query
+
     let subCategory = context.params.id
     if (page) {
         page = '?page=' + page
@@ -450,7 +451,10 @@ export const getServerSideProps = async (context) => {
     }
     let itemsList = []
     let res = {}
-    let data = {'superSale': false, 'vendor': '', 'material': ''}
+    let data = {'superSale': false, 'vendor': '', 'material': '', 'collection': ''}
+    if (collection) {
+        data['collection'] = collection
+    }
     if (isSuperSale) {
         data['superSale'] = true
     }
