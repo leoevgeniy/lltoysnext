@@ -37,6 +37,7 @@ import Breadcrumb from "react-bootstrap/Breadcrumb";
 import Link from "next/link";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
+import MultiRangeSlider from "@/components/MultiRangeSlider";
 
 
 const SubCategory = ({pageProps}) => {
@@ -336,10 +337,30 @@ const SubCategory = ({pageProps}) => {
                         )
                     }
                 </div>
+                <MultiRangeSlider
+                    // baseClassName='multi-range-slider-black'
+                    min={0}
+                    max={100}
+                    step={5}
+                    ruler={true}
+                    label={true}
+                    preventWheel={false}
+                    minValue={minValue}
+                    maxValue={maxValue}
+                    onInput={(e) => {
+                        handleInput(e);
+                    }}
+                />
 
             </>
         )
     }
+    const [minValue, set_minValue] = useState(25);
+    const [maxValue, set_maxValue] = useState(75);
+    const handleInput = (e) => {
+        set_minValue(e.minValue);
+        set_maxValue(e.maxValue);
+    };
     const clearFilters = () => {
         materialRemove()
         vendorRemove()

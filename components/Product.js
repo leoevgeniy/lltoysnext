@@ -157,7 +157,7 @@ function Product({product}) {
                         <span
                             className='old-price '> ₽ {oldPrice}
 
-                    </span> : <br/>}
+                    </span> : ''}
                     <Badge pill bg='success' className='badgeCard float-end'>
                         <FontAwesomeIcon icon={faCreditCard}/> - 10%
                     </Badge>
