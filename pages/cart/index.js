@@ -28,7 +28,7 @@ function Index({pageProps}) {
     useEffect(() => {
         router.isReady ? setIsLoading(false) : ''
 
-    }, [])
+    }, [router.isReady])
 
     const removeFromCartHandler = (id) => {
         dispatch(removeFromCart(id))

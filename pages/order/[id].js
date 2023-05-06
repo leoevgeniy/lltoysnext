@@ -197,7 +197,7 @@ function OrderScreen({pageProps}) {
         } else {
             setSbpReCreate(false)
         }
-    }, [paymentDetailsLoading, paymentDetailsSuccess])
+    }, [paymentDetailsLoading, paymentDetailsSuccess, loading])
 
     const successPaymentHandler = (paymentResult) => {
         dispatch(payOrder(orderId, paymentResult));

@@ -8,9 +8,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 function Recvisits() {
     let width = '320px'
-    useEffect(() => {
-        width = document.getElementById('YMap').clientWidth
-    }, [])
+    if (typeof document !== 'undefined') {width = document.getElementById('YMap').clientWidth}
+
 
     return (
         <Container className="callout-colors-example fs-4 w-100 pb-3 text-white">

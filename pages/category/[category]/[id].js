@@ -113,7 +113,7 @@ const SubCategory = ({pageProps}) => {
             dispatch(listSeenProducts(oppenedItems))
         }
 
-    }, [dispatch, oppenedItems])
+    }, [oppenedItems])
     const brCategory = `/category/${category}`
     const brSubCategory = `/category/${category}/${subCategory}`
     const [show, setShow] = useState(false)

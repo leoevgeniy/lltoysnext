@@ -108,7 +108,7 @@ const Category = ({pageProps}) => {
         }
 
 
-    }, [dispatch, oppenedItems])
+    }, [oppenedItems])
 
     const brCategory = `/category/${category}`
     const [show, setShow] = useState(false)
