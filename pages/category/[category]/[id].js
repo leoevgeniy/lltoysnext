@@ -255,7 +255,6 @@ const SubCategory = ({pageProps}) => {
                             <Offcanvas.Header style={{backgroundColor: '#e5097f', color: 'white'}}>
                                 <Offcanvas.Title className='w-100'>
                                     <span>Фильтры</span>
-                                    {console.log(vendor, material)}
                                     {(searchParams.get('material') || searchParams.get('vendor')) ? <span onClick={clearFilters} className='float-end'>Отмена</span>:''}
                                 </Offcanvas.Title>
                             </Offcanvas.Header>
