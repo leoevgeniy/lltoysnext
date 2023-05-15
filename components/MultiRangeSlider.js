@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
+import {LOCATION} from "@/consts";
+import {useRouter} from "next/router";
 // import PropTypes from "prop-types";
 // import "./multiRangeSlider.css";
 
-const MultiRangeSlider = ({ min, max, onChange}) => {
-    const [minVal, setMinVal] = useState(min);
-    const [maxVal, setMaxVal] = useState(max);
+const MultiRangeSlider = ({ min, max, minInput, maxInput, onChange, setMouseUp, setMaxRangeValue, setMinRangeValue }) => {
+    const [minVal, setMinVal] = useState(minInput);
+    const [maxVal, setMaxVal] = useState(maxInput);
     const minValRef = useRef(min);
     const maxValRef = useRef(max);
     const range = useRef(null);
@@ -40,10 +42,11 @@ const MultiRangeSlider = ({ min, max, onChange}) => {
     useEffect(() => {
         onChange({ min: minVal, max: maxVal });
 
+
     }, [minVal, maxVal, onChange]);
 
     return (
-        <div className="container MRslider">
+        <div className="MRslider">
             <input
                 type="range"
                 min={min}
@@ -51,9 +54,13 @@ const MultiRangeSlider = ({ min, max, onChange}) => {
                 value={minVal}
                 onChange={(event) => {
                     const value = Math.min(Number(event.target.value), maxVal - 1);
+                    // setMinVal(event.target.value);
+                    setMinRangeValue(value)
                     setMinVal(value);
                     minValRef.current = value;
                 }}
+                onMouseUp={()=> setMouseUp(true)}
+                onTouchEnd={()=> setMouseUp(true)}
 
 
                 className="thumb thumb--left"
@@ -67,10 +74,11 @@ const MultiRangeSlider = ({ min, max, onChange}) => {
                 onChange={(event) => {
                     const value = Math.max(Number(event.target.value), minVal + 1);
                     setMaxVal(value);
+                    // setMaxRangeValue(value)
                     maxValRef.current = value;
                 }}
-                // onMouseUp={handle(min,max)}
-                // onTouchEnd={handle(min,max)}
+                onMouseUp={()=> setMouseUp(true)}
+                onTouchEnd={()=> setMouseUp(true)}
 
                 className="thumb thumb--right"
             />
@@ -78,8 +86,31 @@ const MultiRangeSlider = ({ min, max, onChange}) => {
             <div className="slider">
                 <div className="slider__track" />
                 <div ref={range} className="slider__range" />
-                <div className="slider__left-value">{minVal}</div>
-                <div className="slider__right-value">{maxVal}</div>
+                <div className="slider__left-value">
+                    <input
+                        className='text-black'
+                        value={minVal}
+                        min={min}
+                        max={max}
+                        style={{ width: "40px", height: "25px", marginLeft: "-10px" }}
+                        onChange={(e) => {
+                            setMinVal(e.target.value);
+                        }}
+                    />
+                </div>
+                <div className="slider__right-value">
+                    <input
+                        className='text-black'
+
+                        value={maxVal}
+                        min={min - 1}
+                        max={max}
+                        style={{ width: "40px", height: "25px", marginLeft: "-10px" }}
+                        onChange={(e) => {
+                            setMaxVal(e.target.value);
+                        }}
+                    />
+                </div>
             </div>
         </div>
     );

@@ -61,6 +61,9 @@ const SubCategory = ({pageProps}) => {
         pages
     } = pageProps.data;
     const dispatch = useDispatch()
+    const [minRangeValue, setMinRangeValue] = useState(0)
+    const [maxRangeValue, setMaxRangeValue] = useState(Number(maxPrice).toFixed(0))
+
     // const [sort, setSort] = useState('')
     // const [priceSortUp, setPriceSortUp] = useState(false);
     // const [priceSortDown, setPriceSortDown] = useState(false);
@@ -376,12 +379,15 @@ const SubCategory = ({pageProps}) => {
                 {/*/>*/}
                 <MultiRangeSlider
                     min={0}
-                    max={1000}
+                    max={Number(maxPrice).toFixed(0)}
+                    minInput={minRangeValue}
+                    maxInput={maxRangeValue}
                     onChange={({ min, max }) => {
-                        set_minValue(min);
-                        set_maxValue(max);
                         console.log(`min = ${min}, max = ${max}`)
                     }}
+                    setMouseUp={setMouseUp}
+                    setMinRangeValue={setMinRangeValue}
+                    setMaxRangeValue={setMaxRangeValue}
                     // handle={() => {
                     //     newUrl.searchParams.delete('lowprice')
                     //     newUrl.searchParams.delete('highprice')
@@ -391,18 +397,25 @@ const SubCategory = ({pageProps}) => {
             </>
         )
     }
-    const [minValue, set_minValue] = useState(25);
-    const [maxValue, set_maxValue] = useState(Number(maxPrice).toFixed(0));
-    const handleInput = () => {
-        newUrl.searchParams.delete('lowprice')
-        newUrl.searchParams.delete('highprice')
-        // if (newUrl.href.includes('?')) {
-        //     history.push(newUrl.href + '&lowprice=' + minValue + '&highprice=' + set_maxValue)
-        // } else {
-        //     history.push(newUrl.href + '?lowprice=' + minValue + '&highprice=' + set_maxValue)
-        // }
-        setShow(false)
-    };
+    console.log(`min = ${minRangeValue}, max = ${maxRangeValue}`)
+
+
+    const [mouseUp, setMouseUp] = useState(false)
+    console.log(mouseUp)
+    // useEffect(() => {
+    //     if (mouseUp) {
+    //         setMouseUp(false)
+    //
+    //         newUrl.searchParams.delete('lowprice')
+    //         newUrl.searchParams.delete('highprice')
+    //         if (newUrl.href.includes('?')) {
+    //             history.push(newUrl.href + '&lowprice=' + minRangeValue + '&highprice=' + maxRangeValue).then()
+    //         } else {
+    //             history.push(newUrl.href + '?lowprice=' + minRangeValue + '&highprice=' + maxRangeValue).then()
+    //         }
+    //     }
+    // },[mouseUp]);
+
     const clearFilters = () => {
         materialRemove()
         vendorRemove()
