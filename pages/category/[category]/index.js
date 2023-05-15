@@ -55,6 +55,10 @@ const Category = ({pageProps}) => {
         isSuperSale,
         vendorList,
         materialList,
+        colorList,
+        collectionList,
+        sizeList,
+
     } = pageProps.data;
     const dispatch = useDispatch()
     // const [sort, setSort] = useState('')
@@ -63,10 +67,10 @@ const Category = ({pageProps}) => {
     // const [nameSortDown, setNameSortDown] = useState(false);
     // const [nameSortUp, setNameSortUp] = useState(false);
     const [vendor, setVendor] = useState([])
-    // const [collectionSelected, setCollectionSelected] = useState([])
+    const [collection, setCollection] = useState([])
     const [material, setMaterial] = useState([])
-    // const [colorSelected, setColorSelected] = useState([])
-    // const [sizeSelected, setSizeSelected] = useState([])
+    const [color, setColor] = useState([])
+    const [size, setSize] = useState([])
     // const [categorySelected, setCategorySelected] = useState([])
     // const [vendorCanvasShow, setVendorCanvasShow] = useState(false)
     // const [collectionCanvasShow, setCollectionCanvasShow] = useState(false)
@@ -122,6 +126,28 @@ const Category = ({pageProps}) => {
         newUrl.searchParams.delete('material')
         history.push(newUrl.href)
     }
+    const collectionRemove = () => {
+        setCollection('')
+        newUrl.searchParams.delete('collection')
+        setShow(false)
+
+        history.push(newUrl.href)
+    }
+    const colorRemove = () => {
+        setColor('')
+        newUrl.searchParams.delete('color')
+        setShow(false)
+
+        history.push(newUrl.href)
+    }
+    const sizeRemove = () => {
+        setSize('')
+        newUrl.searchParams.delete('size')
+        setShow(false)
+
+        history.push(newUrl.href)
+    }
+
     const Filters = () => {
 
         return (
@@ -194,12 +220,83 @@ const Category = ({pageProps}) => {
                         )
                     }
                 </div>
+                {(colorList[0] && colorList[0]!=='')  &&
+                    <div className='d-flex justify-content-between'>
+                        <span>Цвета</span>
+                        {searchParams.get('color') &&
+                            <span
+                                onClick={colorRemove}
+                            >
+                                            X
+                                        </span>}
+                    </div>
+                }
+                <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
+
+                    {(colorList[0] && colorList[0]!=='') &&
+                        colorList.map((ven) =>
+                            // eslint-disable-next-line react/jsx-key
+                            <Badge
+                                key={ven}
+                                bg={searchParams.get('color') === ven ? 'primary' : 'secondary'}
+                                className='mx-1'
+                                onClick={() => {
+                                    if (history.asPath.includes('?')) {
+                                        history.push(history.asPath + '&color=' + ven)
+                                    } else {
+                                        history.push(history.asPath + '?color=' + ven)
+                                    }
+                                    setShow(false)
+
+                                }}
+                            >
+                                {ven}
+                            </Badge>
+                        )
+                    }
+                </div>
+                {(sizeList[0] && sizeList[0] !== '') &&
+                    <div className='d-flex justify-content-between'>
+                        <span>Размеры</span>
+                        {searchParams.get('size') &&
+                            <span
+                                onClick={sizeRemove}
+                            >
+                                            X
+                                        </span>}
+                    </div>
+                }
+                <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
+
+                    {sizeList[0] &&
+                        sizeList.map((ven) =>
+                            // eslint-disable-next-line react/jsx-key
+                            <Badge
+                                key={ven}
+                                bg={searchParams.get('size') === ven ? 'primary' : 'secondary'}
+                                className='mx-1'
+                                onClick={() => {
+                                    if (history.asPath.includes('?')) {
+                                        history.push(history.asPath + '&size=' + ven)
+                                    } else {
+                                        history.push(history.asPath + '?size=' + ven)
+                                    }
+                                    setShow(false)
+
+                                }}
+                            >
+                                {ven}
+                            </Badge>
+                        )
+                    }
+                </div>
+
                 {collectionList[0] &&
                     <div className='d-flex justify-content-between'>
                         <span>Коллекции</span>
                         {searchParams.get('collection') &&
                             <span
-                                onClick={materialRemove}
+                                onClick={collectionRemove}
                             >
                                             X
                                         </span>}
@@ -268,16 +365,17 @@ const Category = ({pageProps}) => {
                         onHide={() => setShow(false)}
                         style={{height: '90%'}}
                     >
-                        <Offcanvas.Header style={{backgroundColor: '#e5097f', color: 'white'}} >
+                        <Offcanvas.Header style={{backgroundColor: '#e5097f', color: 'white'}}>
                             <Offcanvas.Title className='mb-0 pb-0'>Фильтры</Offcanvas.Title>
                         </Offcanvas.Header>
-                        <OffcanvasBody style={{background: '#e5097f linear-gradient(#e5097f, rgb(0 0 0))', lineHeight: '15px'}}>
-                            <ListGroup className='text-white mh-25' style={{lineHeight : '18px'}}>
-                                    <span className='fw-bolder fs-5'>Категория</span>
-                                    <span className='ml-5'>  {category}</span>
+                        <OffcanvasBody
+                            style={{background: '#e5097f linear-gradient(#e5097f, rgb(0 0 0))', lineHeight: '15px'}}>
+                            <ListGroup className='text-white mh-25' style={{lineHeight: '18px'}}>
+                                <span className='fw-bolder fs-5'>Категория</span>
+                                <span className='ml-5'>  {category}</span>
                                 <div style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
                                     {Object.keys(subCategoriesList).map((item) =>
-                                        <ul key={item} style={{lineHeight : '10px', marginBottom: '0.5rem'}}>
+                                        <ul key={item} style={{lineHeight: '10px', marginBottom: '0.5rem'}}>
                                             <li>
                                                 <Link href={'/category/' + category + '/' + item}
                                                       className={'subCategory text-white lh-1'}>{item}</Link>
@@ -287,7 +385,7 @@ const Category = ({pageProps}) => {
                                         </ul>
                                     )}
                                 </div>
-                                    <Filters/>
+                                <Filters/>
                             </ListGroup>
 
                         </OffcanvasBody>
@@ -387,65 +485,75 @@ const Category = ({pageProps}) => {
                         </Col>
                     </Row>
                 </>
-                }
+            }
 
             {(oppenedItems && oppenedItems.length > 0 && seenProducts) &&
                 <>
-                <div className='popular my-3'>
-                <span className='mx-3 fs-4 text-white'>Вы смотрели</span>
-                <div className='line'></div>
-                </div>
-                <SeenProductCarousel/>
+                    <div className='popular my-3'>
+                        <span className='mx-3 fs-4 text-white'>Вы смотрели</span>
+                        <div className='line'></div>
+                    </div>
+                    <SeenProductCarousel/>
                 </>
             }
-                <div className='popular my-3'>
+            <div className='popular my-3'>
                 <span className='mx-3 fs-4 text-white'>Популярное</span>
                 <div className='line'></div>
-                </div>
-                <ProductCarousel data={pageProps.topData}/>
-                </Container>
+            </div>
+            <ProductCarousel data={pageProps.topData}/>
+        </Container>
 
-                )
-            }
+    )
+}
 
-            export const getServerSideProps = async (context) => {
-            let {category, page, keyword, isSuperSale, vendor, material} = context.query
-            if (page) {
-            page = '?page=' + page
-        } else {
-            page = ''
-        }
-            let res = {}
-            let data = {'superSale': false, 'vendor': '', 'material': ''}
-            if (isSuperSale) {
-            data['superSale'] = true
-            isSuperSale = true
-        } else {
-            isSuperSale = false
-        }
-            if (vendor) {
-            data['vendor'] = vendor
-        }
-            if (material) {
-            data['material'] = material
-        }
+export const getServerSideProps = async (context) => {
+    let {category, page, keyword, isSuperSale, vendor, material, collection, color, size} = context.query
+    if (page) {
+        page = '?page=' + page
+    } else {
+        page = ''
+    }
+    let res = {}
+    let data = {'superSale': false, 'vendor': '', 'material': '', 'collection': '', 'color': '', 'size':''}
+    if (collection) {
+        data['collection'] = collection
+    }
+    if (color) {
+        data['color'] = color
+    }
+    if (size) {
+        data['size'] = size
+    }
+
+    if (isSuperSale) {
+        data['superSale'] = true
+        isSuperSale = true
+    } else {
+        isSuperSale = false
+    }
+    if (vendor) {
+        data['vendor'] = vendor
+    }
+    if (material) {
+        data['material'] = material
+    }
 
 
-            if (keyword && page) {
-            res = await axios.post(`${API_HOST}/api/products/category/${category}${page}&keyword=${keyword}`, data);
-        } else if (keyword && !page) {
-            res = await axios.post(`${API_HOST}/api/products/category/${category}?keyword=${keyword}`, data);
-        } else {
-            keyword = null
-            res = await axios.post(`${API_HOST}/api/products/category/${category}${page}`, data);
-        }
-            const topData = await axios.get(`${API_HOST}/api/products/top`);
-            if (!res.data) {
-            return {
+    if (keyword && page) {
+        res = await axios.post(`${API_HOST}/api/products/category/${category}${page}&keyword=${keyword}`, data);
+    } else if (keyword && !page) {
+        res = await axios.post(`${API_HOST}/api/products/category/${category}?keyword=${keyword}`, data);
+    } else {
+        keyword = null
+        res = await axios.post(`${API_HOST}/api/products/category/${category}${page}`, data);
+    }
+    const topData = await axios.get(`${API_HOST}/api/products/top`);
+    if (!res.data) {
+        return {
             notFound: true,
         }
-        }
-            return {props: {data: res.data, topData: topData.data, category, keyword, isSuperSale}}
-        }
+    }
+    return {props: {data: res.data, topData: topData.data, category, keyword, isSuperSale}}
+}
 
-            export default Category
+export default Category

@@ -38,6 +38,7 @@ import Link from "next/link";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
 import MultiRangeSlider from "@/components/MultiRangeSlider";
+// import MultiRangeSliderold from "@/components/MultiRangeSliderold";
 
 
 const SubCategory = ({pageProps}) => {
@@ -55,6 +56,7 @@ const SubCategory = ({pageProps}) => {
         colorList,
         collectionList,
         sizeList,
+        maxPrice,
         page,
         pages
     } = pageProps.data;
@@ -164,23 +166,28 @@ const SubCategory = ({pageProps}) => {
 
         return (
             <>
+                {vendorList[0] &&
+                    <div className='d-flex justify-content-between'>
+                        <span>Бренд</span>
+                        {searchParams.get('vendor') &&
+                            <Badge
+                                className=''
+                                bg='secondary'
+                                as='button'
+                                onClick={vendorRemove}
+                            >
+                                X
+                            </Badge>}
+                    </div>
+                }
                 <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
-                    {vendorList[0] &&
-                        <div className='d-flex justify-content-between'>
-                            <span>Бренды</span>
-                            {searchParams.get('vendor') &&
-                                <span
-                                    onClick={vendorRemove}
-                                >
-                                            X
-                                        </span>}
-                        </div>
-                    }
+
                     {vendorList[0] &&
                         vendorList.map((ven) =>
                             // eslint-disable-next-line react/jsx-key
                             <Badge
                                 key={ven}
+                                as='button'
                                 bg={searchParams.get('vendor') === ven ? 'primary' : 'secondary'}
                                 className='mx-1'
                                 onClick={() => {
@@ -201,11 +208,14 @@ const SubCategory = ({pageProps}) => {
                     <div className='d-flex justify-content-between'>
                         <span>Материал</span>
                         {searchParams.get('material') &&
-                            <span
+                            <Badge
+                                className=''
+                                bg='secondary'
+                                as='button'
                                 onClick={materialRemove}
                             >
                                             X
-                                        </span>}
+                                        </Badge>}
                     </div>
                 }
                 <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
@@ -215,6 +225,7 @@ const SubCategory = ({pageProps}) => {
                             // eslint-disable-next-line react/jsx-key
                             <Badge
                                 key={ven}
+                                as='button'
                                 bg={searchParams.get('material') === ven ? 'primary' : 'secondary'}
                                 className='mx-1'
                                 onClick={() => {
@@ -236,11 +247,14 @@ const SubCategory = ({pageProps}) => {
                     <div className='d-flex justify-content-between'>
                         <span>Цвета</span>
                         {searchParams.get('color') &&
-                            <span
+                            <Badge
+                                className=''
+                                bg='secondary'
+                                as='button'
                                 onClick={colorRemove}
                             >
                                             X
-                                        </span>}
+                                        </Badge>}
                     </div>
                 }
                 <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
@@ -250,6 +264,7 @@ const SubCategory = ({pageProps}) => {
                             // eslint-disable-next-line react/jsx-key
                             <Badge
                                 key={ven}
+                                as='button'
                                 bg={searchParams.get('color') === ven ? 'primary' : 'secondary'}
                                 className='mx-1'
                                 onClick={() => {
@@ -271,11 +286,14 @@ const SubCategory = ({pageProps}) => {
                     <div className='d-flex justify-content-between'>
                         <span>Размеры</span>
                         {searchParams.get('size') &&
-                            <span
+                            <Badge
+                                className=''
+                                bg='secondary'
+                                as='button'
                                 onClick={sizeRemove}
                             >
                                             X
-                                        </span>}
+                                        </Badge>}
                     </div>
                 }
                 <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
@@ -285,6 +303,7 @@ const SubCategory = ({pageProps}) => {
                             // eslint-disable-next-line react/jsx-key
                             <Badge
                                 key={ven}
+                                as='button'
                                 bg={searchParams.get('size') === ven ? 'primary' : 'secondary'}
                                 className='mx-1'
                                 onClick={() => {
@@ -306,11 +325,14 @@ const SubCategory = ({pageProps}) => {
                     <div className='d-flex justify-content-between'>
                         <span>Коллекции</span>
                         {searchParams.get('collection') &&
-                            <span
+                            <Badge
+                                className=''
+                                bg='secondary'
+                                as='button'
                                 onClick={collectionRemove}
                             >
                                             X
-                                        </span>}
+                                        </Badge>}
                     </div>
                 }
                 <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
@@ -320,6 +342,7 @@ const SubCategory = ({pageProps}) => {
                             // eslint-disable-next-line react/jsx-key
                             <Badge
                                 key={ven}
+                                as='button'
                                 bg={searchParams.get('collection') === ven ? 'primary' : 'secondary'}
                                 className='mx-1'
                                 onClick={() => {
@@ -337,33 +360,55 @@ const SubCategory = ({pageProps}) => {
                         )
                     }
                 </div>
+                {/*<MultiRangeSliderold*/}
+                {/*    // baseClassName='multi-range-slider-black'*/}
+                {/*    min={0}*/}
+                {/*    max={Number(maxPrice).toFixed(0)}*/}
+                {/*    step={100}*/}
+                {/*    ruler={false}*/}
+                {/*    label={true}*/}
+                {/*    preventWheel={false}*/}
+                {/*    minValue={minValue}*/}
+                {/*    maxValue={maxValue}*/}
+                {/*    onInput={(e) => {*/}
+                {/*        handleInput(e);*/}
+                {/*    }}*/}
+                {/*/>*/}
                 <MultiRangeSlider
-                    // baseClassName='multi-range-slider-black'
                     min={0}
-                    max={100}
-                    step={5}
-                    ruler={true}
-                    label={true}
-                    preventWheel={false}
-                    minValue={minValue}
-                    maxValue={maxValue}
-                    onInput={(e) => {
-                        handleInput(e);
+                    max={1000}
+                    onChange={({ min, max }) => {
+                        set_minValue(min);
+                        set_maxValue(max);
+                        console.log(`min = ${min}, max = ${max}`)
                     }}
+                    // handle={() => {
+                    //     newUrl.searchParams.delete('lowprice')
+                    //     newUrl.searchParams.delete('highprice')
+                    // }}
                 />
 
             </>
         )
     }
     const [minValue, set_minValue] = useState(25);
-    const [maxValue, set_maxValue] = useState(75);
-    const handleInput = (e) => {
-        set_minValue(e.minValue);
-        set_maxValue(e.maxValue);
+    const [maxValue, set_maxValue] = useState(Number(maxPrice).toFixed(0));
+    const handleInput = () => {
+        newUrl.searchParams.delete('lowprice')
+        newUrl.searchParams.delete('highprice')
+        // if (newUrl.href.includes('?')) {
+        //     history.push(newUrl.href + '&lowprice=' + minValue + '&highprice=' + set_maxValue)
+        // } else {
+        //     history.push(newUrl.href + '?lowprice=' + minValue + '&highprice=' + set_maxValue)
+        // }
+        setShow(false)
     };
     const clearFilters = () => {
         materialRemove()
         vendorRemove()
+        collectionRemove()
+        colorRemove()
+        sizeRemove()
     }
     return (
         <Container className='categ'>
@@ -553,7 +598,7 @@ const SubCategory = ({pageProps}) => {
 }
 
 export const getServerSideProps = async (context) => {
-    let {category, page, keyword, isSuperSale, vendor, material, collection, color, size} = context.query
+    let {category, page, keyword, isSuperSale, vendor, material, collection, color, size, lowprice, highprice} = context.query
 
     let subCategory = context.params.id
     if (page) {
@@ -563,7 +608,19 @@ export const getServerSideProps = async (context) => {
     }
     let itemsList = []
     let res = {}
-    let data = {'superSale': false, 'vendor': '', 'material': '', 'collection': '', 'color': '', 'size':''}
+    let data = {'superSale': false, 'vendor': '', 'material': '', 'collection': '', 'color': '', 'size':'', 'lowprice':0, 'highprice':0}
+    if (lowprice) {
+        data['lowprice'] = Number(lowprice)
+    } else {
+        data['lowprice'] = 0
+
+    }
+    if (highprice) {
+        data['highprice'] = Number(highprice)
+    } else {
+        data['highprice'] = Number(1000000)
+
+    }
     if (collection) {
         data['collection'] = collection
     }
