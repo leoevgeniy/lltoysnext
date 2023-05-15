@@ -192,7 +192,8 @@ export default function Header(props) {
             >
                 <Container className={expanded ? "d-flex justify-content-start" : "d-flex"}>
 
-                    <Nav className='d-none justify-content-around d-md-flex'>
+                    <Nav className='d-
+                    none justify-content-around d-md-flex'>
                         <Navbar.Brand className='align-self-center' style={{'height': '70px', 'width': '100px'}}
                                       onClick={() => {
                                           setExpanded(false)

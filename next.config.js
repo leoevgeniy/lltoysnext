@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: false,
-
     swcMinify: true,
     optimizeFonts: true,
     images: {
+        unoptimized : true,
         remotePatterns: [
             {
                 protocol: 'https',
