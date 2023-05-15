@@ -69,7 +69,7 @@ function PickPoint() {
                 понедельника.
             </p>
             <h3>Шаги покупателя при получении заказа через постамат:</h3>
-            <Image src='http://stripmag.ru/images/pickpoint-way.gif' className='img-fluid mx-auto d-block'></Image>
+            <Image src='http://stripmag.ru/images/pickpoint-way.gif' alt='Схема работы pickPoint' className='img-fluid mx-auto d-block'/>
             <p>Оплатить покупку при доставке в постамат Вы можете следующими способами: </p>
             <ul>
                 <li>Наличные или кредитная карта в постамате при получении заказа (комиссия 0%)</li>

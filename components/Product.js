@@ -5,12 +5,14 @@ import Link from 'next/link'
 import Image from "next/image";
 import {PRODUCT_DETAILS_RESET} from "@/redux/types";
 import {addToCart} from "@/redux/actions/cartActions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCreditCard} from "@fortawesome/free-solid-svg-icons";
 
 function Product({product}) {
+    const {cartItems} = useSelector(state => state.cart)
+
     const dispatch = useDispatch();
     let price = Number(product.retailPrice)
     const rPrice = Number(product.baseRetailPrice)
@@ -54,20 +56,54 @@ function Product({product}) {
     } else if (product.prodId.length === 6) {
         cat = product.prodId[0] + product.prodId[1]
     }
-    const addToCartHandler = (e) => {
-        e.preventDefault()
+    const [productList, setProductList] = useState({})
+
+    const addToCartHandler = () => {
         const sendColor = product.availability[0][0] || ''
-        dispatch(addToCart(product._id, qty, sendColor,'', 'undefined', 0.1))
+        const sendSize = product.availability[1][0] || ''
+
+        dispatch(addToCart(product._id, qty, sendColor, sendSize, 'undefined', 0.1))
+        dispatch({type: PRODUCT_DETAILS_RESET})
+        // move_to_cart('toCart', 'cart')
+    }
+    const qtyChangePlus = () => {
+        const sendColor = product.availability[0][0] || ''
+        const sendSize = product.availability[1][0] || ''
+
+        cartItems.map((item, ind) => {
+            if (item.product === product._id && item.countInStock > item.qty) {
+                dispatch(addToCart(product._id, item.qty + 1, sendColor, sendSize, ind, 0.1))
+            }
+        })
         dispatch({type: PRODUCT_DETAILS_RESET})
 
-        // move_to_cart('toCart', 'cart')
+    }
+    const qtyChangeMinus = () => {
+        const sendColor = product.availability[0][0] || ''
+        const sendSize = product.availability[1][0] || ''
+
+        cartItems.map((item, ind) => {
+            if (item.product === product._id && item.qty > 1) {
+                dispatch(addToCart(product._id, item.qty - 1, sendColor, sendSize, ind, 0.1))
+            }
+        })
+        dispatch({type: PRODUCT_DETAILS_RESET})
+
     }
     const history = useRouter()
 
     function getRandomArbitrary(min, max) {
         return Math.random() * (max - min) + min;
     }
+    cartItems.map((item, ind) => {
+        productList[item.product] = ind
+    })
 
+    // useEffect(() => {
+    //     cartItems.map((item, ind) => {
+    //         productList[item.product] = ind
+    //     })
+    // }, [cartItems, dispatch])
     // const oldPrice = product.superSaleCost ? (price * getRandomArbitrary(3,4)).toFixed(0) : (price * getRandomArbitrary(1.3,1.8)).toFixed(0)
     const oldPrice = (rPrice > price) ? Number(rPrice).toFixed(0) : price
     const srcLink = `https://feed.p5s.ru/images/mid/${cat}/mid_${product.prodId}.jpg`
@@ -90,7 +126,6 @@ function Product({product}) {
                 </Card.Img>
 
 
-
                 {product.superSaleCost &&
                     <Badge pill bg='danger' className='badge-sale'>
                         Распродажа
@@ -110,9 +145,10 @@ function Product({product}) {
                 <p className='text-lowercase fw-bold card-buy d-inline-block text-start pt-3 fs-6 '
                    onClick={() => history.push(`/products/${product._id}`)}
                 >
-                    {(rPrice > price && (1 - (price / rPrice)) > 0.04) && <Badge pill bg='danger' className='badge-discount'>
-                        - {((1 - (price / oldPrice)) * 100).toFixed(0)} %
-                    </Badge>}
+                    {(rPrice > price && (1 - (price / rPrice)) > 0.04) &&
+                        <Badge pill bg='danger' className='badge-discount'>
+                            - {((1 - (price / oldPrice)) * 100).toFixed(0)} %
+                        </Badge>}
                     <meta itemProp="price" content={price.toFixed(0)}/>
                     <meta itemProp="priceCurrency" content="RUB"/>
                     <span
@@ -121,7 +157,7 @@ function Product({product}) {
                         <span
                             className='old-price '> ₽ {oldPrice}
 
-                    </span> : <br/>}
+                    </span> : ''}
                     <Badge pill bg='success' className='badgeCard float-end'>
                         <FontAwesomeIcon icon={faCreditCard}/> - 10%
                     </Badge>
@@ -137,12 +173,33 @@ function Product({product}) {
 
 
             </Card.Body>
-            {(product.availability[1].length === 0 || product.availability[0].length <=1) && product.assortiment.length>0 &&
+            {((!product.availability[1][0] && product.availability[0].length <= 1) && (!Object.keys(productList).includes(String(product._id)))) ?
                 <span
                     id='toCart'
                     className='picture asButton mb-2 w-75 mx-auto'
                     onClick={addToCartHandler}
-                >В корзину</span>}
+                >В корзину</span>
+                : Object.keys(productList).includes(String(product._id)) ?
+                <div className='mb-2'>
+                    <span
+                        className='asButton'
+                        onClick={qtyChangeMinus}
+                    >
+                        -
+                    </span>
+                    <span className='asButton'>
+                        {cartItems.map((item) => item.product === product._id ? item.qty : '')}
+                    </span>
+                    <span
+                        className='asButton'
+
+                        onClick={qtyChangePlus}
+                    >
+                        +
+                    </span>
+
+                </div> :''
+            }
 
         </Card>
     )

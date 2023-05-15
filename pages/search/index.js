@@ -45,11 +45,12 @@ const Search = ({pageProps}) => {
     // const [priceRangeCanvasShow, setPriceRangeCanvasShow] = useState(false)
     const {products: seenProducts} = useSelector((state) => state.productsSeen)
     const [oppenedItems, setOppenedItems] = useState([])
+    const {cartItems} = useSelector(state => state.cart)
     // const [priceRange, setPriceRange] = useState([])
     // const [priceLow, setPriceLow] = useState(productList.priceLowApi)
     // const [priceUp, setPriceUp] = useState(productList.priceUpApi)
     const searchParams = useSearchParams();
-
+    const [itemsList, setItemsList] = useState([])
     let keyword = searchParams.get('keyword')
     let supersale = searchParams.get('supersale')
     let bestseller = searchParams.get('bestsellers')
@@ -70,7 +71,11 @@ const Search = ({pageProps}) => {
             setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))
         }
         dispatch(listTopProducts())
-
+        cartItems.map((item) => {
+            if (!item.product in itemsList) {
+                setItemsList([...itemsList, item.product])
+            }
+        })
 
     }, [])
     useEffect(() => {
@@ -168,6 +173,7 @@ const Search = ({pageProps}) => {
                                     >
                                         <Product
                                             product={product}
+                                            itemsList={itemsList}
                                         />
                                     </Col>
                                 )

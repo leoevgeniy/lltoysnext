@@ -26,7 +26,8 @@ export default function ProductImageCarousel(products) {
         <div className='carousel-wrapper w-100'>
             <ImageModal
                 src = {source}
-                // backdrop="static"
+
+                backdrop="static"
                 // keyboard={false}
 
                 show={modalShow}

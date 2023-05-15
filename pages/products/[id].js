@@ -44,7 +44,7 @@ function ProductScreen({pageProps}) {
             setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))}
         const disp = async () => {await dispatch(listProductDetails(id))}
         disp()
-    },[])
+    },[dispatch, id])
     useEffect(() => {
         if (oppenedItems) {dispatch(listSeenProducts(oppenedItems))}
 

@@ -61,7 +61,7 @@ function LoginScreen() {
         //     document.getElementById('root').style.height = String(window.innerHeight - document.querySelector('.footer').scrollHeight) + 'px'
         // }
 
-    }, [userInfo, redirect])
+    }, [userInfo, redirect, history])
 
     const submitHandler = (e) => {
         e.preventDefault()

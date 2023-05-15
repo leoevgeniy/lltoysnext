@@ -19,6 +19,8 @@ import '@/styles/imageModal.css'
 import '@/styles/inputPD.css'
 import '@/styles/PageNotFound.css'
 import '@/styles/product.css'
+import '@/styles/MultiRangeSlider.scss'
+import '@/styles/MultiRangeSliderBlack.css'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import {wrapper} from "@/redux/store";

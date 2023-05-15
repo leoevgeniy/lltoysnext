@@ -27,7 +27,7 @@ function UserListScreen() {
 
     useEffect(() => {
         history.isReady ? setIsLoading(false) : ''
-    }, [])
+    }, [history.isReady])
 
     useEffect(() => {
 
