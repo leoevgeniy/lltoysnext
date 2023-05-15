@@ -176,6 +176,8 @@ def getCategotyProducts(request, **args):
     collection = request.data['collection']
     color = request.data['color']
     size = request.data['size']
+    lowprice = request.data['lowprice']
+    highprice = request.data['highprice']
 
     if query is None:
         query = ''
@@ -193,14 +195,16 @@ def getCategotyProducts(request, **args):
                 category__category__icontains=category) & Q(assortiment__countInStock__gt=0) & Q(
                 isSuperSale__iexact=1) & Q(brand__icontains=vendor) &
             Q(material__icontains=material) & Q(CollectionName__icontains=collection) & Q(
-                assortiment__color__icontains=color) & Q(assortiment__size__icontains=size)).distinct().order_by('name')
+                assortiment__color__icontains=color) & Q(assortiment__size__icontains=size) & Q(
+                retailPrice__gte=lowprice) & Q(retailPrice__lte=highprice)).distinct().order_by('name')
     else:
         products = Product.objects.filter(
             Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
                 category__category__icontains=category) & Q(assortiment__countInStock__gt=0) & Q(
                 brand__icontains=vendor) &
             Q(material__icontains=material) & Q(CollectionName__icontains=collection) & Q(
-                assortiment__color__icontains=color) & Q(assortiment__size__icontains=size)).distinct().order_by(
+                assortiment__color__icontains=color) & Q(assortiment__size__icontains=size) & Q(
+                retailPrice__gte=lowprice) & Q(retailPrice__lte=highprice)).distinct().order_by(
             'name')
     productsLength = len(products)
     vendorList = []
@@ -208,14 +212,17 @@ def getCategotyProducts(request, **args):
     materialList = []
     colorList = []
     sizeList = []
+    maxPrice = 0
     if not subcategory:
         for product in products:
             if product.brand != '' and product.brand not in vendorList:
                 vendorList.append(product.brand)
-            if product.material!= '' and product.material not in materialList:
+            if product.material != '' and product.material not in materialList:
                 materialList.append(product.material)
             if product.CollectionName != '' and product.CollectionName not in collectionList:
                 collectionList.append(product.CollectionName)
+            if product.retailPrice > maxPrice:
+                maxPrice = product.retailPrice
             try:
                 assortiment = Assortiment.objects.filter(product=product._id)
                 for assort in assortiment:
@@ -245,20 +252,21 @@ def getCategotyProducts(request, **args):
         for product in products:
             if product.brand != '' and product.brand not in vendorList:
                 vendorList.append(product.brand)
-            if product.material!= '' and product.material not in materialList:
+            if product.material != '' and product.material not in materialList:
                 materialList.append(product.material)
             if product.CollectionName != '' and product.CollectionName not in collectionList:
                 collectionList.append(product.CollectionName)
+            if product.retailPrice > maxPrice:
+                maxPrice = product.retailPrice
             try:
                 assortiment = Assortiment.objects.filter(product=product._id)
                 for assort in assortiment:
-                    if assort.color != ''  and assort.color != 'цвет не указан' and assort.color not in colorList:
+                    if assort.color != '' and assort.color != 'цвет не указан' and assort.color not in colorList:
                         colorList.append(assort.color)
                     if assort.size != '' and assort.size not in sizeList:
                         sizeList.append(assort.size)
             except:
                 pass
-
 
         try:
             categories = Category.objects.all()
@@ -289,6 +297,7 @@ def getCategotyProducts(request, **args):
         page = 1
     page = int(page)
     serializer = ProductSerializer(products, many=True)
+    print(maxPrice)
     return Response(
         {'products': serializer.data,
          'page': page,
@@ -304,7 +313,7 @@ def getCategotyProducts(request, **args):
          'sizeList': sizeList,
          # 'priceUpApi': priceUpApi,
          # 'priceLowApi': priceLowApi,
-         # 'maxPrice': maxPrice
+         'maxPrice': maxPrice
          }
     )
 
