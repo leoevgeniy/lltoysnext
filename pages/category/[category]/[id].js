@@ -5,11 +5,9 @@ import {
     Col,
     Container,
     Badge,
-    FormCheck,
     Offcanvas,
     OffcanvasBody,
     ListGroup,
-    ListGroupItem
 } from 'react-bootstrap'
 import {useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
@@ -18,38 +16,29 @@ import Paginate from '@/components/Paginate'
 import Message from '@/components/Message'
 import Loader from '@/components/Loader'
 import {
-    listCatalog,
     listTopProducts,
-    listProducts,
-    listCategoryProducts,
     listSeenProducts
 } from '@/redux/actions/productAction'
 import ProductCarousel from '@/components/ProductCarousel'
 import SeenProductCarousel from '@/components/SeenProductCarousel'
 import {useSearchParams} from "next/navigation";
-import {PRODUCT_DETAILS_RESET} from '@/redux/types'
-import {Router, useRouter, withRouter} from "next/router";
-import ReactPaginate from 'react-paginate';
-import App, {AppContext} from "next/app";
+import {useRouter} from "next/router";
 import axios from "axios";
 import {API_HOST, LOCATION} from "@/consts";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import Link from "next/link";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
-import MultiRangeSlider from "@/components/MultiRangeSlider";
-// import MultiRangeSliderold from "@/components/MultiRangeSliderold";
-
+import RangePriceSlider from "@/components/RangePriceSlider";
 
 const SubCategory = ({pageProps}) => {
     const subCategory = pageProps.subCategory
     const category = pageProps.category
+    const [loading, setLoading] = useState(false)
     const {
         error,
-        loading,
         products,
         productsLength,
-        categoryList,
         subCategoriesList,
         vendorList,
         materialList,
@@ -61,33 +50,14 @@ const SubCategory = ({pageProps}) => {
         pages
     } = pageProps.data;
     const dispatch = useDispatch()
-    const [minRangeValue, setMinRangeValue] = useState(0)
-    const [maxRangeValue, setMaxRangeValue] = useState(Number(maxPrice).toFixed(0))
-
-    // const [sort, setSort] = useState('')
-    // const [priceSortUp, setPriceSortUp] = useState(false);
-    // const [priceSortDown, setPriceSortDown] = useState(false);
-    // const [nameSortDown, setNameSortDown] = useState(false);
-    // const [nameSortUp, setNameSortUp] = useState(false);
     const [vendor, setVendor] = useState('')
     const [collection, setCollection] = useState([])
     const [material, setMaterial] = useState([])
     const [color, setColor] = useState([])
     const [size, setSize] = useState([])
-    // const [categorySelected, setCategorySelected] = useState([])
-    // const [vendorCanvasShow, setVendorCanvasShow] = useState(false)
-    // const [collectionCanvasShow, setCollectionCanvasShow] = useState(false)
-    // const [materialCanvasShow, setMaterialCanvasShow] = useState(false)
-    // const [sizeCanvasShow, setSizeCanvasShow] = useState(false)
-    // const [colorCanvasShow, setColorCanvasShow] = useState(false)
-    // const [priceRangeCanvasShow, setPriceRangeCanvasShow] = useState(false)
     const {products: seenProducts} = useSelector((state) => state.productsSeen)
     const [oppenedItems, setOppenedItems] = useState([])
-    // const [priceRange, setPriceRange] = useState([])
-    // const [priceLow, setPriceLow] = useState(productList.priceLowApi)
-    // const [priceUp, setPriceUp] = useState(productList.priceUpApi)
     const history = useRouter()
-    // const searchParams = useSearchParams();
     let keyword = pageProps.keyword
     const newUrl = new URL(history.asPath, LOCATION)
     useEffect(() => {
@@ -100,23 +70,6 @@ const SubCategory = ({pageProps}) => {
 
     }, [])
 
-    const [isSuperSale, setIsSuperSale] = useState(false)
-
-    // useEffect(() => {
-    //     if (isSuperSale) {
-    //         newUrl.searchParams.append('isSuperSale', '1')
-    //
-    //         // if (history.asPath.includes('?')) {
-    //         //     history.push(history.asPath + '&isSuperSale=1')
-    //         // } else {
-    //         //     history.push(history.asPath + '?isSuperSale=1')
-    //         // }
-    //     } else {
-    //         newUrl.searchParams.delete('isSuperSale')
-    //
-    //     }
-    //     history.push(newUrl.href)
-    // }, [isSuperSale])
     useEffect(() => {
         if (oppenedItems) {
             dispatch(listSeenProducts(oppenedItems))
@@ -127,43 +80,41 @@ const SubCategory = ({pageProps}) => {
     const brSubCategory = `/category/${category}/${subCategory}`
     const [show, setShow] = useState(false)
     const searchParams = useSearchParams()
-    // const superSaleToggle = () => {
-    //     setIsSuperSale(!isSuperSale)
-    // }
     const vendorRemove = () => {
+
         setVendor('')
         newUrl.searchParams.delete('vendor')
         setShow(false)
 
-        history.push(newUrl.href)
+        history.replace(newUrl.href,undefined, {scroll:false}).then()
     }
     const materialRemove = () => {
         setMaterial('')
         newUrl.searchParams.delete('material')
         setShow(false)
 
-        history.push(newUrl.href)
+        history.replace(newUrl.href,undefined, {scroll:false})
     }
     const collectionRemove = () => {
         setCollection('')
         newUrl.searchParams.delete('collection')
         setShow(false)
 
-        history.push(newUrl.href)
+        history.replace(newUrl.href,undefined, {scroll:false})
     }
     const colorRemove = () => {
         setColor('')
         newUrl.searchParams.delete('color')
         setShow(false)
 
-        history.push(newUrl.href)
+        history.replace(newUrl.href,undefined, {scroll:false})
     }
     const sizeRemove = () => {
         setSize('')
         newUrl.searchParams.delete('size')
         setShow(false)
 
-        history.push(newUrl.href)
+        history.replace(newUrl.href,undefined, {scroll:false})
     }
     const Filters = () => {
 
@@ -177,7 +128,10 @@ const SubCategory = ({pageProps}) => {
                                 className=''
                                 bg='secondary'
                                 as='button'
-                                onClick={vendorRemove}
+                                onClick={() => {
+                                    setLoading(true)
+                                    vendorRemove()
+                                }}
                             >
                                 X
                             </Badge>}
@@ -194,10 +148,12 @@ const SubCategory = ({pageProps}) => {
                                 bg={searchParams.get('vendor') === ven ? 'primary' : 'secondary'}
                                 className='mx-1'
                                 onClick={() => {
+                                    setLoading(true)
                                     if (history.asPath.includes('?')) {
-                                        history.push(history.asPath + '&vendor=' + ven)
+
+                                        history.replace(history.asPath + '&vendor=' + ven,undefined, {scroll:false})
                                     } else {
-                                        history.push(history.asPath + '?vendor=' + ven)
+                                        history.replace(history.asPath + '?vendor=' + ven,undefined, {scroll:false})
                                     }
                                     setShow(false)
                                 }}
@@ -217,8 +173,8 @@ const SubCategory = ({pageProps}) => {
                                 as='button'
                                 onClick={materialRemove}
                             >
-                                            X
-                                        </Badge>}
+                                X
+                            </Badge>}
                     </div>
                 }
                 <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
@@ -232,10 +188,11 @@ const SubCategory = ({pageProps}) => {
                                 bg={searchParams.get('material') === ven ? 'primary' : 'secondary'}
                                 className='mx-1'
                                 onClick={() => {
+                                    setLoading(true)
                                     if (history.asPath.includes('?')) {
-                                        history.push(history.asPath + '&material=' + ven)
+                                        history.replace(history.asPath + '&material=' + ven,undefined, {scroll:false})
                                     } else {
-                                        history.push(history.asPath + '?material=' + ven)
+                                        history.replace(history.asPath + '?material=' + ven,undefined, {scroll:false})
                                     }
                                     setShow(false)
 
@@ -256,8 +213,8 @@ const SubCategory = ({pageProps}) => {
                                 as='button'
                                 onClick={colorRemove}
                             >
-                                            X
-                                        </Badge>}
+                                X
+                            </Badge>}
                     </div>
                 }
                 <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
@@ -271,10 +228,11 @@ const SubCategory = ({pageProps}) => {
                                 bg={searchParams.get('color') === ven ? 'primary' : 'secondary'}
                                 className='mx-1'
                                 onClick={() => {
+                                    setLoading(true)
                                     if (history.asPath.includes('?')) {
-                                        history.push(history.asPath + '&color=' + ven)
+                                        history.replace(history.asPath + '&color=' + ven,undefined, {scroll:false})
                                     } else {
-                                        history.push(history.asPath + '?color=' + ven)
+                                        history.replace(history.asPath + '?color=' + ven,undefined, {scroll:false})
                                     }
                                     setShow(false)
 
@@ -295,8 +253,8 @@ const SubCategory = ({pageProps}) => {
                                 as='button'
                                 onClick={sizeRemove}
                             >
-                                            X
-                                        </Badge>}
+                                X
+                            </Badge>}
                     </div>
                 }
                 <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
@@ -310,10 +268,11 @@ const SubCategory = ({pageProps}) => {
                                 bg={searchParams.get('size') === ven ? 'primary' : 'secondary'}
                                 className='mx-1'
                                 onClick={() => {
+                                    setLoading(true)
                                     if (history.asPath.includes('?')) {
-                                        history.push(history.asPath + '&size=' + ven)
+                                        history.replace(history.asPath + '&size=' + ven,undefined, {scroll:false})
                                     } else {
-                                        history.push(history.asPath + '?size=' + ven)
+                                        history.replace(history.asPath + '?size=' + ven,undefined, {scroll:false})
                                     }
                                     setShow(false)
 
@@ -334,8 +293,8 @@ const SubCategory = ({pageProps}) => {
                                 as='button'
                                 onClick={collectionRemove}
                             >
-                                            X
-                                        </Badge>}
+                                X
+                            </Badge>}
                     </div>
                 }
                 <div className='d-inline-block' style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
@@ -349,10 +308,11 @@ const SubCategory = ({pageProps}) => {
                                 bg={searchParams.get('collection') === ven ? 'primary' : 'secondary'}
                                 className='mx-1'
                                 onClick={() => {
+                                    setLoading(true)
                                     if (history.asPath.includes('?')) {
-                                        history.push(history.asPath + '&collection=' + ven)
+                                        history.replace(history.asPath + '&collection=' + ven,undefined, {scroll:false})
                                     } else {
-                                        history.push(history.asPath + '?collection=' + ven)
+                                        history.replace(history.asPath + '?collection=' + ven,undefined, {scroll:false})
                                     }
                                     setShow(false)
 
@@ -363,45 +323,49 @@ const SubCategory = ({pageProps}) => {
                         )
                     }
                 </div>
-                {/*<MultiRangeSliderold*/}
-                {/*    // baseClassName='multi-range-slider-black'*/}
-                {/*    min={0}*/}
-                {/*    max={Number(maxPrice).toFixed(0)}*/}
-                {/*    step={100}*/}
-                {/*    ruler={false}*/}
-                {/*    label={true}*/}
-                {/*    preventWheel={false}*/}
-                {/*    minValue={minValue}*/}
-                {/*    maxValue={maxValue}*/}
-                {/*    onInput={(e) => {*/}
-                {/*        handleInput(e);*/}
-                {/*    }}*/}
-                {/*/>*/}
-                <MultiRangeSlider
-                    min={0}
-                    max={Number(maxPrice).toFixed(0)}
-                    minInput={minRangeValue}
-                    maxInput={maxRangeValue}
-                    onChange={({ min, max }) => {
-                        console.log(`min = ${min}, max = ${max}`)
-                    }}
-                    setMouseUp={setMouseUp}
-                    setMinRangeValue={setMinRangeValue}
-                    setMaxRangeValue={setMaxRangeValue}
-                    // handle={() => {
-                    //     newUrl.searchParams.delete('lowprice')
-                    //     newUrl.searchParams.delete('highprice')
-                    // }}
-                />
+                <div className='slid'>
+                    <div className='d-flex justify-content-between'>
+                        <span>Цена</span>
+                        {(currentRange[0] !== 0 || currentRange[1] !== maxPrice) &&
+                            <Badge
+                                className=''
+                                bg='secondary'
+                                as='button'
+                                onClick={() => {
+                                    setLoading(true)
+                                    newUrl.searchParams.delete('lowprice')
+                                    newUrl.searchParams.delete('highprice')
+                                    setCurrentRange([0,maxPrice])
+                                    history.replace(newUrl.href,undefined, {scroll:false})
+                                }}
+                            >
+                                X
+                            </Badge>}
+                    </div>
+
+                    <RangePriceSlider
+                        min={currentRange[0]}
+                        max={currentRange[1]}
+                        maxPrice={localMaxPrice}
+                        onChange={({min, max}) => {
+                            setLoading(true)
+                            newUrl.searchParams.delete('lowprice')
+                            newUrl.searchParams.delete('highprice')
+                            setCurrentRange([min, max])
+                            if (newUrl.href.includes('?')) {
+                                history.replace(newUrl.href + '&lowprice=' + min + '&highprice=' + max,undefined, {scroll:false}).then()
+                            } else {
+                                history.replace(newUrl.href + '?lowprice=' + min + '&highprice=' + max,undefined, {scroll:false}).then()
+                            }
+
+                        }}/>
+                </div>
+
 
             </>
         )
     }
-    console.log(`min = ${minRangeValue}, max = ${maxRangeValue}`)
 
-
-    const [mouseUp, setMouseUp] = useState(false)
-    console.log(mouseUp)
     // useEffect(() => {
     //     if (mouseUp) {
     //         setMouseUp(false)
@@ -415,178 +379,190 @@ const SubCategory = ({pageProps}) => {
     //         }
     //     }
     // },[mouseUp]);
-
+    const [localMaxPrice, setLocalMaxPrice] = useState(maxPrice)
+    useEffect(() => {
+        setLoading(pageProps.isLoading)
+    }, [pageProps])
+    const [currentRange, setCurrentRange] = useState([0, maxPrice.toFixed(0)])
     const clearFilters = () => {
-        materialRemove()
-        vendorRemove()
-        collectionRemove()
-        colorRemove()
-        sizeRemove()
+        setLoading(true)
+        setShow(false)
+        setVendor('')
+        newUrl.searchParams.delete('vendor')
+        setMaterial('')
+        newUrl.searchParams.delete('material')
+        setCollection('')
+        newUrl.searchParams.delete('collection')
+        setColor('')
+        newUrl.searchParams.delete('color')
+        setSize('')
+        newUrl.searchParams.delete('size')
+        newUrl.searchParams.delete('lowprice')
+        newUrl.searchParams.delete('highprice')
+        history.replace(newUrl.href, undefined, {scroll: false})
+
     }
     return (
         <Container className='categ'>
-            {loading ? (
-                <Loader/>
-            ) : error ? (
-                    <Message variant="danger">{error}</Message>
-                ) :
-                <div>
-                    <Head>
-                        <title>{subCategory}</title>
-                        <meta name='description' content={subCategory}/>
-                        <meta name='keywords' content={subCategory}/>
-                        <meta name='keywords'
-                              content='sexshop, сексшоп, магазин интимных товаров для взрослых, секс игрушки, sex toys, интимшоп, интим шоп, intimshop, секс, вибратор, фаллоимитатор, вагина, фаллос, клитор, стимулятор, мастурбатор, куклы, эротическое белье'/>
 
-                    </Head>
-                    <div className="content justify-content-center">
-                        {/*{(filter || category) ? (*/}
-                        <div className='d-flex justify-content-between'>
+            <div>
+                <Head>
+                    <title>{subCategory}</title>
+                    <meta name='description' content={subCategory}/>
+                    <meta name='keywords' content={subCategory}/>
+                    <meta name='keywords'
+                          content='sexshop, сексшоп, магазин интимных товаров для взрослых, секс игрушки, sex toys, интимшоп, интим шоп, intimshop, секс, вибратор, фаллоимитатор, вагина, фаллос, клитор, стимулятор, мастурбатор, куклы, эротическое белье'/>
 
-                            <h1 className='text-start text-white'>{subCategory}
-                                {productsLength > 0 &&
-                                    <span className='prod-length pl-2'>{productsLength} товаров</span>}
+                </Head>
+                <div className="content justify-content-center">
+                    <div className='d-flex justify-content-between'>
 
-                            </h1>
-                            {(history.pathname.includes('/category') || history.pathname.includes('/search')) &&
-                                <FontAwesomeIcon
-                                    className='d-block d-md-none category-filter-icon my-auto mr-2 text-white'
-                                    icon={faFilter}
-                                    onClick={() => setShow(true)}/>
-                            }
-                        </div>
-                        <Offcanvas
-                            show={show}
-                            placement='bottom'
-                            onHide={() => setShow(false)}
-                            style={{height: '90%'}}
+                        <h1 className='text-start text-white'>{subCategory}
+                            {productsLength > 0 &&
+                                <span className='prod-length pl-2'>{productsLength} товаров</span>}
 
-                        >
-                            <Offcanvas.Header style={{backgroundColor: '#e5097f', color: 'white'}} className={'my-0 py-0'}>
-                                <Offcanvas.Title className='w-100'>
-                                    <span>Фильтры</span>
-                                    {(searchParams.get('material') || searchParams.get('vendor')) ?
-                                        <span onClick={clearFilters} className='float-end'>Отмена</span> : ''}
-                                </Offcanvas.Title>
-                            </Offcanvas.Header>
-                            <OffcanvasBody className={'my-0 py-0'} style={{background: '#e5097f linear-gradient(#e5097f, rgb(0 0 0))'}}>
-                                <ListGroup className='text-white mh-25'>
-                                    <span className='fw-bolder fs-5'>Категория</span>
-                                    <span><Link href={`/category/${category}`} onClick={() => setShow(false)}
-                                                className='ml-5 text-white mb-0'>  {category}</Link>
+                        </h1>
+                        {(history.pathname.includes('/category') || history.pathname.includes('/search')) &&
+                            <FontAwesomeIcon
+                                className='d-block d-md-none category-filter-icon my-auto mr-2 text-white'
+                                icon={faFilter}
+                                onClick={() => setShow(true)}/>
+                        }
+                    </div>
+                    <Offcanvas
+                        show={show}
+                        placement='bottom'
+                        onHide={() => setShow(false)}
+                        style={{height: '90%'}}
+
+                    >
+                        <Offcanvas.Header style={{backgroundColor: '#e5097f', color: 'white'}} className={'my-0 py-0'}>
+                            <Offcanvas.Title className='w-100'>
+                                <span>Фильтры</span>
+                                {(searchParams.get('material') || searchParams.get('vendor') || searchParams.get('collection')
+                                    || searchParams.get('color') || searchParams.get('size') || searchParams.get('lowprice') ||
+                                    searchParams.get('highprice')) ?
+                                    <Badge as='button' bg='secondary' onClick={() => {
+                                        clearFilters()
+                                    }} className='float-end'>Отмена</Badge> : ''}
+                            </Offcanvas.Title>
+                        </Offcanvas.Header>
+                        <OffcanvasBody className={'my-0 py-0'}
+                                       style={{background: '#e5097f linear-gradient(#e5097f, rgb(0 0 0))'}}>
+                            <ListGroup className='text-white mh-25'>
+                                <span className='fw-bolder fs-5'>Категория</span>
+                                <span><Link href={`/category/${category}`} onClick={() => setShow(false)}
+                                            className='ml-5 text-white mb-0'>  {category}</Link>
                                         </span>
-                                    <ul className='lh-1 text-white ' style={{'maxHeight': '50px', 'overflowY': 'scroll'}}>
+                                <ul className='lh-1 text-white ' style={{'maxHeight': '50px', 'overflowY': 'scroll'}}>
 
-                                        {Object.keys(subCategoriesList).map((item, i) =>
-                                            <li key={i}>
-                                                <Link href={'/category/' + category + '/' + item}
-                                                      onClick={() => setShow(false)}
-                                                      className={item === subCategory ? 'text-decoration-none subCategory text-white' : 'subCategory text-white'}> {item}</Link>
-                                                <span
-                                                    className='prod-length pl-2 text-light'>{subCategoriesList[item]}</span>
-                                            </li>
-                                        )}
-                                    </ul>
-                                    <br/>
-                                </ListGroup>
-                                <ListGroup>
-                                    <Filters/>
-                                </ListGroup>
-                            </OffcanvasBody>
-                        </Offcanvas>
-
-                        <Row>
-                            <Col sm={0} md={3} className='d-none d-md-block text-white'>
-                                <p className='fw-bolder fs-5 text-white'>Категория</p>
-                                <p><Link href={`/category/${category}`} className='ml-5 text-white'>  {category}</Link>
-                                </p>
-                                <p className='ml-8 text-white'>{subCategory}</p>
-                                <ul>
-
-                                    {subCategoriesList && Object.keys(subCategoriesList).map((item, i) =>
-                                        <li key={item}>
+                                    {Object.keys(subCategoriesList).map((item, i) =>
+                                        <li key={i}>
                                             <Link href={'/category/' + category + '/' + item}
-                                                  className='subCategory'> {item}</Link>
+                                                  onClick={() => setShow(false)}
+                                                  className={item === subCategory ? 'text-decoration-none subCategory text-white' : 'subCategory text-white'}> {item}</Link>
                                             <span
-                                                className='prod-length pl-2'>{subCategoriesList[item]}</span>
+                                                className='prod-length pl-2 text-light'>{subCategoriesList[item]}</span>
                                         </li>
                                     )}
                                 </ul>
                                 <br/>
-                                {/*<div className='d-flex justify-content-between'>*/}
-                                {/*<span>*/}
-                                {/*Распродажа</span>*/}
-                                {/*    <FormCheck*/}
-                                {/*        custom='true'*/}
-                                {/*        id='isSusperSale'*/}
-                                {/*        type='switch'*/}
-                                {/*        сhecked={isSuperSale ? 'true' : ''}*/}
-                                {/*        onChange={() => setIsSuperSale(!isSuperSale)}*/}
-                                {/*        className=''></FormCheck>*/}
-                                {/*</div>*/}
+                            </ListGroup>
+                            <ListGroup>
                                 <Filters/>
+                            </ListGroup>
+                        </OffcanvasBody>
+                    </Offcanvas>
 
-                            </Col>
-                            <Col sm={12} md={9}>
-                                <div>
-                                    <Breadcrumb>
-                                        <Breadcrumb.Item
-                                            href='/'
-                                        >
-                                            Главная
-                                        </Breadcrumb.Item>
-                                        <Breadcrumb.Item
-                                            href={brCategory}
-                                        >
-                                            {category}
-                                        </Breadcrumb.Item>
-                                        <Breadcrumb.Item
-                                            href={brSubCategory}
-                                            active
-                                        >
-                                            {subCategory}
-                                        </Breadcrumb.Item>
-                                    </Breadcrumb>
-                                    {keyword &&
-                                        <Badge>
-                                            {keyword}
-                                            <Badge onClick={() => history.push(brSubCategory)}>
-                                                x
-                                            </Badge>
+                    <Row>
+                        <Col sm={0} md={3} className='d-none d-md-block text-white'>
+                            <p className='fw-bolder fs-5 text-white'>Категория</p>
+                            <p><Link href={`/category/${category}`} className='ml-5 text-white'>  {category}</Link>
+                            </p>
+                            <p className='ml-8 text-white'>{subCategory}</p>
+                            <ul>
+
+                                {subCategoriesList && Object.keys(subCategoriesList).map((item) =>
+                                    <li key={item}>
+                                        <Link href={'/category/' + category + '/' + item}
+                                              className='subCategory'> {item}</Link>
+                                        <span
+                                            className='prod-length pl-2'>{subCategoriesList[item]}</span>
+                                    </li>
+                                )}
+                            </ul>
+                            <br/>
+                            <Filters/>
+
+                        </Col>
+                        <Col sm={12} md={9}>
+                            <div>
+                                <Breadcrumb>
+                                    <Breadcrumb.Item
+                                        href='/'
+                                    >
+                                        Главная
+                                    </Breadcrumb.Item>
+                                    <Breadcrumb.Item
+                                        href={brCategory}
+                                    >
+                                        {category}
+                                    </Breadcrumb.Item>
+                                    <Breadcrumb.Item
+                                        href={brSubCategory}
+                                        active
+                                    >
+                                        {subCategory}
+                                    </Breadcrumb.Item>
+                                </Breadcrumb>
+                                {keyword &&
+                                    <Badge>
+                                        {keyword}
+                                        <Badge onClick={() => history.push(brSubCategory)}>
+                                            x
                                         </Badge>
-                                    }
-                                    <Row className='mb-4 mx-0 w-100 justify-content-center text-center'>
-                                        {Array.from(products).map(
-                                            (product) => (
-                                                <Col
-                                                    className='px-0'
-                                                    key={product._id}
-                                                    xs={6}
-                                                    sm={6}
-                                                    md={4}
-                                                    lg={3}
-                                                    xl={3}
-                                                >
-                                                    <Product
-                                                        product={product}
-                                                    />
-                                                </Col>
-                                            )
-                                        )}
-                                    </Row>
-                                    <Paginate
-                                        className='mt-2'
-                                        page={page}
-                                        pages={pages}
-                                        keyword={keyword ? brSubCategory + '?keyword=' + keyword : brSubCategory}
-                                    />
-                                </div>
-                            </Col>
-                        </Row>
-                    </div>
+                                    </Badge>
+                                }
+                                {loading ? (
+                                    <Loader/>
+                                ) : error ? (
+                                        <Message variant="danger">{error}</Message>
+                                    ) :
+                                    <>
+                                        <Row className='mb-4 mx-0 w-100 justify-content-center text-center'>
+                                            {Array.from(products).map(
+                                                (product) => (
+                                                    <Col
+                                                        className='px-0'
+                                                        key={product._id}
+                                                        xs={6}
+                                                        sm={6}
+                                                        md={4}
+                                                        lg={3}
+                                                        xl={3}
+                                                    >
+                                                        <Product
+                                                            product={product}
+                                                        />
+                                                    </Col>
+                                                )
+                                            )}
+                                        </Row>
 
+                                        <Paginate
+                                            className='mt-2'
+                                            page={page}
+                                            pages={pages}
+                                            keyword={keyword ? brSubCategory + '?keyword=' + keyword : brSubCategory}
+                                        />
+                                    </>
+                                }
+                            </div>
+                        </Col>
+                    </Row>
                 </div>
-            }
+
+            </div>
 
 
             <div className='popular my-3'>
@@ -611,7 +587,19 @@ const SubCategory = ({pageProps}) => {
 }
 
 export const getServerSideProps = async (context) => {
-    let {category, page, keyword, isSuperSale, vendor, material, collection, color, size, lowprice, highprice} = context.query
+    let {
+        category,
+        page,
+        keyword,
+        isSuperSale,
+        vendor,
+        material,
+        collection,
+        color,
+        size,
+        lowprice,
+        highprice
+    } = context.query
 
     let subCategory = context.params.id
     if (page) {
@@ -621,7 +609,16 @@ export const getServerSideProps = async (context) => {
     }
     let itemsList = []
     let res = {}
-    let data = {'superSale': false, 'vendor': '', 'material': '', 'collection': '', 'color': '', 'size':'', 'lowprice':0, 'highprice':0}
+    let data = {
+        'superSale': false,
+        'vendor': '',
+        'material': '',
+        'collection': '',
+        'color': '',
+        'size': '',
+        'lowprice': 0,
+        'highprice': 0
+    }
     if (lowprice) {
         data['lowprice'] = Number(lowprice)
     } else {
@@ -652,9 +649,9 @@ export const getServerSideProps = async (context) => {
     if (material) {
         data['material'] = material
     }
-
+    let isLoading = true
     if (keyword && page) {
-        res = await axios.post(`${API_HOST}/api/products/category/${category}/${subCategory}${page}&keyword=${keyword}`, data);
+        res = await axios.post(`${API_HOST}/api/products/category/${category}/${subCategory}${page}&keyword=${keyword}`, data).then();
     } else if (keyword && !page) {
         res = await axios.post(`${API_HOST}/api/products/category/${category}/${subCategory}?keyword=${keyword}`, data);
 
@@ -667,8 +664,10 @@ export const getServerSideProps = async (context) => {
         return {
             notFound: true,
         }
+    } else {
+        isLoading = false
     }
-    return {props: {data: res.data, topData: topData.data, category, subCategory, keyword}}
+    return {props: {data: res.data, topData: topData.data, category, subCategory, keyword, isLoading}}
 }
 
 export default SubCategory

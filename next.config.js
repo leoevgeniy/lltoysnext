@@ -18,7 +18,8 @@ const nextConfig = {
 }
 module.exports = {
     experimental: {
-        forceSwcTransforms: true
+        forceSwcTransforms: true,
+        scrollRestoration: true,
     },
 }
 
