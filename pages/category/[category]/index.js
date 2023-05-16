@@ -128,7 +128,7 @@ const Category = ({pageProps}) => {
     useEffect(() => {
         setLoading(pageProps.isLoading)
     }, [pageProps])
-    const [currentRange, setCurrentRange] = useState([0, maxPrice.toFixed(0)])
+    const [currentRange, setCurrentRange] = useState([0, maxPrice])
     const clearFilters = () => {
         setLoading(true)
         setShow(false)
