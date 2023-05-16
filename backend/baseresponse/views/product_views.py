@@ -206,6 +206,13 @@ def getCategotyProducts(request, **args):
                 assortiment__color__icontains=color) & Q(assortiment__size__icontains=size) & Q(
                 retailPrice__gte=lowprice) & Q(retailPrice__lte=highprice)).distinct().order_by(
             'name')
+    productsMaxPrice = Product.objects.filter(
+        Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
+            category__category__icontains=category) & Q(assortiment__countInStock__gt=0) & Q(
+            brand__icontains=vendor) &
+        Q(material__icontains=material) & Q(CollectionName__icontains=collection) & Q(
+            assortiment__color__icontains=color) & Q(assortiment__size__icontains=size))
+
     productsLength = len(products)
     vendorList = []
     collectionList = []
@@ -221,8 +228,6 @@ def getCategotyProducts(request, **args):
                 materialList.append(product.material)
             if product.CollectionName != '' and product.CollectionName not in collectionList:
                 collectionList.append(product.CollectionName)
-            if product.retailPrice > maxPrice:
-                maxPrice = product.retailPrice
             try:
                 assortiment = Assortiment.objects.filter(product=product._id)
                 for assort in assortiment:
@@ -256,8 +261,6 @@ def getCategotyProducts(request, **args):
                 materialList.append(product.material)
             if product.CollectionName != '' and product.CollectionName not in collectionList:
                 collectionList.append(product.CollectionName)
-            if product.retailPrice > maxPrice:
-                maxPrice = product.retailPrice
             try:
                 assortiment = Assortiment.objects.filter(product=product._id)
                 for assort in assortiment:
@@ -284,7 +287,7 @@ def getCategotyProducts(request, **args):
                                     assortiment__countInStock__gt=0)))
         except:
             pass
-
+    maxPrice = productsMaxPrice.aggregate(Max('retailPrice'))
     page = request.query_params.get('page')
     paginator = Paginator(products, 24)
     try:
@@ -297,7 +300,6 @@ def getCategotyProducts(request, **args):
         page = 1
     page = int(page)
     serializer = ProductSerializer(products, many=True)
-    print(maxPrice)
     return Response(
         {'products': serializer.data,
          'page': page,
@@ -313,7 +315,7 @@ def getCategotyProducts(request, **args):
          'sizeList': sizeList,
          # 'priceUpApi': priceUpApi,
          # 'priceLowApi': priceLowApi,
-         'maxPrice': maxPrice
+         'maxPrice': maxPrice['retailPrice__max']
          }
     )
 
