@@ -95,6 +95,11 @@ function ProductScreen({pageProps}) {
     const onHide=() => setModalShow(false)
     const showDesc = () => setModalShow(true)
     const onBack = () => {
+        // history.back()
+        history.beforePopState((state) => {
+            state.options.scroll = false;
+            return true;
+        });
         history.back()
     }
 
