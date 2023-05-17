@@ -6,14 +6,20 @@ import Image from "next/image";
 import kuragi from "../public/Kuragi.png";
 
 function Footer() {
+    // const footerHeight = document.querySelector('.footer_text').offsetHeight
+    // const imgHeight = footerHeight*0.8 + 'px'
+    // console.log(footerHeight)
     return (
-            <Container className='d-none d-md-flex justify-content-center footer'>
-                <Row className='d-flex py-3 justify-content-md-center text-white text-center fs-6' md='auto'>
-                    <Link href="/"
-                          className='d-none d-sm-none d-md-none d-lg-block d-xl-block d-xxl-block justify-self-left'>
-                        <Image quality={100} priority className='logo img-fluid align-self-auto' src={kuragi} alt='Sex Shop logo'/>
-                    </Link>
-                    <div className='d-flex justify-content-center fs-6'>
+        <Container className='d-none d-md-flex justify-content-center footer'>
+            <Row className='py-3 text-white text-center fs-6 w-100'>
+                <Col className='col-3 position-relative w-full'>
+                    {/*<Link href="/"*/}
+                    {/*      className='d-none d-sm-none d-md-none d-lg-block d-xl-block d-xxl-block justify-self-left'>*/}
+                        <Image fill style={{objectFit: "contain"}} loading="lazy" className='logo' src={kuragi} alt='Sex Shop logo'/>
+                    {/*</Link>*/}
+                </Col>
+                <Col className='col-9'>
+                    <div className='d-flex justify-content-between fs-6'>
                         <div id='delivery'
                              className='d-none d-sm-none d-md-none d-lg-flex d-xl-flex d-xxl-flex flex-column text-light  px-5'>
                             <p>Доставка заказов</p>
@@ -50,17 +56,18 @@ function Footer() {
                         </div>
                         <div id='time' className='d-flex flex-column text-light '>
                             <p>Время работы</p>
-                            <span id='garanty' >
+                            <span id='garanty'>
                                 Ежедневно: <span className='link-secondary'>9.00 - 21.00</span>
                             </span>
-                            <span id='rekvisits' >
+                            <span id='rekvisits'>
                                 Телефон: <span className='link-secondary'>+7 (995) 131-08-12</span>
                             </span>
 
                         </div>
                     </div>
-                </Row>
-            </Container>
+                </Col>
+            </Row>
+        </Container>
     )
 }
 

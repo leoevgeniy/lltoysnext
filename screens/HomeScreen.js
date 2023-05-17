@@ -7,10 +7,10 @@ import SeenProductCarousel from "@/components/SeenProductCarousel";
 import ProductCarousel from "@/components/ProductCarousel";
 import {listSeenProducts, listTopProducts} from "@/redux/actions/productAction";
 import Image from "next/image";
-import mainlady from '@/public/mailladysmall.jpg'
+import mainlady from '@/public/mainladysmall.jpg'
 import sexmebel from '@/public/sexmebel.webp'
 import erotic from '@/public/erotic.webp'
-import bdsm from '@/public/bdsm.webp'
+import bdsm from '@/public/bdsm.jpg'
 import lubricants from '@/public/lubricants.webp'
 import toys from '@/public/toys.webp'
 import things from '@/public/things.webp'
@@ -20,7 +20,7 @@ import men from '@/public/men.webp'
 import nignee from '@/public/nignee.webp'
 import kupalniki from '@/public/kupalniki.webp'
 import discount10 from '@/public/discount10.jpg'
-import deliveryfree from '@/public/freedelivery.jpg'
+import deliveryfree from '@/public/freedelivery.webp'
 import {useRouter} from "next/router";
 
 const HomeScreen = (pageProps) => {

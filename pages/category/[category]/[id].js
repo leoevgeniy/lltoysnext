@@ -69,6 +69,11 @@ const SubCategory = ({pageProps}) => {
 
 
     }, [])
+    useEffect(() => {
+        if (!loading) {
+            setCurrentRange([0, maxPrice.toFixed(0)])
+        }
+    },[loading])
 
     useEffect(() => {
         if (oppenedItems) {
@@ -81,7 +86,7 @@ const SubCategory = ({pageProps}) => {
     const [show, setShow] = useState(false)
     const searchParams = useSearchParams()
     const vendorRemove = () => {
-
+        setLoading(true)
         setVendor('')
         newUrl.searchParams.delete('vendor')
         setShow(false)
@@ -92,28 +97,28 @@ const SubCategory = ({pageProps}) => {
         setMaterial('')
         newUrl.searchParams.delete('material')
         setShow(false)
-
+        setLoading(true)
         history.replace(newUrl.href,undefined, {scroll:false})
     }
     const collectionRemove = () => {
         setCollection('')
         newUrl.searchParams.delete('collection')
         setShow(false)
-
+        setLoading(true)
         history.replace(newUrl.href,undefined, {scroll:false})
     }
     const colorRemove = () => {
         setColor('')
         newUrl.searchParams.delete('color')
         setShow(false)
-
+        setLoading(true)
         history.replace(newUrl.href,undefined, {scroll:false})
     }
     const sizeRemove = () => {
         setSize('')
         newUrl.searchParams.delete('size')
         setShow(false)
-
+        setLoading(true)
         history.replace(newUrl.href,undefined, {scroll:false})
     }
     const Filters = () => {
@@ -148,6 +153,8 @@ const SubCategory = ({pageProps}) => {
                                 bg={searchParams.get('vendor') === ven ? 'primary' : 'secondary'}
                                 className='mx-1'
                                 onClick={() => {
+                                    setCurrentRange([0, maxPrice])
+
                                     setLoading(true)
                                     if (history.asPath.includes('?')) {
 
@@ -188,6 +195,8 @@ const SubCategory = ({pageProps}) => {
                                 bg={searchParams.get('material') === ven ? 'primary' : 'secondary'}
                                 className='mx-1'
                                 onClick={() => {
+                                    setCurrentRange([0, maxPrice])
+
                                     setLoading(true)
                                     if (history.asPath.includes('?')) {
                                         history.replace(history.asPath + '&material=' + ven,undefined, {scroll:false})
@@ -228,6 +237,8 @@ const SubCategory = ({pageProps}) => {
                                 bg={searchParams.get('color') === ven ? 'primary' : 'secondary'}
                                 className='mx-1'
                                 onClick={() => {
+                                    setCurrentRange([0, maxPrice])
+
                                     setLoading(true)
                                     if (history.asPath.includes('?')) {
                                         history.replace(history.asPath + '&color=' + ven,undefined, {scroll:false})
@@ -268,6 +279,8 @@ const SubCategory = ({pageProps}) => {
                                 bg={searchParams.get('size') === ven ? 'primary' : 'secondary'}
                                 className='mx-1'
                                 onClick={() => {
+                                    setCurrentRange([0, maxPrice])
+
                                     setLoading(true)
                                     if (history.asPath.includes('?')) {
                                         history.replace(history.asPath + '&size=' + ven,undefined, {scroll:false})
@@ -308,6 +321,7 @@ const SubCategory = ({pageProps}) => {
                                 bg={searchParams.get('collection') === ven ? 'primary' : 'secondary'}
                                 className='mx-1'
                                 onClick={() => {
+                                    setCurrentRange([0, maxPrice])
                                     setLoading(true)
                                     if (history.asPath.includes('?')) {
                                         history.replace(history.asPath + '&collection=' + ven,undefined, {scroll:false})
@@ -326,7 +340,7 @@ const SubCategory = ({pageProps}) => {
                 <div className='slid'>
                     <div className='d-flex justify-content-between'>
                         <span>Цена</span>
-                        {(currentRange[0] !== 0 || currentRange[1] !== maxPrice) &&
+                        {(currentRange[0] !== 0 || currentRange[1] !== maxPrice.toFixed(0)) &&
                             <Badge
                                 className=''
                                 bg='secondary'
@@ -335,14 +349,13 @@ const SubCategory = ({pageProps}) => {
                                     setLoading(true)
                                     newUrl.searchParams.delete('lowprice')
                                     newUrl.searchParams.delete('highprice')
-                                    setCurrentRange([0,maxPrice])
+                                    setCurrentRange([0,maxPrice.toFixed(0)])
                                     history.replace(newUrl.href,undefined, {scroll:false})
                                 }}
                             >
                                 X
                             </Badge>}
                     </div>
-
                     <RangePriceSlider
                         min={currentRange[0]}
                         max={currentRange[1]}
@@ -379,7 +392,7 @@ const SubCategory = ({pageProps}) => {
     //         }
     //     }
     // },[mouseUp]);
-    const [localMaxPrice, setLocalMaxPrice] = useState(maxPrice)
+    const [localMaxPrice, setLocalMaxPrice] = useState(maxPrice.toFixed(0))
     useEffect(() => {
         setLoading(pageProps.isLoading)
     }, [pageProps])

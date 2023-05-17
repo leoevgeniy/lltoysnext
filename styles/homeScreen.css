@@ -16,8 +16,8 @@
 .homescreen .image-container {
     /*width: 100vw;*/
     /*height: 30vh;*/
-    background: no-repeat url("../public/mainlady.webp");
-    background-size: contain;
+    /*background: no-repeat url("../public/mainlady.webp");*/
+    /*background-size: contain;*/
     /*position: relative;*/
 }
 
@@ -225,7 +225,7 @@
     }
     .category2 {
         grid-area: none;
-        /*background: center no-repeat url("../public/bdsmhorisontal.webp");*/
+        background: center no-repeat url("../public/bdsmhorisontal.jpg");
         background-size: contain;
     }
     .category3 {

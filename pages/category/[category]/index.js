@@ -79,6 +79,11 @@ const Category = ({pageProps}) => {
 
     }, [])
     useEffect(() => {
+        if (!loading) {
+            setCurrentRange([0, maxPrice.toFixed(0)])
+        }
+    },[loading])
+    useEffect(() => {
         if (oppenedItems) {
             dispatch(listSeenProducts(oppenedItems))
         }
@@ -93,42 +98,42 @@ const Category = ({pageProps}) => {
         setVendor('')
         newUrl.searchParams.delete('vendor')
         setShow(false)
-
+        setLoading(true)
         history.replace(newUrl.href, undefined, {scroll: false}).then()
     }
     const materialRemove = () => {
         setMaterial('')
         newUrl.searchParams.delete('material')
         setShow(false)
-
+        setLoading(true)
         history.replace(newUrl.href, undefined, {scroll: false})
     }
     const collectionRemove = () => {
         setCollection('')
         newUrl.searchParams.delete('collection')
         setShow(false)
-
+        setLoading(true)
         history.replace(newUrl.href, undefined, {scroll: false})
     }
     const colorRemove = () => {
         setColor('')
         newUrl.searchParams.delete('color')
         setShow(false)
-
+        setLoading(true)
         history.replace(newUrl.href, undefined, {scroll: false})
     }
     const sizeRemove = () => {
         setSize('')
         newUrl.searchParams.delete('size')
         setShow(false)
-
+        setLoading(true)
         history.replace(newUrl.href, undefined, {scroll: false})
     }
-    const [localMaxPrice, setLocalMaxPrice] = useState(maxPrice)
+    const [localMaxPrice, setLocalMaxPrice] = useState(maxPrice.toFixed(0))
     useEffect(() => {
         setLoading(pageProps.isLoading)
     }, [pageProps])
-    const [currentRange, setCurrentRange] = useState([0, maxPrice])
+    const [currentRange, setCurrentRange] = useState([0, maxPrice.toFixed(0)])
     const clearFilters = () => {
         setLoading(true)
         setShow(false)
@@ -358,7 +363,7 @@ const Category = ({pageProps}) => {
                 <div className='slid'>
                     <div className='d-flex justify-content-between'>
                         <span>Цена</span>
-                        {(currentRange[0] !== 0 || currentRange[1] !== maxPrice) &&
+                        {(currentRange[0] !== 0 || currentRange[1] !== maxPrice.toFixed(0)) &&
                             <Badge
                                 className=''
                                 bg='secondary'
@@ -367,7 +372,7 @@ const Category = ({pageProps}) => {
                                     setLoading(true)
                                     newUrl.searchParams.delete('lowprice')
                                     newUrl.searchParams.delete('highprice')
-                                    setCurrentRange([0, maxPrice])
+                                    setCurrentRange([0, maxPrice.toFixed(0)])
                                     setShow(false)
                                     history.replace(newUrl.href, undefined, {scroll: false})
                                 }}
