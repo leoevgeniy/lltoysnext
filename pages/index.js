@@ -52,16 +52,7 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async (ctx
     const topData = data
     data = {}
     const {data: bestSeller} = await axios.get(`${API_HOST}/api/products/bestseller`);
-    bestSeller.setHeader(
-        'Cache-Control',
-        'public, s-maxage=10, stale-while-revalidate=59',
-    );
     const {data: novelties} = await axios.get(`${API_HOST}/api/products/new`);
-    novelties.setHeader(
-        'Cache-Control',
-        'public, s-maxage=10, stale-while-revalidate=59',
-    );
-
     let search = null
     if (keyword) {
         search = keyword

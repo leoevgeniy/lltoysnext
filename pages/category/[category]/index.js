@@ -648,6 +648,7 @@ export const getServerSideProps = async (context) => {
         res = await axios.post(`${API_HOST}/api/products/category/${category}${page}`, data);
     }
     const topData = await axios.get(`${API_HOST}/api/products/top`);
+
     if (!res.data) {
         return {
             notFound: true,
@@ -655,6 +656,7 @@ export const getServerSideProps = async (context) => {
     } else {
         isLoading = false
     }
+    console.log(res, res.data)
     return {props: {data: res.data, topData: topData.data, category, keyword, isSuperSale, isLoading}}
 }
 
