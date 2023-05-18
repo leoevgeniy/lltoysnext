@@ -2,7 +2,7 @@
 
 const nextConfig = {
     output: 'standalone',
-    reactStrictMode: false,
+    reactStrictMode: true,
     swcMinify: true,
     optimizeFonts: true,
     images: {
@@ -21,6 +21,7 @@ const nextConfig = {
     },
 
     experimental: {
+        outputStandalone: true,
         largePageDataBytes: 128 * 3000,
         forceSwcTransforms: true,
         scrollRestoration: true

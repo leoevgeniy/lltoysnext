@@ -1,14 +1,9 @@
 import React from "react";
-import {useState} from "react";
 import Head from "next/head";
 import HomeScreen from '../screens/HomeScreen'
-import MyVerticallyCenteredModal from '../components/MyVerticallyCenteredModal'
 import axios from "axios";
 import {API_HOST} from "@/consts";
-import {connect, useDispatch} from "react-redux";
 import {wrapper} from "@/redux/store";
-import {useAppSelector} from "@/Hook";
-import {reduxLogin} from "@/redux/actions/userActions";
 import {useRouter} from "next/router";
 
 
@@ -50,13 +45,23 @@ const Home = ({pageProps}) => {
 
 
 export const getServerSideProps = wrapper.getServerSideProps(store => async (ctx) => {
+
     const {keyword} = ctx.query;
     let {data} = await axios.get(`${API_HOST}/api/products/top`);
 
     const topData = data
     data = {}
     const {data: bestSeller} = await axios.get(`${API_HOST}/api/products/bestseller`);
+    bestSeller.setHeader(
+        'Cache-Control',
+        'public, s-maxage=10, stale-while-revalidate=59',
+    );
     const {data: novelties} = await axios.get(`${API_HOST}/api/products/new`);
+    novelties.setHeader(
+        'Cache-Control',
+        'public, s-maxage=10, stale-while-revalidate=59',
+    );
+
     let search = null
     if (keyword) {
         search = keyword
