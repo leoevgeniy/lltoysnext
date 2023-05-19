@@ -1,6 +1,7 @@
 import datetime
 import operator
 import urllib
+import urllib.parse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -23,7 +24,6 @@ def getProducts(request, *args):
     query = request.query_params.get('keyword')
     if query is None:
         query = ''
-    print(request.data.get('novelties'), request.data.get('supersale'), request.data.get('bestsellers'))
     if request.data.get('novelties'):
         products = Product.objects.filter(
             Q(assortiment__countInStock__gt=0) & Q(isNovelties__iexact=1)).distinct().order_by('name')
@@ -37,7 +37,6 @@ def getProducts(request, *args):
         products = Product.objects.filter(
             Q(assortiment__countInStock__gt=0) & Q(name__icontains=query) | Q(category__category__icontains=query) | Q(
                 category__subCategory__icontains=query)).distinct().order_by('name')
-    print(len(products))
     #                               & Q(category__category__icontains=category) & Q(
     # category__subCategory__icontains=filterer) & Q(retailPrice__gte=priceLow) & Q(retailPrice__lte=priceUp) &
     #                               Q(assortiment__countInStock__gt=0) & Q(brand__icontains=vendor) & Q(
@@ -138,7 +137,7 @@ def getProducts(request, *args):
 
     page = request.query_params.get('page')
 
-    paginator = Paginator(products, 24)
+    paginator = Paginator(products, 12)
     try:
         products = paginator.page(page)
     except PageNotAnInteger:
@@ -168,6 +167,68 @@ def getProducts(request, *args):
 
 
 @api_view(['POST'])
+def getTestProducts(request, **args):
+    query = request.query_params.get('keyword')
+    if query is None:
+        query = ''
+    isSuperSale = request.data['superSale']
+    vendor = request.data['vendor']
+    material = request.data['material']
+    collection = request.data['collection']
+    color = request.data['color']
+    size = request.data['size']
+    lowprice = request.data['lowprice']
+    highprice = request.data['highprice']
+    # encodig: utf-8
+    category = urllib.parse.unquote(args['pk'])
+    try:
+        subcategory = urllib.parse.unquote(args['pk1'])
+    except:
+        subcategory = ''
+    products = Product.objects.filter(
+        Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
+            category__category__icontains=category) & Q(assortiment__countInStock__gt=0) & Q(
+            brand__icontains=vendor) &
+        Q(material__icontains=material) & Q(CollectionName__icontains=collection) & Q(
+            assortiment__color__icontains=color) & Q(assortiment__size__icontains=size) & Q(
+            retailPrice__gte=lowprice) & Q(retailPrice__lte=highprice)).distinct().order_by(
+        'name')
+    # maxPrice = productsMaxPrice.aggregate(Max('retailPrice'))
+    page = request.query_params.get('page')
+    paginator = Paginator(products, 12)
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+    if page is None or page == 'undefined':
+        page = 1
+    page = int(page)
+    serializer = ProductSerializer(products, many=True)
+
+    return Response(
+        {'products': serializer.data,
+         # 'category': query,
+         'page': page,
+         'pages': paginator.num_pages,
+         #  'productsLength': productsLength,
+         #  'subCategoriesList': subCategoriesList,
+
+         #  'vendorList': vendorList,
+         #  'collectionList': collectionList,
+         # 'colorUrlList': colorUrlList,
+         #  'materialList': materialList,
+         #  'colorList': colorList,
+         #  'sizeList': sizeList,
+         # 'priceUpApi': priceUpApi,
+         # 'priceLowApi': priceLowApi,
+         #  'maxPrice': maxPrice['retailPrice__max']
+         }
+    )
+
+
+@api_view(['POST'])
 def getCategotyProducts(request, **args):
     query = request.query_params.get('keyword')
     isSuperSale = request.data['superSale']
@@ -182,14 +243,16 @@ def getCategotyProducts(request, **args):
     if query is None:
         query = ''
 
-    category = args['pk']
+    category = urllib.parse.unquote(args['pk'])
     try:
-        subcategory = args['pk1']
+        subcategory = urllib.parse.unquote(args['pk1'])
     except:
         subcategory = ''
     subCategoriesList = {}
+    print(query, isSuperSale, type(isSuperSale), vendor, material, collection, color, size, lowprice, highprice,
+          category, subcategory)
     categoriesList = {}
-    if isSuperSale:
+    if isSuperSale and isSuperSale == 'true':
         products = Product.objects.filter(
             Q(name__icontains=query) & Q(category__subCategory__icontains=subcategory) & Q(
                 category__category__icontains=category) & Q(assortiment__countInStock__gt=0) & Q(
@@ -289,7 +352,7 @@ def getCategotyProducts(request, **args):
             pass
     maxPrice = productsMaxPrice.aggregate(Max('retailPrice'))
     page = request.query_params.get('page')
-    paginator = Paginator(products, 24)
+    paginator = Paginator(products, 12)
     try:
         products = paginator.page(page)
     except PageNotAnInteger:
