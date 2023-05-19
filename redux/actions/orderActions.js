@@ -193,6 +193,7 @@ export const payOrderRequest = (order, userDetails, url, callback) => async (dis
                 Authorization: `Bearer ${userInfo.token}`,
             },
         };
+        console.log(order)
         const body = {
             order,
             userDetails,
