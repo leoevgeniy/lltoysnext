@@ -1,17 +1,16 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import classnames from 'classnames'
 
-const RangePriceSlider = ({min, max, onChange}) => {
+const RangePriceSlider = ({min, max, maxPrice, onChange}) => {
     const [minVal, setMinVal] = useState(min);
     const [maxVal, setMaxVal] = useState(max);
-    const minValRef = useRef(null);
-    const maxValRef = useRef(null);
+    const minValRef = useRef(0);
+    const maxValRef = useRef(maxPrice);
     const range = useRef(null);
     // Convert to percentage
     const getPercent = useCallback(
-        (value) => Math.round(((value - min) / (max - min)) * 100), [min, max]
+        (value) => Math.round((((value-min) / (max-min)) * 100)), [min, max]
     );
-
 // Set width of the range to decrease from the left side
     useEffect(() => {
         if (maxValRef.current) {
@@ -50,7 +49,7 @@ const RangePriceSlider = ({min, max, onChange}) => {
         <div className='slider my-3 pb-5'>
             <input
                 type="range"
-                min={min}
+                min={0}
                 max={max}
                 value={minVal}
                 ref={minValRef}
@@ -67,7 +66,7 @@ const RangePriceSlider = ({min, max, onChange}) => {
             <input
                 type="range"
                 min={min}
-                max={max}
+                max={maxPrice}
                 value={maxVal}
                 ref={maxValRef}
                 onChange={(event) => {

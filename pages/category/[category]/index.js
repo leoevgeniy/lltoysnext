@@ -32,6 +32,7 @@ import Link from "next/link";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
 import RangePriceSlider from "@/components/RangePriceSlider";
+import PriceSlider from "@/components/PriceSlider";
 
 
 const Category = ({pageProps}) => {
@@ -56,6 +57,9 @@ const Category = ({pageProps}) => {
         sizeList,
         maxPrice
     } = pageProps.data;
+    const {lowprice, highprice} = pageProps
+
+    if (!maxPrice) {maxPrice=0}
     const dispatch = useDispatch()
     const [vendor, setVendor] = useState([])
     const [collection, setCollection] = useState([])
@@ -68,6 +72,8 @@ const Category = ({pageProps}) => {
     const [isSuper, setIsSuper] = useState(isSuperSale)
     const newUrl = new URL(history.asPath, LOCATION)
     const searchParams = useSearchParams()
+    const [currentRange, setCurrentRange] = useState([lowprice, highprice])
+
     useEffect(() => {
         if (localStorage.getItem('oppenedItems')) {
             setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))
@@ -78,11 +84,11 @@ const Category = ({pageProps}) => {
 
 
     }, [])
-    useEffect(() => {
-        if (!loading) {
-            setCurrentRange([0, maxPrice.toFixed(0)])
-        }
-    },[loading])
+    // useEffect(() => {
+    //     if (!loading) {
+    //         setCurrentRange([0, maxPrice.toFixed(0)])
+    //     }
+    // },[loading])
     useEffect(() => {
         if (oppenedItems) {
             dispatch(listSeenProducts(oppenedItems))
@@ -94,6 +100,7 @@ const Category = ({pageProps}) => {
     const brCategory = `/category/${category}`
     const [show, setShow] = useState(false)
     const vendorRemove = () => {
+        setCurrentRange([0, maxPrice.toFixed(0)])
 
         setVendor('')
         newUrl.searchParams.delete('vendor')
@@ -102,6 +109,8 @@ const Category = ({pageProps}) => {
         history.replace(newUrl.href, undefined, {scroll: false}).then()
     }
     const materialRemove = () => {
+        setCurrentRange([0, maxPrice.toFixed(0)])
+
         setMaterial('')
         newUrl.searchParams.delete('material')
         setShow(false)
@@ -109,6 +118,8 @@ const Category = ({pageProps}) => {
         history.replace(newUrl.href, undefined, {scroll: false})
     }
     const collectionRemove = () => {
+        setCurrentRange([0, maxPrice.toFixed(0)])
+
         setCollection('')
         newUrl.searchParams.delete('collection')
         setShow(false)
@@ -116,6 +127,8 @@ const Category = ({pageProps}) => {
         history.replace(newUrl.href, undefined, {scroll: false})
     }
     const colorRemove = () => {
+        setCurrentRange([0, maxPrice.toFixed(0)])
+
         setColor('')
         newUrl.searchParams.delete('color')
         setShow(false)
@@ -123,21 +136,29 @@ const Category = ({pageProps}) => {
         history.replace(newUrl.href, undefined, {scroll: false})
     }
     const sizeRemove = () => {
+        setCurrentRange([0, maxPrice.toFixed(0)])
+
         setSize('')
         newUrl.searchParams.delete('size')
         setShow(false)
         setLoading(true)
         history.replace(newUrl.href, undefined, {scroll: false})
     }
-    const [localMaxPrice, setLocalMaxPrice] = useState(maxPrice.toFixed(0))
     useEffect(() => {
         setLoading(pageProps.isLoading)
+        if (highprice === 1000000) {
+            setCurrentRange([lowprice, maxPrice.toFixed(0)])
+        } else {
+            setCurrentRange([lowprice, highprice])
+        }
+
     }, [pageProps])
-    const [currentRange, setCurrentRange] = useState([0, maxPrice.toFixed(0)])
     const clearFilters = () => {
         setLoading(true)
         setShow(false)
         setVendor('')
+        setCurrentRange([0, maxPrice.toFixed(0)])
+
         newUrl.searchParams.delete('vendor')
         setMaterial('')
         newUrl.searchParams.delete('material')
@@ -360,7 +381,12 @@ const Category = ({pageProps}) => {
                         )
                     }
                 </div>
-                <div className='slid'>
+                {loading ? (
+                    <Loader/>
+                ) : error ? (
+                    <Message variant="danger">{error}</Message>
+                ) :(maxPrice && maxPrice >0) ?
+                    <div className='slid'>
                     <div className='d-flex justify-content-between'>
                         <span>Цена</span>
                         {(currentRange[0] !== 0 || currentRange[1] !== maxPrice.toFixed(0)) &&
@@ -381,25 +407,32 @@ const Category = ({pageProps}) => {
                             </Badge>}
                     </div>
 
-                    <RangePriceSlider
-                        min={currentRange[0]}
-                        max={currentRange[1]}
-                        maxPrice={localMaxPrice}
-                        onChange={({min, max}) => {
-                            setLoading(true)
-                            newUrl.searchParams.delete('lowprice')
-                            newUrl.searchParams.delete('highprice')
-                            setCurrentRange([min, max])
-                            if (newUrl.href.includes('?')) {
-                                history.replace(newUrl.href + '&lowprice=' + min + '&highprice=' + max, undefined, {scroll: false}).then()
-                            } else {
-                                history.replace(newUrl.href + '?lowprice=' + min + '&highprice=' + max, undefined, {scroll: false}).then()
-                            }
-                            setShow(false)
-                        }}/>
-                </div>
-
-
+                    {/*<RangePriceSlider*/}
+                    {/*    min={currentRange[0]}*/}
+                    {/*    max={currentRange[1]}*/}
+                    {/*    maxPrice={localMaxPrice}*/}
+                    {/*    onChange={({min, max}) => {*/}
+                    {/*        setLoading(true)*/}
+                    {/*        newUrl.searchParams.delete('lowprice')*/}
+                    {/*        newUrl.searchParams.delete('highprice')*/}
+                    {/*        setCurrentRange([min, max])*/}
+                    {/*        if (newUrl.href.includes('?')) {*/}
+                    {/*            history.replace(newUrl.href + '&lowprice=' + min + '&highprice=' + max, undefined, {scroll: false}).then()*/}
+                    {/*        } else {*/}
+                    {/*            history.replace(newUrl.href + '?lowprice=' + min + '&highprice=' + max, undefined, {scroll: false}).then()*/}
+                    {/*        }*/}
+                    {/*        setShow(false)*/}
+                    {/*    }}/>*/}
+                        <PriceSlider
+                            maxPrice={maxPrice.toFixed(0)}
+                            priceRange={currentRange}
+                            setPriceRange={setCurrentRange}
+                            setLoading={setLoading}
+                            setShow={setShow}
+                            // setPriceRangeCanvasShow={setPriceRangeCanvasShow}
+                        />
+                </div> : ''
+                }
             </>
         )
     }
@@ -481,19 +514,6 @@ const Category = ({pageProps}) => {
                             </ul>
                         )}
                         <br/>
-                        {/*<div className='d-flex justify-content-between'>*/}
-                        {/*    <span>*/}
-                        {/*    Распродажа</span>*/}
-                        {/*    {console.log(isSuper)}*/}
-                        {/*    {isSuper &&*/}
-                        {/*        <FormCheck*/}
-                        {/*        custom='true'*/}
-                        {/*        id='isSusperSale'*/}
-                        {/*        type='switch'*/}
-                        {/*        сhecked={isSuper ? 'true' : ''}*/}
-                        {/*        onChange={() => setIsSuper(!isSuper)}*/}
-                        {/*        className=''></FormCheck>}*/}
-                        {/*</div>*/}
                         <Filters/>
                     </Col>
                     {loading ? (
@@ -604,12 +624,14 @@ export const getServerSideProps = async (context) => {
     if (lowprice) {
         data['lowprice'] = Number(lowprice)
     } else {
+        lowprice=0
         data['lowprice'] = 0
 
     }
     if (highprice) {
         data['highprice'] = Number(highprice)
     } else {
+        highprice=1000000
         data['highprice'] = Number(1000000)
 
     }
@@ -648,7 +670,6 @@ export const getServerSideProps = async (context) => {
         res = await axios.post(`${API_HOST}/api/products/category/${category}${page}`, data);
     }
     const topData = await axios.get(`${API_HOST}/api/products/top`);
-
     if (!res.data) {
         return {
             notFound: true,
@@ -656,8 +677,7 @@ export const getServerSideProps = async (context) => {
     } else {
         isLoading = false
     }
-    console.log(res, res.data)
-    return {props: {data: res.data, topData: topData.data, category, keyword, isSuperSale, isLoading}}
+    return {props: {data: res.data, topData: topData.data, category, keyword, isSuperSale, isLoading, lowprice, highprice}}
 }
 
 export default Category

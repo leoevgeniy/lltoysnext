@@ -75,11 +75,11 @@ function Index({pageProps}) {
                     <Col xs={12} sm={12} md={8}>
                         <Link href="/" className="btn btn-light my-3" onClick={(e) => {
                             e.preventDefault()
-                            history.beforePopState((state) => {
+                            router.beforePopState((state) => {
                                 state.options.scroll = false;
                                 return true;
                             });
-                            history.back()
+                            router.back()
                         }
                         }>
                             Назад

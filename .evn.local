@@ -1,4 +1,5 @@
-export const API_HOST='http://localhost:8000'
-export const LOCATION='http://localhost:3000'
-export const VALID_KEY = 'iKa0EzMTcxYzNSuPgKecMEZt0K948dP0'
-export const DADATA_TOKEN = 'c626ed218daca90f04edd627891ee1c035e86387'
+API_HOST='http://backend.lltoys.ru',
+LOCATION='http://localhost:3000',
+VALID_KEY = 'iKa0EzMTcxYzNSuPgKecMEZt0K948dP0',
+DADATA_TOKEN = 'c626ed218daca90f04edd627891ee1c035e86387',
+NODE_ENV = 'development'
