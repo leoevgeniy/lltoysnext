@@ -538,12 +538,12 @@ def itemsCreate(order):
     items = []
     itemsTotalPrice = 0
     for item in order['orderItems']:
-        itemsTotalPrice += float(item['price'])
+        itemsTotalPrice += float(item['price'])*item['qty']
         item_to_add = {
             "description": item['name'],
-            "quantity": item['qty'],
+            "quantity": int(item['qty']),
             "amount": {
-                "value": item['price'],
+                "value": float(item['price']),
                 "currency": "RUB"
             },
             'vat_code': 1,
@@ -552,7 +552,7 @@ def itemsCreate(order):
             'payment_mode': 'full_payment',
         }
         items.append(item_to_add)
-    print(itemsTotalPrice, order['totalPrice'])
+    print(itemsTotalPrice, float(order['totalPrice']))
     if float(order['totalPrice']) > itemsTotalPrice:
         item_to_add = {
             "description": 'доставка',
