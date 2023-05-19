@@ -1,13 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 import Head from "next/head";
 import HomeScreen from '../screens/HomeScreen'
 import axios from "axios";
 import {API_HOST} from "@/consts";
 import {wrapper} from "@/redux/store";
 import {useRouter} from "next/router";
+import MyVerticallyCenteredModal from "@/components/MyVerticallyCenteredModal";
 
 
 const Home = ({pageProps}) => {
+
     const history = useRouter()
     try {
         if (pageProps.search) {
@@ -30,6 +32,7 @@ const Home = ({pageProps}) => {
       наручники, кляпы, кандалы, плетки. Доставка почтой по России и курьером в Москве."
                 />
             </Head>
+
             <HomeScreen
                 data={pageProps.topData}
                 bestSeller={pageProps.bestSeller}

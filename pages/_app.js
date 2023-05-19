@@ -24,10 +24,12 @@ import '@fortawesome/fontawesome-svg-core/styles.css'
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import {wrapper} from "@/redux/store";
 import Head from "next/head";
+import MyVerticallyCenteredModal from "@/components/MyVerticallyCenteredModal";
 
 const MyApp = ({Component, ...rest}) => {
     const {store, props} = wrapper.useWrappedStore(rest);
     const size = useWindowSize();
+    const [modalShow, setModalShow] = useState(true);
 
     return (
         <div style={size.width < 768 ? {'marginTop': '70px'} : {}} className='bg-black'>
@@ -36,6 +38,13 @@ const MyApp = ({Component, ...rest}) => {
             <Provider store={store}>
                 <Layout>
                     <div className='children' style={size.width < 768 ? {'marginBottom': '70px'} : {}}>
+                        <MyVerticallyCenteredModal
+                            backdrop="static"
+                            keyboard={false}
+                            show={modalShow}
+                            onHide={() => setModalShow(false)}
+                            backdropClassName=''
+                        />
                         <Component {...rest} />
                     </div>
                 </Layout>
