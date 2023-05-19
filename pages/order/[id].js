@@ -385,7 +385,7 @@ function OrderScreen({pageProps}) {
                                         <Col>₽ {Number(order.itemsPrice).toFixed(0)}</Col>
                                     </Row>
                                     <Row>
-                                        <Col>Доставка</Col>
+                                        <Col>Включая доставку</Col>
                                         <Col>₽ {Number(order.itemsPrice).toFixed(0)> 3000 ? 0 : 300}</Col>
                                     </Row>
                                 </ListGroupItem>

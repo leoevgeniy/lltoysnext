@@ -83,6 +83,7 @@ const Category = ({pageProps}) => {
         setMaterial(searchParams.get('material'))
 
 
+
     }, [])
     // useEffect(() => {
     //     if (!loading) {
@@ -95,7 +96,7 @@ const Category = ({pageProps}) => {
         }
 
 
-    }, [])
+    }, [oppenedItems])
 
     const brCategory = `/category/${category}`
     const [show, setShow] = useState(false)
