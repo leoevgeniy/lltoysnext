@@ -27,7 +27,7 @@ from rest_framework import status
 
 class MyTokenObtainPairSerializerPhone(TokenObtainSerializerPhone):
     def validate(self, attrs):
-
+        # attrs[0]['phone_number'] = '7'+attrs[0]['phone_number'][-10:]
         data = super().validate(attrs)
         try:
             serializer = UserSerializerWithToken(self.user).data
@@ -104,9 +104,9 @@ def generate_random_string(length):
 
 @api_view(['GET'])
 def getUserByPhoneNumber(request):
-    phone_number = request.query_params.get('phone')
+    phone_number = request.query_params.get('phone')[-10:]
     try:
-        profile = Profile.objects.get(phone_number=phone_number)
+        profile = Profile.objects.get(phone_number__contains=phone_number)
         return Response(User.objects.get(id=profile.user_id).id)
     except:
         return Response({'detail': 'Пользователь с таким номером телефона не зарегистрирован'})
