@@ -23,7 +23,7 @@ function LoginScreen() {
     const [name, setName] = useState('')
     const [isValidPhone, setIsValidPhone] = useState('')
     const dispatch = useDispatch()
-    const [noPhone, setNoPhone] = useState(false)
+    const [exist, setExist] = useState(false)
     const searchParams = useSearchParams();
     const redirect = (searchParams.get('redirect') ? searchParams.get('redirect') : '/')
     // ? searchParams.split('=')[1] : '/'
@@ -67,7 +67,14 @@ function LoginScreen() {
 
     const submitHandler = (e) => {
         e.preventDefault()
-        dispatch(login(email, password))
+        if (exist) {
+        dispatch(login(email, password))}
+        else {
+            dispatch(register(name, email, inputcode, phone_number))
+                .then(dispatch(phoneLogin(phone_number, inputcode)))
+            setShow(false)
+            history.push(`${redirect}`)
+        }
     }
 
     const submitHandlerByPhone = async (e) => {
@@ -80,19 +87,21 @@ function LoginScreen() {
                     .then(async exist => {
                         console.log(exist)
                         exist.data['detail'] ?
-                            setAxiosError(exist.data['detail'])
-                            // await axios.get(`/api/users/phone_confirmation?phone=${phone_number}&key=iKa0EzMTcxYzNSuPgKecMEZt0K948dP0&service_id=450214&email=${email}`)
-                            //     .then(response => {
-                            //         setReceivedCode(response.data['code'])
-                            //         setIsValidPhone(true)
-                            //         handleShow()
-                            //     })
-                            :
-                            await axios.get(`${API_HOST}/api/users/phone_confirmation?phone=${phone_number}&key=iKa0EzMTcxYzNSuPgKecMEZt0K948dP0&service_id=450214`)
+                            // setAxiosError(exist.data['detail'])
+                            await axios.get(`${API_HOST}/api/users/phone_confirmation?phone=${phone_number}&key=iKa0EzMTcxYzNSuPgKecMEZt0K948dP0&service_id=450214&email=${email}`)
                                 .then(response => {
                                     setReceivedCode(response.data['code'])
                                     setIsValidPhone(true)
                                     handleShow()
+                                    setExist(false)
+                                })                            :
+                            await axios.get(`${API_HOST}/api/users/phone_confirmation?phone=${phone_number}&key=iKa0EzMTcxYzNSuPgKecMEZt0K948dP0&service_id=450214`)
+                                .then(response => {
+                                    setReceivedCode(response.data['code'])
+                                    setIsValidPhone(true)
+                                    handleShow(exist)
+                                    setExist(true)
+
                                 })
                     })
 
@@ -219,15 +228,15 @@ function LoginScreen() {
                         </Link>
                         </Col>
                     </Row>
-                    <Row className='py-2 text-white'>
-                        <Col>
-                            Забыли пароль? <Link
-                            href={'/login-restore'}
-                        >
-                            Восстановить
-                        </Link>
-                        </Col>
-                    </Row>
+                    {/*<Row className='py-2 text-white'>*/}
+                    {/*    <Col>*/}
+                    {/*        Забыли пароль? <Link*/}
+                    {/*        href={'/login-restore'}*/}
+                    {/*    >*/}
+                    {/*        Восстановить*/}
+                    {/*    </Link>*/}
+                    {/*    </Col>*/}
+                    {/*</Row>*/}
                 </>
             }
 
