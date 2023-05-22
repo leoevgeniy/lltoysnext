@@ -14,10 +14,10 @@ export const phoneLogin = (phone, password) => async (dispatch) => {
                 "Content-type": "application/json",
             },
         };
-
+        const updatedPhone = '7' + phone.substring(phone.length - 10, phone.length)
         const { data } = await axios.post(
             `${API_HOST}/api/users/login/`,
-            { phone_number: phone},
+            { phone_number: updatedPhone},
             config
         );
         if (data['detail']) {

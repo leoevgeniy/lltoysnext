@@ -390,7 +390,8 @@ const Category = ({pageProps}) => {
                     <div className='slid'>
                     <div className='d-flex justify-content-between'>
                         <span>Цена</span>
-                        {(currentRange[0] !== 0 || currentRange[1] !== maxPrice.toFixed(0)) &&
+
+                        {(currentRange[0] !== 0 || Number(currentRange[1]) !== Number((Number(maxPrice).toFixed(0)))) &&
                             <Badge
                                 className=''
                                 bg='secondary'

@@ -70,10 +70,10 @@ function Index({pageProps}) {
 
     return (
         <Container className='categ'>
-            <Row className='w-100'>
+            <Row className='w-100 mx-0'>
                 {!isLoading &&
                     <Col xs={12} sm={12} md={8}>
-                        <Link href="/" className="btn btn-light my-3" onClick={(e) => {
+                        <Link href="/" className="btn btn-light my-3 mx-0" onClick={(e) => {
                             e.preventDefault()
                             router.beforePopState((state) => {
                                 state.options.scroll = false;
@@ -96,13 +96,13 @@ function Index({pageProps}) {
                                     {cartItems && cartItems.map((item, ind) => (
 
                                         <ListGroupItem key={ind}>
-                                            <Row>
+                                            <Row className='mx-0'>
                                                 <Col md={2} className='text-center'>
-                                                    <Image src={item.image} alt={item.name} className='maxHeight-100'
+                                                    <Image src={item.image} alt={item.name} className='maxHeight-100 mx-auto'
                                                            fluid rounded/>
                                                 </Col>
                                                 <Col md={3}>
-                                                    <Link href={`/products/${item.product}`}>{item.name}</Link>
+                                                    <Link href={`/products/${item.product}`} className='text-decoration-none text-black text-center fs-5'>{item.name}</Link>
                                                     {(((item.color && item.color !== 'цвет не указан')) || (item.color && Object.keys(item.colors[0]) && item.color !== 'цвет не указан')) &&
                                                         <Form.Control
                                                             as="select"
@@ -232,8 +232,9 @@ function Index({pageProps}) {
 
                                                 </Col>
 
-                                                <Col md={1}>
+                                                <Col md={1} className='d-flex'>
                                                     <Button
+                                                        className=''
                                                         type='button'
                                                         variant='light'
                                                         onClick={() => removeFromCartHandler(ind)}
@@ -257,7 +258,7 @@ function Index({pageProps}) {
                                     <Button
                                         type='button'
                                         variant='success'
-                                        className='w-100 mb-3'
+                                        className='w-100 mb-3 fs-4'
                                         disabled={cartItems.length === 0}
                                         onClick={checkoutHandler}
                                     >

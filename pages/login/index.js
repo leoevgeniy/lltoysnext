@@ -16,8 +16,6 @@ function LoginScreen() {
     const [email, setEmail] = useState('')
     const [phone_number, setPhone] = useState('')
     const [password, setPassword] = useState('')
-    const [byPhone, setByPhone] = useState(false)
-    const [byEmail, setByEmail] = useState(true)
     const [inputcode, setInputcode] = useState('')
     const [receivedCode, setReceivedCode] = useState({})
     const [axiosError, setAxiosError] = useState('')
@@ -25,9 +23,13 @@ function LoginScreen() {
     const [name, setName] = useState('')
     const [isValidPhone, setIsValidPhone] = useState('')
     const dispatch = useDispatch()
+    const [noPhone, setNoPhone] = useState(false)
     const searchParams = useSearchParams();
-    const redirect = (searchParams.get('redirect') ? '/'+searchParams.get('redirect') : '/')
-        // ? searchParams.split('=')[1] : '/'
+    const redirect = (searchParams.get('redirect') ? searchParams.get('redirect') : '/')
+    // ? searchParams.split('=')[1] : '/'
+    const [byPhone, setByPhone] = useState(!!searchParams.get('redirect'))
+    const [byEmail, setByEmail] = useState(!searchParams.get('redirect'))
+
     const userLogin = useSelector(state => state.userLogin)
     const {loading, userInfo, error} = userLogin
     const handleClose = () => {
@@ -76,7 +78,16 @@ function LoginScreen() {
             try {
                 await axios.get(`${API_HOST}/api/users/profile/exist?phone=${phone_number}`)
                     .then(async exist => {
-                        exist.data['detail'] ? setAxiosError(exist.data['detail']) :
+                        console.log(exist)
+                        exist.data['detail'] ?
+                            setAxiosError(exist.data['detail'])
+                            // await axios.get(`/api/users/phone_confirmation?phone=${phone_number}&key=iKa0EzMTcxYzNSuPgKecMEZt0K948dP0&service_id=450214&email=${email}`)
+                            //     .then(response => {
+                            //         setReceivedCode(response.data['code'])
+                            //         setIsValidPhone(true)
+                            //         handleShow()
+                            //     })
+                            :
                             await axios.get(`${API_HOST}/api/users/phone_confirmation?phone=${phone_number}&key=iKa0EzMTcxYzNSuPgKecMEZt0K948dP0&service_id=450214`)
                                 .then(response => {
                                     setReceivedCode(response.data['code'])
@@ -84,6 +95,7 @@ function LoginScreen() {
                                     handleShow()
                                 })
                     })
+
 
             } catch (error) {
                 error.response && error.response.data.detail
@@ -94,7 +106,7 @@ function LoginScreen() {
 
         } else {
             // Предупреждаю, что номер неверный
-            alert('Неверный номер телефона');
+            alert('Некоректный номер телефона');
             // Подсвечиваю input с номером телефона для удобства
         }
     }
@@ -123,10 +135,10 @@ function LoginScreen() {
                 </Modal.Footer>
             </Modal>
 
-            <h1>Логин</h1>
+            <h1 className='text-white'>Логин</h1>
             {error && <Message variant='danger'>{error}</Message>}
             {loading && <Loader/>}
-            <ListGroupItem className="border-0">
+            <ListGroupItem className="border-0 d-flex justify-content-around">
                 <ButtonGroup className="btn-group mr-2 fs-5 border-0">
                     <Button
                         style={byEmail ? {'backgroundColor': '#e5097f', 'border': 'none'} : {}}
@@ -161,7 +173,7 @@ function LoginScreen() {
                         </Form.Control>
                     </Form.Group>
 
-                    <Form.Group controlId='password'>
+                    <Form.Group controlId='password' className='mb-2'>
                         <Form.Label>Пароль</Form.Label>
                         <Form.Control
                             type='password'
@@ -177,8 +189,8 @@ function LoginScreen() {
                 </Form>
             }
             {byPhone &&
-                <Form onSubmit={submitHandlerByPhone}>
-                    <Form.Group controlId='email'>
+                <Form onSubmit={submitHandlerByPhone} className='d-flex flex-column'>
+                    <Form.Group controlId='phone' className='mb-2'>
                         <Form.Label>Номер телефона</Form.Label>
                         <Form.Control
                             type='phone'
@@ -189,31 +201,35 @@ function LoginScreen() {
                         </Form.Control>
                     </Form.Group>
 
-                    <Button type='submit' variant='primary'>Войти</Button>
+                    <Button type='submit' variant='primary' className='text-center'>Войти</Button>
 
                 </Form>
             }
 
             {axiosError && <Message variant='danger'>{axiosError}</Message>}
 
-            <Row className='py-3'>
-                <Col>
-                    Новый пользователь? <Link
-                    href={redirect ? `/register?redirect=${redirect}` : '/register'}
-                >
-                    Зарегистрироваться
-                </Link>
-                </Col>
-            </Row>
-            <Row className='py-2'>
-                <Col>
-                    Забыли пароль? <Link
-                    href={'/login-restore'}
-                >
-                    Восстановить
-                </Link>
-                </Col>
-            </Row>
+            {byEmail &&
+                <>
+                    <Row className='py-3 text-white'>
+                        <Col>
+                            Новый пользователь? <Link
+                            href={redirect ? `/inputpd?redirect=${redirect}` : '/inputpd'}
+                        >
+                            Зарегистрироваться
+                        </Link>
+                        </Col>
+                    </Row>
+                    <Row className='py-2 text-white'>
+                        <Col>
+                            Забыли пароль? <Link
+                            href={'/login-restore'}
+                        >
+                            Восстановить
+                        </Link>
+                        </Col>
+                    </Row>
+                </>
+            }
 
         </Container>
     )

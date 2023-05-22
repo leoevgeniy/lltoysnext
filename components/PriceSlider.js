@@ -7,9 +7,10 @@ import {LOCATION} from "@/consts";
 import {useRouter} from "next/router";
 
 function PriceSlider({maxPrice, priceRange, setPriceRange, setLoading, setShow}) {
-    const [range, setRange] = useState({'min': Number(priceRange[0]), 'max': Number(priceRange[1])})
+    const [range, setRange] = useState({'min': Number(priceRange[0]), 'max': Number(priceRange[1])>Number(Number(maxPrice).toFixed(0)) ? Number(Number(maxPrice).toFixed(0)) : Number(priceRange[1])})
     const history = useRouter()
     const newUrl = new URL(history.asPath, LOCATION)
+
     return (
         <div className='w-75 mh-25 mt-3 mx-auto'>
                 <div  className='w-100'>
@@ -18,7 +19,7 @@ function PriceSlider({maxPrice, priceRange, setPriceRange, setLoading, setShow})
                     <InputRange
                         // classNames='text-white'
                         draggableTrack
-                        maxValue={Number(Number(maxPrice).toFixed(0))}
+                        maxValue={Number(Number(maxPrice).toFixed(0))+100}
                         minValue={Number('0')}
                         step={100}
                         value={range}
