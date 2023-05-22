@@ -21,7 +21,7 @@ const nextConfig = {
     },
 
     experimental: {
-        outputStandalone: true,
+        // outputStandalone: true,
         largePageDataBytes: 128 * 3000,
         forceSwcTransforms: true,
         scrollRestoration: true

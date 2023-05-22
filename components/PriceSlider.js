@@ -11,7 +11,7 @@ function PriceSlider({maxPrice, priceRange, setPriceRange, setLoading, setShow})
     const history = useRouter()
     const newUrl = new URL(history.asPath, LOCATION)
     return (
-        <div className='mw-100 mh-25 mt-3'>
+        <div className='w-75 mh-25 mt-3 mx-auto'>
                 <div  className='w-100'>
                     {/*<p className='mb-4'> Диапазон: {Number(range.min).toFixed(0)} - {Number(range.max).toFixed(0)} </p>*/}
 

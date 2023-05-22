@@ -73,7 +73,6 @@ const Category = ({pageProps}) => {
     const newUrl = new URL(history.asPath, LOCATION)
     const searchParams = useSearchParams()
     const [currentRange, setCurrentRange] = useState([lowprice, highprice])
-
     useEffect(() => {
         if (localStorage.getItem('oppenedItems')) {
             setOppenedItems(JSON.parse(localStorage.getItem("oppenedItems")))
@@ -81,6 +80,7 @@ const Category = ({pageProps}) => {
         dispatch(listTopProducts())
         setVendor(searchParams.get('vendor'))
         setMaterial(searchParams.get('material'))
+        if (highprice > maxPrice.toFixed(0)) {setCurrentRange(lowprice, maxPrice.toFixed(0))}
 
 
 
@@ -579,6 +579,7 @@ const Category = ({pageProps}) => {
                                         className='mt-2'
                                         page={page}
                                         pages={pages}
+                                        setLoading={setLoading}
                                         keyword={keyword ? brCategory + '?keyword=' + keyword : brCategory}
                                     />
                                 </div>

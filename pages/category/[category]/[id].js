@@ -586,6 +586,7 @@ const SubCategory = ({pageProps}) => {
                                             page={page}
                                             pages={pages}
                                             keyword={keyword ? brSubCategory + '?keyword=' + keyword : brSubCategory}
+                                            setLoading={setLoading}
                                         />
                                     </>
                                 }

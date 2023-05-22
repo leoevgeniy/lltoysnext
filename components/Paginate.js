@@ -1,7 +1,8 @@
 import React from "react";
 import {PageItem, Pagination} from "react-bootstrap";
+import {useRouter} from "next/router";
 
-function Paginate({pages, page, keyword = "", isAdmin = false}) {
+function Paginate({pages, page, keyword = "", isAdmin = false, setLoading}) {
     // let filter = ''
     // let keywordQuery = ''
     // let category = ''
@@ -48,6 +49,7 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
     if (keyword.includes('?')) {
         pageStr = '&page'
     }
+    const history = useRouter()
     return (
 
         <div style={{display: "flex", justifyContent: "center"}}>
@@ -58,24 +60,35 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
 
                     >
                         <Pagination.First
-                            href={
-                                !isAdmin
-                                    ? `${keyword}${pageStr}=${1}`
-                                    : `/admin/productlist/${keyword}}?page=${1}`
-                            }/>
+                            onClick={()=> {
+                                history.replace(`${keyword}${pageStr}=${1}`)
+                                setLoading(true)
+                            }}
+                            // href={
+                            //     !isAdmin
+                            //         ? `${keyword}${pageStr}=${1}`
+                            //         : `/admin/productlist/${keyword}}?page=${1}`
+                            // }
+                        />
                     </span>
                     <span
                         key={page - 10}
 
                     >
                         <Pagination.Ellipsis
-                            href={
-                                !isAdmin
-                                    ? `${keyword}${pageStr}=${page - 10}`
-                                    : `/admin/productlist/${keyword}?page=${
-                                        page - 10
-                                    }`
-                            }/>
+                            onClick={()=> {
+                                history.replace(`${keyword}${pageStr}=${page - 10}`)
+                                setLoading(true)
+
+                            }}
+                            // href={
+                            //     !isAdmin
+                            //         ? `${keyword}${pageStr}=${page - 10}`
+                            //         : `/admin/productlist/${keyword}?page=${
+                            //             page - 10
+                            //         }`
+                            // }
+                        />
                     </span>
                     {[...Array(pages).keys()].map(function (x) {
                         if (x + 1 >= page - 2 && x + 1 <= page + 2) {
@@ -85,16 +98,23 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
 
                                 >
                                     <Pagination.Item
+                                        onClick={()=> {
+                                            history.replace(`${keyword}${pageStr}=${
+                                                x + 1
+                                            }`)
+                                            setLoading(true)
+
+                                        }}
                                         active={x + 1 === page}
-                                        href={
-                                            !isAdmin
-                                                ? `${keyword}${pageStr}=${
-                                                    x + 1
-                                                }`
-                                                : `/admin/productlist/${keyword}?page=${
-                                                    x + 1
-                                                }`
-                                        }
+                                        // href={
+                                        //     !isAdmin
+                                        //         ? `${keyword}${pageStr}=${
+                                        //             x + 1
+                                        //         }`
+                                        //         : `/admin/productlist/${keyword}?page=${
+                                        //             x + 1
+                                        //         }`
+                                        // }
                                     >
                                         {x + 1}
                                     </Pagination.Item>
@@ -109,13 +129,19 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
 
                         >
                             <Pagination.Ellipsis
-                                href={
-                                    !isAdmin
-                                        ? `${keyword}${pageStr}=${page + 3}`
-                                        : `/admin/productlist/${keyword}?page=${
-                                            page + 3
-                                        }`
-                                }/>
+                                onClick={()=> {
+                                    history.replace(`${keyword}${pageStr}=${page + 3}`)
+                                    setLoading(true)
+
+                                }}
+                                // href={
+                                //     !isAdmin
+                                //         ? `${keyword}${pageStr}=${page + 3}`
+                                //         : `/admin/productlist/${keyword}?page=${
+                                //             page + 3
+                                //         }`
+                                // }
+                            />
                         </span>
                     )}
                     {page + 4 <= pages && (
@@ -124,11 +150,17 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
 
                         >
                             <Pagination.Last
-                                href={
-                                    !isAdmin
-                                        ? `${keyword}${pageStr}=${pages}`
-                                        : `/admin/productlist/${keyword}?page=${pages}`
-                                }/>
+                                onClick={()=> {
+                                    history.replace(`${keyword}${pageStr}=${pages}`)
+                                    setLoading(true)
+
+                                }}
+                                // href={
+                                //     !isAdmin
+                                //         ?
+                                //         : `/admin/productlist/${keyword}?page=${pages}`
+                                // }
+                            />
                         </span>
                     )}
 
@@ -144,17 +176,23 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                                     key={x + 1}
 
                                 >
+
                                     <PageItem
                                         active={x + 1 === page}
-                                        href={
-                                            !isAdmin
-                                                ? `${keyword}${pageStr}=${
-                                                    x + 1
-                                                }`
-                                                : `/admin/productlist/${keyword}?page=${
-                                                    x + 1
-                                                }`
-                                        }
+                                        onClick={()=> {
+                                            history.replace(`${keyword}${pageStr}=${x + 1}`)
+                                            setLoading(true)
+
+                                        }}
+                                        // href={
+                                        //     !isAdmin
+                                        //         ? `${keyword}${pageStr}=${
+                                        //             x + 1
+                                        //         }`
+                                        //         : `/admin/productlist/${keyword}?page=${
+                                        //             x + 1
+                                        //         }`
+                                        // }
 
                                     >
                                         {x + 1}
@@ -169,13 +207,18 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
                             key={page + 4}
                         >
                                 <Pagination.Ellipsis
-                                    href={
-                                        !isAdmin
-                                            ? `${keyword}${pageStr}=${page + 4}`
-                                            : `/admin/productlist/${keyword}?page=${
-                                                page + 6
-                                            }`
-                                    }
+                                    onClick={()=> {
+                                        history.replace(`${keyword}${pageStr}=${page + 4}`)
+                                        setLoading(true)
+
+                                    }}
+                                    // href={
+                                    //     !isAdmin
+                                    //         ? `${keyword}${pageStr}=${page + 4}`
+                                    //         : `/admin/productlist/${keyword}?page=${
+                                    //             page + 6
+                                    //         }`
+                                    // }
                                 />
                         </span>
                     )}
@@ -185,11 +228,17 @@ function Paginate({pages, page, keyword = "", isAdmin = false}) {
 
                         >
                             <Pagination.Last
-                                href={
-                                    !isAdmin
-                                        ? `${keyword}${pageStr}=${pages}`
-                                        : `/admin/productlist/${keyword}?page=${pages}`
-                                }/>
+                                onClick={() => {
+                                    history.replace(`${keyword}${pageStr}=${pages}`)
+                                    setLoading(true)
+
+                                }}
+
+                                // href={
+                                //     !isAdmin
+                                //         ? `${keyword}${pageStr}=${pages}`
+                                //         : `/admin/productlist/${keyword}?page=${pages}`
+                                />
                         </span>
                     )}
                 </Pagination>
