@@ -598,16 +598,20 @@ const SubCategory = ({pageProps}) => {
             </div>
 
 
-            <div className='popular my-3'>
-                <span className='mx-3 fs-4 text-white'>Распродажа</span>
-                <div className='line'></div>
-            </div>
+            <Link href='/search?supersale=1'
+                  className='mx-3 fs-4 text-white text-decoration-none'
+
+                  onClick={() => setLoading(true)}
+            >
+                <div className='popular my-2' style={{backgroundColor: '#e5097f'}}>
+                    Распродажа
+                </div>
+            </Link>
             <ProductCarousel data={pageProps.topData}/>
             {(oppenedItems && oppenedItems.length > 0 && seenProducts) &&
                 <>
-                    <div className='popular my-3'>
-                        <span className='mx-3 fs-4 text-white'>Вы смотрели</span>
-                        <div className='line'></div>
+                    <div className='popular my-3' style={{backgroundColor: '#e5097f'}}>
+                        <span className='mx-3 fs-4 text-white' >Вы смотрели</span>
                     </div>
                     <SeenProductCarousel/>
                 </>

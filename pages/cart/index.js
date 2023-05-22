@@ -346,19 +346,21 @@ function Index({pageProps}) {
             </Row>
             {seenProducts && seenProducts.length > 0 &&
                 <>
-                    <div className='popular my-3'>
-                        <span className='mx-3 fs-4 text-white'>Вы смотрели</span>
-                        <div className='line'></div>
+                    <div className='popular my-3' style={{backgroundColor: '#e5097f'}}>
+                        <span className='mx-3 fs-4 text-white' >Вы смотрели</span>
                     </div>
                     <SeenProductCarousel/>
                 </>
             }
             {pageProps.topData &&
                 <>
-                    <div className='popular my-3'>
-                        <span className='mx-3 fs-4 text-white'>Популярное</span>
-                        <div className='line'></div>
-                    </div>
+                    <Link href='/search?bestsellers=1' className='mx-3 fs-4 text-white text-decoration-none'
+                          onClick={() => setLoading(true)}>
+                        <div className='popular my-1' style={{backgroundColor: '#e5097f'}}>
+                            Хиты
+                            продаж
+                        </div>
+                    </Link>
                     <ProductCarousel data={pageProps.topData}/>
                 </>}
         </Container>

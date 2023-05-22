@@ -2,13 +2,17 @@
     font-size: small;
     min-width: 20%;
 }
-.catalog .offcanvas-header, .offcanvas-body{
+.catalog .offcanvas-header{
     color: white;
-    background-color: black;
+    background-color: #e5097f;
+}
+
+.offcanvas-body {
+    background: #e5097f linear-gradient(#e5097f, rgb(0 0 0));
 }
 .catalog .accordion-item, .accordion-header, .accordion-button.collapsed, .accordion-button{
     color: black;
-    background-color: rgb(210 199 219);
+    background-color: white;
 }
 .accordion-button:not(.collapsed) {
     color: black !important;

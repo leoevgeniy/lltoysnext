@@ -456,9 +456,8 @@ function ProductScreen({pageProps}) {
                             {/*</Row>*/}
                         {(oppenedItems && oppenedItems.length > 0 && products) &&
                             <>
-                                <div className='popular my-3'>
-                                    <span className='mx-3 fs-4 text-white'>Вы смотрели</span>
-                                    <div className='line'></div>
+                                <div className='popular my-3' style={{backgroundColor: '#e5097f'}}>
+                                    <span className='mx-3 fs-4 text-white' >Вы смотрели</span>
                                 </div>
                                 <SeenProductCarousel/>
                             </>

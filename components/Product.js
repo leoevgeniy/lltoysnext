@@ -136,7 +136,7 @@ function Product({product}) {
 
             <Card.Body itemProp="offers" itemScope itemType="http://schema.org/Offer"
 
-                       className='py-1 body justify-content-start'>
+                       className='py-1 body justify-content-start px-1'>
                 {/*<Card.Title*/}
 
                 {/*    // style={{'font-size' : '1vw', 'font-weight': 'bold'}}*/}
