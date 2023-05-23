@@ -90,8 +90,10 @@ export const login = (email, password) => async (dispatch) => {
             type: t.USER_LOGIN_FAIL,
             payload:
                 error.response && error.response.data.detail
-                    ? error.response.data.detail
-                    : error.message,
+                    ?  'Пользователь с таким e-mail не зарегистрирован'
+                    // error.response.data.detail
+                    :
+                    error.message,
         });
     }
 };

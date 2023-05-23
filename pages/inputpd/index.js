@@ -13,6 +13,7 @@ import axios from "axios";
 import {useRouter} from "next/router";
 import Link from "next/link";
 import {useSearchParams} from "next/navigation";
+import {API_HOST} from "@/consts";
 //
 //
 function InputPD() {
@@ -31,20 +32,22 @@ function InputPD() {
     const [show, setShow] = useState(false);
     const searchParams = useSearchParams();
 
-    const redirect = (searchParams.get('redirect') ? searchParams.get('redirect') : '/')
+    const redirect = (searchParams.get('redirect') ? '/' + searchParams.get('redirect') : '/')
 
     const handleClose = () => {
+        console.log(inputcode, receivedCode)
         if (inputcode === receivedCode) {
             if (isExist) {
                 dispatch(phoneLogin(phone_number, inputcode))
-                history.push('/shipping')
+                history.push(redirect)
             } else {
-            setShow(false)
-            dispatch(register(name, email, inputcode, phone_number))
-                .then(dispatch(phoneLogin(phone_number, inputcode)))
-            setShow(false)
-            history.push('/shipping')
-        }} else {
+                setShow(false)
+                dispatch(register(name, email, inputcode, phone_number))
+                    .then(dispatch(phoneLogin(phone_number, inputcode)))
+                setShow(false)
+                history.push(redirect)
+            }
+        } else {
             alert('Введен неверный код');
         }
 
@@ -72,20 +75,46 @@ function InputPD() {
         e.preventDefault()
         if (validator.isMobilePhone(phone_number, ['ru-RU'])) {
             // Изменил state
-
+            setPhone(prevState => '7' + prevState.substring(prevState.length - 10, prevState.length))
             try {
-                await axios.get(`/api/users/phone_confirmation?phone=${phone_number}&key=${process.env.VALID_KEY}&service_id=450214&email=${email}`)
-                    .then(response => {
-                        setReceivedCode(response.data['code'])
-                        setIsValidPhone(true)
-                        handleShow()
+
+                await axios.get(`${API_HOST}/api/users/profile/exist?phone=${phone_number}`)
+                    .then(async exist => {
+                        console.log(phone_number, exist)
+
+                        exist.data['detail'] !== 'Пользователь с таким номером телефона не зарегистрирован' ?
+                            setAxiosError(exist.data['detail'])
+                            // await axios.get(`${API_HOST}/api/users/phone_confirmation?phone=${phone_number}&key=iKa0EzMTcxYzNSuPgKecMEZt0K948dP0&service_id=450214&email=${email}`)
+                            //     .then(response => {
+                            //         setReceivedCode(response.data['code'])
+                            //         setIsValidPhone(true)
+                            //         handleShow()
+                            //         setExist(false)
+                            //     })
+                                :
+                            await axios.get(`${API_HOST}/api/users/phone_confirmation?phone=${phone_number}&key=iKa0EzMTcxYzNSuPgKecMEZt0K948dP0&service_id=450214`)
+                                .then(response => {
+                                    setReceivedCode(response.data['code'])
+                                    setIsValidPhone(true)
+                                    handleShow()
+                                    setIsExist(false)
+
+                                })
+
+                                // setReceivedCode('1234')
+                                // setIsValidPhone(true)
+                                // console.log(receivedCode)
+                                // handleShow()
+                                // setIsExist(false)
+
                     })
+
+
             } catch (error) {
                 error.response && error.response.data.detail
                     ? setAxiosError(error.response.data.detail)
                     : setAxiosError(error.message)
             }
-
 
         } else {
             // Предупреждаю, что номер неверный
@@ -146,9 +175,11 @@ function InputPD() {
                         />
 
                     </Form.Group>
-                    <h2 className='text-center fw-bold mt-3 text-white' style={{'fontSize': '20px'}}>Введите номер телефона <span
-                        className='text-danger'>*</span></h2>
-                    <p style={{'fontSize': '15px'}} className='text-white'>Мы Вам позвоним. Отвечать на звонок не нужно.</p>
+                    <h2 className='text-center fw-bold mt-3 text-white' style={{'fontSize': '20px'}}>Введите номер
+                        телефона <span
+                            className='text-danger'>*</span></h2>
+                    <p style={{'fontSize': '15px'}} className='text-white'>Мы Вам позвоним. Отвечать на звонок не
+                        нужно.</p>
 
                     <Form.Group controlId='phone'>
                         <Form.Control
@@ -159,8 +190,8 @@ function InputPD() {
                         />
 
                     </Form.Group>
-                    <Button type='submit' variant='primary' className='my-3 text-center w-100'>Войти</Button>
-                    <p>Уже есть пользователь? <Link href='/login'><span
+                    <Button type='submit' variant='primary' className='my-3 text-center w-100'>Зарегистрироваться</Button>
+                    <p className='text-white'>Уже есть пользователь? <Link href='/login'><span
                         className='text-primary'>Авторизоваться.</span></Link></p>
                 </Form>
 
@@ -168,7 +199,8 @@ function InputPD() {
             {axiosError && <Message variant='danger'>{axiosError}</Message>}
 
         </>
-)
+    )
 }
+
 //
 export default InputPD

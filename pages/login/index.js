@@ -29,14 +29,23 @@ function LoginScreen() {
     // ? searchParams.split('=')[1] : '/'
     const [byPhone, setByPhone] = useState(!!searchParams.get('redirect'))
     const [byEmail, setByEmail] = useState(!searchParams.get('redirect'))
+    const [isExist, setIsExist] = useState('')
 
     const userLogin = useSelector(state => state.userLogin)
     const {loading, userInfo, error} = userLogin
     const handleClose = () => {
         if (inputcode === receivedCode) {
-            setShow(false)
-            dispatch(phoneLogin(phone_number, inputcode))
-        } else {
+            if (isExist) {
+                setShow(false)
+                dispatch(phoneLogin(phone_number, inputcode))
+                history.push('/shipping')
+            } else {
+
+                dispatch(register(name, email, inputcode, phone_number))
+                    .then(dispatch(phoneLogin(phone_number, inputcode)))
+                setShow(false)
+                history.push('/shipping')
+            }} else {
             alert('Введен неверный код');
         }
 
@@ -67,43 +76,56 @@ function LoginScreen() {
 
     const submitHandler = (e) => {
         e.preventDefault()
-        if (exist) {
-        dispatch(login(email, password))}
-        else {
-            dispatch(register(name, email, inputcode, phone_number))
-                .then(dispatch(phoneLogin(phone_number, inputcode)))
-            setShow(false)
-            history.push(`${redirect}`)
-        }
+        // if (exist) {
+        dispatch(login(email, password))
+    // }
+        // else {
+        //     dispatch(register(name, email, inputcode, phone_number))
+        //         .then(dispatch(phoneLogin(phone_number, inputcode)))
+        //     setShow(false)
+        //     history.push(`${redirect}`)
+        // }
     }
 
     const submitHandlerByPhone = async (e) => {
         e.preventDefault()
         if (validator.isMobilePhone(phone_number, ['ru-RU'])) {
             // Изменил state
-
+            setPhone(prevState => '7' + prevState.substring(prevState.length -10, prevState.length))
             try {
                 await axios.get(`${API_HOST}/api/users/profile/exist?phone=${phone_number}`)
                     .then(async exist => {
-                        console.log(exist)
-                        exist.data['detail'] ?
+                        if (exist.data['detail'])
+                        {
                             // setAxiosError(exist.data['detail'])
-                            await axios.get(`${API_HOST}/api/users/phone_confirmation?phone=${phone_number}&key=iKa0EzMTcxYzNSuPgKecMEZt0K948dP0&service_id=450214&email=${email}`)
+                            await axios.get(`${API_HOST}/api/users/phone_confirmation?phone=${phone_number}&key=iKa0EzMTcxYzNSuPgKecMEZt0K948dP0&service_id=450214`)
                                 .then(response => {
                                     setReceivedCode(response.data['code'])
                                     setIsValidPhone(true)
                                     handleShow()
                                     setExist(false)
-                                })                            :
+                                })
+
+                            // setReceivedCode('1234')
+                            // setIsValidPhone(true)
+                            // handleShow()
+                            // setExist(false)
+                        } else
+                        {
                             await axios.get(`${API_HOST}/api/users/phone_confirmation?phone=${phone_number}&key=iKa0EzMTcxYzNSuPgKecMEZt0K948dP0&service_id=450214`)
                                 .then(response => {
                                     setReceivedCode(response.data['code'])
                                     setIsValidPhone(true)
-                                    handleShow(exist)
+                                    handleShow()
                                     setExist(true)
 
                                 })
-                    })
+                            //         setReceivedCode('1234')
+                            //         setIsValidPhone(true)
+                            //         handleShow()
+                            //         setExist(true)
+                        }
+                        })
 
 
             } catch (error) {
@@ -123,7 +145,7 @@ function LoginScreen() {
         <Container className='login mw-80'>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Введите последние 4 цифры</Modal.Title>
+                    <Modal.Title>Введите последние 4 цифры входящего номера</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Control
@@ -132,7 +154,8 @@ function LoginScreen() {
                         value={inputcode}
                         onChange={(e) => setInputcode(e.target.value)}
                     />
-                    <p>Это будет Ваш пароль при авторизации на email. Пароль можно изменить в личном профиле</p>
+                    {!isExist &&
+                        <p>Это будет Ваш пароль при авторизации на email. Пароль можно изменить в личном профиле</p>}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={closeModal}>
@@ -221,7 +244,8 @@ function LoginScreen() {
                 <>
                     <Row className='py-3 text-white'>
                         <Col>
-                            Новый пользователь? <Link
+                            Новый пользователь?
+                            <Link
                             href={redirect ? `/inputpd?redirect=${redirect}` : '/inputpd'}
                         >
                             Зарегистрироваться
