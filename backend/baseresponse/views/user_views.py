@@ -48,6 +48,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return data
 
 
+
+
+
+
 class MyTokenObtainPairView(TokenObtainPairView):
     # serializer_class = MyTokenObtainPairSerializer
     def get_serializer_class(self):
@@ -177,15 +181,25 @@ def phoneConfirmation(request):
     try:
         profile = Profile.objects.get(phone_number=phone_number)
         res['exist'] = 'true'
-        phone = requests.get(f'https://api.ucaller.ru/v1.0/checkPhone?phone={phone_number}&key={key}&service_id={service_id}').json()['phone']
+        phone = requests.get(
+            f'https://api.ucaller.ru/v1.0/checkPhone?phone={phone_number}&key={key}&service_id={service_id}').json()[
+            'phone']
 
-        code = requests.get(f'https://api.ucaller.ru/v1.0/initCall?phone={phone}&key={key}&service_id={service_id}').json()['code']
+        code = \
+            requests.get(
+                f'https://api.ucaller.ru/v1.0/initCall?phone={phone}&key={key}&service_id={service_id}').json()[
+                'code']
         res['code'] = code
         return Response(res)
     except:
-        phone = requests.get(f'https://api.ucaller.ru/v1.0/checkPhone?phone={phone_number}&key={key}&service_id={service_id}').json()['phone']
+        phone = requests.get(
+            f'https://api.ucaller.ru/v1.0/checkPhone?phone={phone_number}&key={key}&service_id={service_id}').json()[
+            'phone']
 
-        code = requests.get(f'https://api.ucaller.ru/v1.0/initCall?phone={phone}&key={key}&service_id={service_id}').json()['code']
+        code = \
+            requests.get(
+                f'https://api.ucaller.ru/v1.0/initCall?phone={phone}&key={key}&service_id={service_id}').json()[
+                'code']
         res['code'] = code
         return Response(res)
 
