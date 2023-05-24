@@ -1,0 +1,6 @@
+PassengerEnabled On
+PassengerPython /home/l/leoevgrv/leoevgrv.beget.tech/venv_django/bin/python3.8
+PassengerNodejs /home/l/leoevgrv/.local/bin/node
+PassengerAppRoot /home/l/leoevgrv/leoevgrv.beget.tech/frontend/.next/standalone/
+PassengerAppType node
+PassengerStartupFile server.js

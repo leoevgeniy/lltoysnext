@@ -7,6 +7,7 @@ function Loader() {
             animation='border'
             role='status'
             style={{
+                color: 'lightgray',
                 height: '100px',
                 width: '100px',
                 margin: 'auto',
