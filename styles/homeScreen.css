@@ -2,7 +2,7 @@
     display: flex;
 }
 .popular .line {
-    height: 40px;
+    /*height: 40px;*/
     width: 100%;
     /*background-color: #1281e3;*/
     background-color: #e5097f;
@@ -97,7 +97,7 @@
 .category1 {
     grid-area: 1 / 1 / 2 / 2;
     /*background: center no-repeat url("../public/erotic.webp");*/
-    box-shadow: -10px 10px 50px gray;
+    /*box-shadow: -10px 10px 50px gray;*/
 
     /*background-size: cover;*/
 }
@@ -110,27 +110,27 @@
 .category3 {
     grid-area: 1 / 3 / 2 / 4;
     /*background: center no-repeat url("../public/lubricants.png");*/
-    box-shadow: 10px 10px 50px gray;
+    /*box-shadow: 10px 10px 50px gray;*/
     /*background-size: cover;*/
 }
 .category4 {
     grid-area: 2 / 1 / 3 / 2;
     /*background: center no-repeat url("../public/toys.png");*/
-    box-shadow: -10px 10px 50px gray;
+    /*box-shadow: -10px 10px 50px gray;*/
 
     /*background-size: cover;*/
 }
 .category5 {
     grid-area: 2 / 3 / 3 / 4;
     /*background: center no-repeat url("../public/things.webp");*/
-    box-shadow: 10px 10px 50px gray;
+    /*box-shadow: 10px 10px 50px gray;*/
 
     /*background-size: cover;*/
 }
 .category6 {
     grid-area: 1 / 1 / 2 / 2;
     /*background: center no-repeat url("../public/sexmebel.jpg");*/
-    box-shadow: 10px 10px 50px gray;
+    /*box-shadow: 10px 10px 50px gray;*/
 
     /*background-size: cover;*/
 }
@@ -143,28 +143,28 @@
 .category8 {
     grid-area: 1 / 3 / 2 / 4;
     /*background: center no-repeat url("../public/men.webp");*/
-    box-shadow: 10px 10px 50px gray;
+    /*box-shadow: 10px 10px 50px gray;*/
 
     /*background-size: cover;*/
 }
 .category9 {
     grid-area: 2 / 1 / 3 / 2;
     /*background: center no-repeat url("../public/nignee.webp");*/
-    box-shadow: 10px 10px 50px gray;
+    /*box-shadow: 10px 10px 50px gray;*/
 
     /*background-size: cover;*/
 }
 .category10 {
     grid-area: 2 / 3 / 3 / 4;
     /*background: center no-repeat url("../public/kupalniki.webp");*/
-    box-shadow: 10px 10px 50px gray;
+    /*box-shadow: 10px 10px 50px gray;*/
 
     /*background-size: cover;*/
 }
 .category11 {
     grid-area: none;
     /*background: center no-repeat url("../public/womenSmall.webp");*/
-    box-shadow: 10px 10px 50px gray;
+    /*box-shadow: 10px 10px 50px gray;*/
 
     /*background-size: cover;*/
 }
@@ -209,13 +209,13 @@
         display: grid;
         grid-gap: 5px;
         justify-content: center;
-        grid: repeat(2, 250px) / repeat(2, 50%)
+        grid: repeat(2, 200px) / repeat(2, 50%)
     }
     .categories2{
         display: grid;
         grid-gap: 5px;
         justify-content: center;
-        grid: repeat(2, 250px) / repeat(2, 50%)
+        grid: repeat(2, 200px) / repeat(2, 50%)
     }
 
     .category1 {

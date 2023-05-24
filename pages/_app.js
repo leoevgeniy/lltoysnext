@@ -1,4 +1,4 @@
-import '@/styles/globals.css'
+import '@/styles/globals.scss'
 import {Provider} from "react-redux";
 import React, {useEffect, useState} from "react";
 import Layout from '@/components/layout'

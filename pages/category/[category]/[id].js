@@ -447,13 +447,14 @@ const SubCategory = ({pageProps}) => {
 
                 </Head>
                 <div className="content justify-content-center">
-                    <div className='d-flex justify-content-between'>
+                    <div className='d-flex flex-column justify-content-between'>
 
                         <h1 className='text-start text-white'>{subCategory}
-                            {productsLength > 0 &&
-                                <span className='prod-length pl-2'>{productsLength} товаров</span>}
+
 
                         </h1>
+                        {productsLength > 0 &&
+                            <span className='prod-length pl-2'>{productsLength} товаров</span>}
                         {(history.pathname.includes('/category') || history.pathname.includes('/search')) &&
                             <FontAwesomeIcon
                                 className='d-block d-md-none category-filter-icon my-auto mr-2 text-white'
@@ -599,11 +600,11 @@ const SubCategory = ({pageProps}) => {
 
 
             <Link href='/search?supersale=1'
-                  className='mx-3 fs-4 text-white text-decoration-none'
+                  className='fs-4 text-light text-decoration-none'
 
                   onClick={() => setLoading(true)}
             >
-                <div className='popular my-2' style={{backgroundColor: '#e5097f'}}>
+                <div className='popular' style={{backgroundColor: '#e5097f'}}>
                     Распродажа
                 </div>
             </Link>
@@ -611,7 +612,7 @@ const SubCategory = ({pageProps}) => {
             {(oppenedItems && oppenedItems.length > 0 && seenProducts) &&
                 <>
                     <div className='popular my-3' style={{backgroundColor: '#e5097f'}}>
-                        <span className='mx-3 fs-4 text-white' >Вы смотрели</span>
+                        <span className='fs-4 text-light' >Вы смотрели</span>
                     </div>
                     <SeenProductCarousel/>
                 </>

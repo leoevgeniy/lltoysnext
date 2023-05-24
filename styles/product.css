@@ -136,7 +136,7 @@
 
     .asButton {
         display: inline-block;
-        color: black;
+        color: gray;
         font-size: 125%;
         font-weight: 700;
         text-decoration: none;
@@ -211,7 +211,7 @@
 
     .asButton {
         display: inline-block;
-        color: black;
+        color: gray;
         font-size: 125%;
         font-weight: 700;
         text-decoration: none;

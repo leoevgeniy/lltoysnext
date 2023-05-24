@@ -451,24 +451,26 @@ const Category = ({pageProps}) => {
                           content='sexshop, сексшоп, магазин интимных товаров для взрослых, секс игрушки, sex toys, интимшоп, интим шоп, intimshop, секс, вибратор, фаллоимитатор, вагина, фаллос, клитор, стимулятор, мастурбатор, куклы, эротическое белье'/>
 
                 </Head>
-                <div className='d-flex justify-content-between'>
-                    <h1 className='text-start text-white'>{category}
-                        {productsLength > 0 &&
-                            <span className='prod-length pl-2'>{productsLength} товаров</span>}
+                <Container className='d-flex flex-column justify-content-between'>
+                    <h1 className='text-start text-light'>{category}
+
                     </h1>
+                    {productsLength > 0 &&
+                        <span className='prod-length pl-2'>{productsLength} товаров</span>}
                     {(history.pathname.includes('/category') || history.pathname.includes('/search')) &&
-                        <FontAwesomeIcon className='d-block d-md-none category-filter-icon my-auto mr-2 text-white'
+                        <FontAwesomeIcon className='d-block d-md-none category-filter-icon my-auto mr-2 text-light'
                                          icon={faFilter}
                                          onClick={() => setShow(true)}/>
                     }
-                </div>
+
+                </Container>
                 <Offcanvas
                     show={show}
                     placement='bottom'
                     onHide={() => setShow(false)}
                     style={{height: '90%'}}
                 >
-                    <Offcanvas.Header style={{backgroundColor: '#e5097f', color: 'white'}}>
+                    <Offcanvas.Header style={{backgroundColor: '#e5097f', color: 'text-light'}}>
                         <Offcanvas.Title className='mb-0 pb-0'>Фильтры</Offcanvas.Title>
                         {(searchParams.get('material') || searchParams.get('vendor') || searchParams.get('collection')
                             || searchParams.get('color') || searchParams.get('size') || searchParams.get('lowprice') ||
@@ -477,10 +479,11 @@ const Category = ({pageProps}) => {
                                 clearFilters()
                             }} className='float-end'>Отмена</Badge> : ''}
 
+
                     </Offcanvas.Header>
                     <OffcanvasBody
                         style={{background: '#e5097f linear-gradient(#e5097f, rgb(0 0 0))', lineHeight: '15px'}}>
-                        <ListGroup className='text-white mh-25' style={{lineHeight: '18px'}}>
+                        <ListGroup className='text-light mh-25' style={{lineHeight: '18px'}}>
                             <span className='fw-bolder fs-5'>Категория</span>
                             <span className='ml-5'>  {category}</span>
                             <div style={{'maxHeight': '100px', 'overflowY': 'scroll'}}>
@@ -488,9 +491,9 @@ const Category = ({pageProps}) => {
                                     <ul key={item} style={{lineHeight: '10px', marginBottom: '0.5rem'}}>
                                         <li>
                                             <Link href={'/category/' + category + '/' + item}
-                                                  className={'subCategory text-white lh-1'}>{item}</Link>
+                                                  className={'subCategory text-light lh-1'}>{item}</Link>
                                             <span
-                                                className='prod-length pl-2'>{subCategoriesList[item]}</span>
+                                                className='prod-length pl-2 text-'>{subCategoriesList[item]}</span>
                                         </li>
                                     </ul>
                                 )}
@@ -502,8 +505,8 @@ const Category = ({pageProps}) => {
                 </Offcanvas>
 
                 <Row>
-                    <Col xs={0} md={3} className='d-none d-md-block text-white'>
-                        <p className='fw-bolder fs-5'>Категория</p>
+                    <Col xs={0} md={3} className='d-none d-md-block text-light'>
+                        <p className='fw-bolder fs-5 text-light'>Категория</p>
                         <p className='ml-5'>  {category}</p>
                         {Object.keys(subCategoriesList).map((item) =>
                             <ul key={item}>
@@ -512,9 +515,11 @@ const Category = ({pageProps}) => {
                                           className='subCategory'>{item}</Link>
                                     <span
                                         className='prod-length pl-2'>{subCategoriesList[item]}</span>
+
                                 </li>
                             </ul>
                         )}
+
                         <br/>
                         <Filters/>
                     </Col>
@@ -524,7 +529,7 @@ const Category = ({pageProps}) => {
                             <Message variant="danger">{error}</Message>
                         ) :
                         <Col xs={12} md={9}>
-                            <div className="content">
+                            <Container className="content">
 
 
                                 <div>
@@ -584,7 +589,7 @@ const Category = ({pageProps}) => {
                                         keyword={keyword ? brCategory + '?keyword=' + keyword : brCategory}
                                     />
                                 </div>
-                            </div>
+                            </Container>
                         </Col>}
                 </Row>
             </>
@@ -592,18 +597,18 @@ const Category = ({pageProps}) => {
 
             {(oppenedItems && oppenedItems.length > 0 && seenProducts) &&
                 <>
-                    <div className='popular my-3' style={{backgroundColor: '#e5097f'}}>
-                        <span className='mx-3 fs-4 text-white' >Вы смотрели</span>
-                    </div>
+                    <Container className='my-3' style={{backgroundColor: '#e5097f'}}>
+                        <span className='fs-4 text-light' >Вы смотрели</span>
+                    </Container>
                     <SeenProductCarousel/>
                 </>
             }
-            <Link href='/search?bestsellers=1' className='mx-3 fs-4 text-white text-decoration-none'
+            <Link href='/search?bestsellers=1' className='fs-4 text-light text-decoration-none'
                   onClick={() => setLoading(true)}>
-                <div className='popular my-1' style={{backgroundColor: '#e5097f'}}>
+                <Container className='my-1' style={{backgroundColor: '#e5097f'}}>
                     Хиты
                     продаж
-                </div>
+                </Container>
             </Link>
             <ProductCarousel data={pageProps.topData}/>
         </Container>

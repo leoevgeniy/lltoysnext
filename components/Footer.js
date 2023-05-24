@@ -11,15 +11,15 @@ function Footer() {
     // console.log(footerHeight)
     return (
         <Container className='d-none d-md-flex justify-content-center footer'>
-            <Row className='py-3 text-white text-center fs-6 w-100'>
-                <Col className='col-3 position-relative w-full'>
-                    {/*<Link href="/"*/}
-                    {/*      className='d-none d-sm-none d-md-none d-lg-block d-xl-block d-xxl-block justify-self-left'>*/}
-                        <Image fill style={{objectFit: "contain"}} loading="lazy" className='logo' src={kuragi} alt='Sex Shop logo'/>
-                    {/*</Link>*/}
-                </Col>
-                <Col className='col-9'>
-                    <div className='d-flex justify-content-between fs-6'>
+            <Row className='py-3 text-light text-center fs-6 w-100'>
+                {/*<Col className='col-3 position-relative w-full'>*/}
+                {/*    /!*<Link href="/"*!/*/}
+                {/*    /!*      className='d-none d-sm-none d-md-none d-lg-block d-xl-block d-xxl-block justify-self-left'>*!/*/}
+                {/*        <Image fill style={{objectFit: "contain"}} loading="lazy" className='logo' src={kuragi} alt='Sex Shop logo'/>*/}
+                {/*    /!*</Link>*!/*/}
+                {/*</Col>*/}
+                <Col className='col-12'>
+                    <div className='d-flex justify-content-around fs-6'>
                         <div id='delivery'
                              className='d-none d-sm-none d-md-none d-lg-flex d-xl-flex d-xxl-flex flex-column text-light  px-5'>
                             <p>Доставка заказов</p>

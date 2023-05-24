@@ -50,7 +50,7 @@ const HomeScreen = (pageProps) => {
                         <Loader/>
                     ) :
                     <Container className='homescreen'>
-                        <div className='d-flex'>
+                        <Container className='d-flex'>
                             <div className='w-75'>
                                 <Image
                                     className='mainlady'
@@ -77,117 +77,143 @@ const HomeScreen = (pageProps) => {
                                 />
 
                             </div>
-                        </div>
-                        <Link href='/search?supersale=1'
-                              className='mx-3 fs-4 text-white text-decoration-none'
+                        </Container>
+                        <Container className='d-none d-lg-block'>
+                            <Link href='/search?supersale=1'
+                                  className='mx-3 fs-4 text-white text-decoration-none '
 
-                              onClick={() => setLoading(true)}
-                        >
-                            <div className='popular my-2' style={{backgroundColor: '#e5097f'}}>
-                                Распродажа
-                            </div>
-                        </Link>
-                        <ProductCarousel data={data}/>
-                        <div className="w-100 pt-3">
-                            <div className='categories relative'>
-                                <Link className='category category1 position-relative h-100'
+                                  onClick={() => setLoading(true)}
+                            >
+                                <div className='popular my-2' style={{backgroundColor: '#e5097f'}}>
+                                    Распродажа
+                                </div>
+                            </Link>
+                            <ProductCarousel data={data}/>
+                        </Container>
+                        <Container className="w-100 pt-3">
+                            <Container className='categories relative'>
+                                <Link className='category category1 position-relative'
                                       href='/category/Эротическая одежда' onClick={() => setLoading(true)}>
-                                    <Image placeholder='blur' fill style={{objectFit: "contain"}} loading="lazy"
+                                    <Image placeholder='blur' fill
+                                           style={{objectFit: "cover", borderRadius: '30px', overflow: 'hidden'}}
+                                           loading="lazy"
                                            src={erotic}
                                            alt='Эротическая одежда'/>
                                 </Link>
-                                <Link className='category category2 position-relative w-full'
+                                <Link className='category category2 position-relative'
                                       href='/category/BDSM, садо-мазо товары' onClick={() => setLoading(true)}>
-                                    <Image placeholder='blur' fill style={{objectFit: "contain"}} object-fit="cover"
+                                    <Image placeholder='blur' fill
+                                           style={{objectFit: "cover", borderRadius: '30px', overflow: 'hidden'}}
+                                           object-fit="cover"
                                            loading="lazy"
                                            src={bdsm} alt='BDSM, садо-мазо товары'/>
                                 </Link>
-                                <Link className='category category3 position-relative w-full'
+                                <Link className='category category3 position-relative'
                                       href='/category/Смазки, лубриканты' onClick={() => setLoading(true)}>
-                                    <Image placeholder='blur' fill style={{objectFit: "contain"}} loading="lazy"
+                                    <Image placeholder='blur' fill
+                                           style={{objectFit: "cover", borderRadius: '30px', overflow: 'hidden'}}
+                                           loading="lazy"
                                            src={lubricants}
                                            alt='Смазки, лубриканты'/>
                                 </Link>
-                                <Link className='category category4 position-relative w-full'
+                                <Link className='category category4 position-relative '
                                       href='/category/Анальные игрушки' onClick={() => setLoading(true)}>
-                                    <Image placeholder='blur' fill style={{objectFit: "contain"}} loading="lazy"
+                                    <Image placeholder='blur' fill
+                                           style={{objectFit: "cover", borderRadius: '30px', overflow: 'hidden'}}
+                                           loading="lazy"
                                            src={toys}
                                            alt='Анальные игрушки'/>
                                 </Link>
-                                <Link className='category category5 position-relative w-full'
+                                <Link className='category category5 position-relative '
                                       href='/category/Приятные мелочи' onClick={() => setLoading(true)}>
-                                    <Image placeholder='blur' fill style={{objectFit: "contain"}} loading="lazy"
+                                    <Image placeholder='blur' fill
+                                           style={{objectFit: "cover", borderRadius: '30px', overflow: 'hidden'}}
+                                           loading="lazy"
                                            src={things}
                                            alt='Приятные мелочи'/>
                                 </Link>
-                            </div>
-                        </div>
-                        <Link href='/search?bestsellers=1' className='mx-3 fs-4 text-white text-decoration-none'
-                              onClick={() => setLoading(true)}>
-                            <div className='popular my-1' style={{backgroundColor: '#e5097f'}}>
-                                Хиты
-                                продаж
-                            </div>
-                        </Link>
-                        <ProductCarousel data={bestSeller}/>
-
+                            </Container>
+                        </Container>
+                        <Container>
+                            <Link href='/search?bestsellers=1' className='fs-4 text-light text-decoration-none'
+                                  onClick={() => setLoading(true)}>
+                                <div className='' style={{backgroundColor: '#e5097f'}}>
+                                    Хиты
+                                    продаж
+                                </div>
+                            </Link>
+                            <ProductCarousel data={bestSeller}/>
+                        </Container>
                         {/*<BannersCarousel/>*/}
-                        <div className="w-100">
-                            <div className='categories2 '>
+                        <Container className="w-100">
+                            <Container className='categories2 '>
                                 <Link className='category category6 position-relative w-full'
                                       href='/category/Секс-мебель и качели' onClick={() => setLoading(true)}>
-                                    <Image placeholder='blur' fill style={{objectFit: "contain"}} loading="lazy"
+                                    <Image placeholder='blur' fill
+                                           style={{objectFit: "cover", borderRadius: '10px', overflow: 'hidden'}}
+                                           loading="lazy"
                                            src={sexmebel}
                                            alt='Секс-мебель и качели'/>
                                 </Link>
                                 <Link className='category category7 position-relative w-full'
                                       href='/category/Секс-товары для женщин' onClick={() => setLoading(true)}>
-                                    <Image placeholder='blur' fill style={{objectFit: "contain"}} loading="lazy"
+                                    <Image placeholder='blur' fill
+                                           style={{objectFit: "cover", borderRadius: '30px', overflow: 'hidden'}}
+                                           loading="lazy"
                                            src={women}
                                            alt='Секс-товары для женщин' className=''/>
                                 </Link>
                                 <Link className='category category11 position-relative w-full'
                                       href='/category/Секс-товары для женщин' onClick={() => setLoading(true)}>
-                                    <Image placeholder='blur' fill style={{objectFit: "contain"}} loading="lazy"
+                                    <Image placeholder='blur' fill
+                                           style={{objectFit: "cover", borderRadius: '30px', overflow: 'hidden'}}
+                                           loading="lazy"
                                            src={womenSmall}
                                            alt='Секс-товары для женщин'/>
                                 </Link>
                                 <Link className='category category8 position-relative w-full'
                                       href='/category/Секс-товары для мужчин' onClick={() => setLoading(true)}>
-                                    <Image placeholder='blur' fill style={{objectFit: "contain"}} loading="lazy"
+                                    <Image placeholder='blur' fill
+                                           style={{objectFit: "cover", borderRadius: '30px', overflow: 'hidden'}}
+                                           loading="lazy"
                                            src={men}
                                            alt='Секс-товары для мужчин'/>
                                 </Link>
                                 <Link className='category category9 position-relative w-full'
                                       href='/category/Нижнее белье' onClick={() => setLoading(true)}>
-                                    <Image placeholder='blur' fill style={{objectFit: "contain"}} loading="lazy"
+                                    <Image placeholder='blur' fill
+                                           style={{objectFit: "cover", borderRadius: '30px', overflow: 'hidden'}}
+                                           loading="lazy"
                                            src={nignee}
                                            alt='Нижнее белье'/>
                                 </Link>
                                 <Link className='category category10 position-relative w-full'
                                       href='/category/Купальники' onClick={() => setLoading(true)}>
-                                    <Image placeholder='blur' fill style={{objectFit: "contain"}} loading="lazy"
+                                    <Image placeholder='blur' fill
+                                           style={{objectFit: "cover", borderRadius: '30px', overflow: 'hidden'}}
+                                           loading="lazy"
                                            src={kupalniki}
                                            alt='Купальники'/>
                                 </Link>
-                            </div>
-                        </div>
-                        <Link href='/search?novelties=1'
-                              className='mx-3 fs-4 text-white text-decoration-none'
-                              onClick={() => setLoading(true)}>
-                            <div className='popular my-3' style={{backgroundColor: '#e5097f'}}>
-                                Новинки
-                            </div>
-                        </Link>
-                        <ProductCarousel data={novelties}/>
-
+                            </Container>
+                        </Container>
+                        <Container>
+                            <Link href='/search?novelties=1'
+                                  className='fs-4 text-light text-decoration-none'
+                                  onClick={() => setLoading(true)}>
+                                <div className='popular my-1' style={{backgroundColor: '#e5097f'}}>
+                                    Новинки
+                                </div>
+                            </Link>
+                            <ProductCarousel data={novelties}/>
+                        </Container>
                         {(oppenedItems && oppenedItems.length > 0 && seenProducts) &&
-                            <>
-                                <div className='popular my-3' style={{backgroundColor: '#e5097f'}}>
-                                    <span className='mx-3 fs-4 text-white' >Вы смотрели</span>
+                            <Container>
+                                <div className='popular my-1' style={{backgroundColor: '#e5097f'}}>
+                                    <span className='mx-3 fs-4 text-white'>Вы смотрели</span>
                                 </div>
                                 <SeenProductCarousel/>
-                            </>
+                            </Container>
                         }
 
                     </Container>

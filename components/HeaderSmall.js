@@ -12,7 +12,7 @@ import {
 import {useSelector} from "react-redux";
 import {useSearchParams} from "next/navigation";
 
-const HeaderSmall = () => {
+const HeaderSmall = (setShow) => {
     const history = useRouter()
     const params = useSearchParams()
     const [isLoading, setIsLoading] = useState(true)
@@ -31,17 +31,16 @@ const HeaderSmall = () => {
         history.isReady ? setIsLoading(false) : ''
     }, [])
 
-    const [show, setShow] = useState(false);
     const submitHandler = () => {
 
     }
     return (
         <header-small classname='bg-dark'>
-            <Container className="d-flex d-md-none justify-content-between align-items-center fixed-top header-small">
-                <Link href="/" style={{'height': '70px', 'width': '160px'}}>
+            <Container className="d-flex d-md-none justify-content-start align-items-center fixed-top header-small" style={{height: '70px'}}>
+                <Link href="/" style={{'height': '50px', 'width': '100px'}}>
                     <Image priority className='logo' src={kuragi} alt='Магазин Куражи'/>
                 </Link>
-                <Form onSubmit={() => history.push(`/search?keyword=${keyword}`)} className="d-flex w-100 mx-3">
+                <Form onSubmit={() => history.push(`/search?keyword=${keyword}`)} className="d-flex w-75 ml-1">
                     <FormControl
                         type="text"
                         name={`keyword`}
@@ -62,6 +61,9 @@ const HeaderSmall = () => {
                           style={{'top': '8px', 'right': '30px', 'fontSize': '13px'}}><FontAwesomeIcon
                         icon={faMagnifyingGlass}/></span>
                 </Form>
+                <div
+                    style={{width: '50px'}}
+                ></div>
             </Container>
         </header-small>
     )

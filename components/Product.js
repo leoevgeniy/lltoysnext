@@ -166,7 +166,7 @@ function Product({product}) {
                 <span onClick={() => history.push(`/products/${product._id}`)}
                       className='fw-bold card-name d-inline-block text-start py-0 mb-0 fs-6 '>
 
-                    <span itemProp="name" className='card-name fw-bold text-black '>{product.name}</span>
+                    <span itemProp="name" className='card-name fw-bold text-dark '>{product.name}</span>
 
 
                 </span>

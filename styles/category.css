@@ -1,5 +1,5 @@
 .categ .prod-length {
-    color: black;
+    color: darkgray;
     font-size: 14px;
     text-size-adjust: none;
     -webkit-font-smoothing: antialiased;
@@ -11,18 +11,17 @@
 
 }
 .categ .subCategory {
-    color: white;
+    color: lightgray;
 }
 .categ .breadcrump {
-    color: white;
+    color: lightgray;
 }
 .categ .breadcrumb-item.active, .breadcrumb-item.active::before {
-    color: black;
+    color: darkgray;
 }
 .category-filter-icon {
-
-    /*position: absolute;*/
-    /*z-index: 10000;*/
-    /*top: -43px;*/
-    /*right: 12px;*/
+    position: fixed;
+    z-index: 10000;
+    top: 25px;
+    right: 12px;
 }

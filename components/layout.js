@@ -7,7 +7,7 @@ import HeaderSmall from "@/components/HeaderSmall";
 import FooterSmall from "@/components/FooterSmall";
 
 const Layout = ({children}) => {
-    const [modalShow, setModalShow] = useState(true);
+    // const [modalShow, setModalShow] = useState(true);
     return (
         <div id='layout' style={{'backgroundColor': 'black'}}>
             {/*<MyVerticallyCenteredModal*/}
