@@ -81,7 +81,7 @@ function UserListScreen() {
 
                                     <td>
                                         <Link
-                                            href={`/admin/user/${user._id}/edit`}
+                                            href={`/admin/user?userid=${user._id}`}
                                         >
                                             <Button
                                                 variant="light"

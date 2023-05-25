@@ -107,27 +107,27 @@ function OrderScreen({pageProps}) {
             dispatch(p5sgetOrderDetails(orderId));
         }
 
-        // if (!loading && p5sDetailsError) {
-        //     if (
-        //         order.paymentMethod === "cash" ||
-        //         order.paymentMethod === "deliveryCard"
-        //     ) {
-        //         dispatch(
-        //             p5sCreateOrder({
-        //                 orderItems: order.orderItems,
-        //                 shippingAddress: order.shippingAddress,
-        //                 paymentMethod: order.paymentMethod,
-        //                 itemsPrice: order.itemsPrice,
-        //                 shippingPrice: order.shippingPrice,
-        //                 taxPrice: order.taxPrice,
-        //                 totalPrice: order.totalPrice,
-        //                 size: order.size,
-        //                 orderID: Number(orderId),
-        //                 comments: order.comments,
-        //             })
-        //         );
-        //     }
-        // }
+        if (!loading && p5sDetailsError) {
+            if (
+                order.paymentMethod === "cash" ||
+                order.paymentMethod === "deliveryCard"
+            ) {
+                dispatch(
+                    p5sCreateOrder({
+                        orderItems: order.orderItems,
+                        shippingAddress: order.shippingAddress,
+                        paymentMethod: order.paymentMethod,
+                        itemsPrice: order.itemsPrice,
+                        shippingPrice: order.shippingPrice,
+                        taxPrice: order.taxPrice,
+                        totalPrice: order.totalPrice,
+                        size: order.size,
+                        orderID: Number(orderId),
+                        comments: order.comments,
+                    })
+                );
+            }
+        }
         if (!loading && p5sDetailsError) {
             if (order.paymentMethod === "bankCard" && order.isPaid) {
                 dispatch(

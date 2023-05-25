@@ -93,7 +93,6 @@ export const p5sCreateOrder = (order) => async (dispatch, getState) => {
             },
         };
         const {data} = await axios.post(`${API_HOST}/api/order/p5s/`, order, config);
-
         dispatch({
             type: P5S_ORDER_CREATE_SUCCESS,
             payload: order,
