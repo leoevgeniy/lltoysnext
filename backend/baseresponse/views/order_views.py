@@ -103,9 +103,14 @@ def addP5sOrder(request):
     user = request.user
     profile = Profile.objects.get(user_id=user.id)
     data = request.data
+    delivery = 0
     payload = ''
+    itemsPrice = 0
+    deliverPrice = 0
+
     for i in data['orderItems']:
         payload += f'{i["aID"]}-{i["qty"]}-{i["price"]},'
+        itemsPrice += float(i['price'])
     orderItems = data['orderItems']
     orderList = payload[:len(payload) - 1]
 
@@ -121,7 +126,8 @@ def addP5sOrder(request):
         paymentMethod = 0
     else:
         paymentMethod = 1
-
+    if itemsPrice < 3000:
+        deliverPrice = 300
     headers = {
         # "Content-type": "application/form-data",
         'ApiKey': '62e3b498a67f03.93794391',
@@ -129,7 +135,7 @@ def addP5sOrder(request):
         'order': orderList,
         'ExtOrderID': data['orderID'],
         'ExtOrderPaid': paymentMethod,
-        'ExtDeliveryCost': 0,
+        'ExtDeliveryCost': deliverPrice,
         'dsDelivery': delivery,
         'dsFio': user.first_name,
         'dsMobPhone': str(profile.phone_number),
