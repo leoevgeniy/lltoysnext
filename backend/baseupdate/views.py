@@ -1,4 +1,6 @@
+import datetime
 import urllib
+import xml.etree.ElementTree as etree
 
 from django import db
 from rest_framework.decorators import api_view
@@ -206,3 +208,330 @@ def updateStock(request):
     recipient_list = ['leoevgeniy@gmail.com']
     send_mail(subject, message, email_from, recipient_list)
     return Response('Данные обновлены!')
+
+
+@api_view(['GET'])
+def createsitemap(request):
+    catalog = {}
+    categories = Category.objects.all()
+    sitemaproot = etree.Element('urlset')
+    sitemaproot.set('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9')
+    staticRoutes = etree.SubElement(sitemaproot, 'url')
+    loc = etree.SubElement(staticRoutes, 'loc')
+    loc.text = 'https://lltoys.ru/'
+    lastmod = etree.SubElement(staticRoutes, 'lastmod')
+    lastmod.text = datetime.datetime.now().isoformat()
+    changefreq = etree.SubElement(staticRoutes, 'changefreq')
+    changefreq.text = 'daily'
+    priority = etree.SubElement(staticRoutes, 'priority')
+    priority.text = '1.0'
+    staticRoutesabout = etree.SubElement(sitemaproot, 'url')
+    loc = etree.SubElement(staticRoutesabout, 'loc')
+    loc.text = 'https://lltoys.ru/about'
+    lastmod = etree.SubElement(staticRoutesabout, 'lastmod')
+    lastmod.text = datetime.datetime.now().isoformat()
+    changefreq = etree.SubElement(staticRoutesabout, 'changefreq')
+    changefreq.text = 'daily'
+    priority = etree.SubElement(staticRoutesabout, 'priority')
+    priority.text = '0.1'
+    staticRoutesDelivery = etree.SubElement(sitemaproot, 'url')
+    loc = etree.SubElement(staticRoutesDelivery, 'loc')
+    loc.text = 'https://lltoys.ru/delivery-curerom'
+    lastmod = etree.SubElement(staticRoutesDelivery, 'lastmod')
+    lastmod.text = datetime.datetime.now().isoformat()
+    changefreq = etree.SubElement(staticRoutesDelivery, 'changefreq')
+    changefreq.text = 'daily'
+    priority = etree.SubElement(staticRoutesDelivery, 'priority')
+    priority.text = '0.3'
+    staticRoutesDelivery = etree.SubElement(sitemaproot, 'url')
+    loc = etree.SubElement(staticRoutesDelivery, 'loc')
+    loc.text = 'https://lltoys.ru/delivery-pickpoint'
+    lastmod = etree.SubElement(staticRoutesDelivery, 'lastmod')
+    lastmod.text = datetime.datetime.now().isoformat()
+    changefreq = etree.SubElement(staticRoutesDelivery, 'changefreq')
+    changefreq.text = 'daily'
+    priority = etree.SubElement(staticRoutesDelivery, 'priority')
+    priority.text = '0.3'
+    staticRoutesDelivery = etree.SubElement(sitemaproot, 'url')
+    loc = etree.SubElement(staticRoutesDelivery, 'loc')
+    loc.text = 'https://lltoys.ru/delivery-self'
+    lastmod = etree.SubElement(staticRoutesDelivery, 'lastmod')
+    lastmod.text = datetime.datetime.now().isoformat()
+    changefreq = etree.SubElement(staticRoutesDelivery, 'changefreq')
+    changefreq.text = 'daily'
+    priority = etree.SubElement(staticRoutesDelivery, 'priority')
+    priority.text = '0.3'
+    staticRoutesDelivery = etree.SubElement(sitemaproot, 'url')
+    loc = etree.SubElement(staticRoutesDelivery, 'loc')
+    loc.text = 'https://lltoys.ru/delivery-pochtarf'
+    lastmod = etree.SubElement(staticRoutesDelivery, 'lastmod')
+    lastmod.text = datetime.datetime.now().isoformat()
+    changefreq = etree.SubElement(staticRoutesDelivery, 'changefreq')
+    changefreq.text = 'daily'
+    priority = etree.SubElement(staticRoutesDelivery, 'priority')
+    priority.text = '0.3'
+    staticRoutesRegister = etree.SubElement(sitemaproot, 'url')
+    loc = etree.SubElement(staticRoutesRegister, 'loc')
+    loc.text = 'https://lltoys.ru/inputpd?redirect=/'
+    lastmod = etree.SubElement(staticRoutesRegister, 'lastmod')
+    lastmod.text = datetime.datetime.now().isoformat()
+    changefreq = etree.SubElement(staticRoutesRegister, 'changefreq')
+    changefreq.text = 'daily'
+    priority = etree.SubElement(staticRoutesRegister, 'priority')
+    priority.text = '0.8'
+    staticRoutesHit = etree.SubElement(sitemaproot, 'url')
+    loc = etree.SubElement(staticRoutesHit, 'loc')
+    loc.text = 'https://lltoys.ru/search?bestsellers=1'
+    lastmod = etree.SubElement(staticRoutesHit, 'lastmod')
+    lastmod.text = datetime.datetime.now().isoformat()
+    changefreq = etree.SubElement(staticRoutesHit, 'changefreq')
+    changefreq.text = 'daily'
+    priority = etree.SubElement(staticRoutesHit, 'priority')
+    priority.text = '1.0'
+    staticRoutesHit = etree.SubElement(sitemaproot, 'url')
+    loc = etree.SubElement(staticRoutesHit, 'loc')
+    loc.text = 'https://lltoys.ru/search?supersale=1'
+    lastmod = etree.SubElement(staticRoutesHit, 'lastmod')
+    lastmod.text = datetime.datetime.now().isoformat()
+    changefreq = etree.SubElement(staticRoutesHit, 'changefreq')
+    changefreq.text = 'daily'
+    priority = etree.SubElement(staticRoutesHit, 'priority')
+    priority.text = '1.0'
+    staticRoutesHit = etree.SubElement(sitemaproot, 'url')
+    loc = etree.SubElement(staticRoutesHit, 'loc')
+    loc.text = 'https://lltoys.ru/search?novelties=1'
+    lastmod = etree.SubElement(staticRoutesHit, 'lastmod')
+    lastmod.text = datetime.datetime.now().isoformat()
+    changefreq = etree.SubElement(staticRoutesHit, 'changefreq')
+    changefreq.text = 'daily'
+    priority = etree.SubElement(staticRoutesHit, 'priority')
+    priority.text = '1.0'
+    for category in categories:
+        if category.subCategory and (category.category not in catalog):
+            catalog[category.category] = [category.subCategory]
+            sitecategory = etree.SubElement(sitemaproot, 'url')
+            loc = etree.SubElement(sitecategory, 'loc')
+            if not category.subCategory and category.category:
+                category.subCategory = category.category
+            loc.text = f'https://lltoys.ru/category/{category.category}'
+            lastmod = etree.SubElement(sitecategory, 'lastmod')
+            lastmod.text = datetime.datetime.now().isoformat()
+            changefreq = etree.SubElement(sitecategory, 'changefreq')
+            changefreq.text = 'daily'
+            priority = etree.SubElement(sitecategory, 'priority')
+            priority.text = '1.0'
+        else:
+            if category.subCategory and (category.subCategory not in catalog[category.category]):
+                catalog[category.category].append(category.subCategory)
+                sitecategory = etree.SubElement(sitemaproot, 'url')
+                loc = etree.SubElement(sitecategory, 'loc')
+                if not category.subCategory and category.category:
+                    category.subCategory = category.category
+                loc.text = f'https://lltoys.ru/category/{category.category}/{category.subCategory}'
+                lastmod = etree.SubElement(sitecategory, 'lastmod')
+                lastmod.text = datetime.datetime.now().isoformat()
+                changefreq = etree.SubElement(sitecategory, 'changefreq')
+                changefreq.text = 'daily'
+                priority = etree.SubElement(sitecategory, 'priority')
+                priority.text = '1.0'
+    if not settings.DEBUG:
+        etree.ElementTree(sitemaproot).write(
+            "/home/l/leoevgrv/lltoys.ru/public_html/sitemap.xml",
+            xml_declaration=True,
+            encoding='UTF-8',
+        )
+    else:
+        etree.ElementTree(sitemaproot).write(
+            "./public_html/sitemap.xml",
+            xml_declaration=True,
+            encoding='UTF-8',
+        )
+    subject = 'Информация создании файла itemap.xml'
+    message = f'Файл создан'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = ['leoevgeniy@gmail.com']
+    send_mail(subject, message, email_from, recipient_list)
+    return Response('Данные обновлены!')
+
+
+@api_view(['GET'])
+def createyml(request):
+    categoriesModels = Category.objects.all()
+    catalog = {}
+    for category in categoriesModels:
+        if category.subCategory and (category.category not in catalog):
+            catalog[category.category] = [category.subCategory]
+        else:
+            if category.subCategory and (category.subCategory not in catalog[category.category]):
+                catalog[category.category].append(category.subCategory)
+    root = etree.Element("yml_catalog")
+    root.set('date', datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat())
+    appt = etree.SubElement(root, "shop")
+
+    # создаем дочерний суб-элемент.
+    name = etree.SubElement(appt, "name")
+    name.text = "lltoys.ru"
+
+    company = etree.SubElement(appt, "company")
+    company.text = "lltoys.ru"
+
+    url = etree.SubElement(appt, "url")
+    url.text = "https://lltoys.ru"
+
+    currencies = etree.SubElement(appt, 'currencies')
+    currency = etree.SubElement(currencies, 'currency')
+    currency.set('id', 'RUR')
+    currency.set('rate', '1')
+    categories = etree.SubElement(appt, 'categories')
+    catIndex = 1
+    categoryToUpdate = []
+    count = 0
+    for cat in catalog:
+        category = etree.SubElement(categories, 'category')
+        category.set('id', str(catIndex))
+        category.text = cat
+        subCatIndex = catIndex + 1
+        catDBall = categoriesModels.filter(category=cat)
+        for subCat in catalog[cat]:
+
+            subCategory = etree.SubElement(categories, 'category')
+            subCategory.set('id', str(subCatIndex))
+            subCategory.set('parentId', str(catIndex))
+            if not subCat:
+                subCat = cat
+            subCategory.text = subCat
+            for dbCat in catDBall:
+                if dbCat.subCategory == subCat:
+                    categoryToUpdate.append(Category(id=dbCat.id, categoryId=str(subCatIndex), categoryParentId=str(catIndex)))
+                    count += 1
+            subCatIndex += 1
+            if count > 5000:
+                count = 0
+                Category.objects.bulk_update(categoryToUpdate, fields=['categoryId', 'categoryParentId'])
+                db.close_old_connections()
+                categoryToUpdate = []
+        catIndex = subCatIndex
+    Category.objects.bulk_update(categoryToUpdate, fields=['categoryId', 'categoryParentId'])
+    db.close_old_connections()
+    delivery = etree.SubElement(appt, 'delivery')
+    delivery.text = 'true'
+    adult = etree.SubElement(appt, 'adult')
+    adult.text = 'true'
+    offers = etree.SubElement(appt, 'offers')
+    offerCount = 0
+    products = Product.objects.all()
+    categoriesModels = Category.objects.all()
+    assortiment = Assortiment.objects.all()
+    print('categ')
+    db.close_old_connections()
+    count = 0
+    for product in products:
+        countInStock = 0
+        assort = assortiment.filter(product_id=product._id)
+        for i in assort:
+            if i.countInStock > 0 and countInStock < i.countInStock:
+                countInStock = i.countInStock
+        if countInStock > 2:
+            try:
+                categoryForturbo = categoriesModels.filter(product_id=product._id)
+                i = categoryForturbo[0]
+                if i.categoryId != '0':
+                    offer = etree.SubElement(offers, 'offer', id=str(product._id))
+                    name = etree.SubElement(offer, 'name')
+                    name.text = product.name
+                    vendor = etree.SubElement(offer, 'vendor')
+                    vendor.text = product.brand
+                    vendorCode = etree.SubElement(offer, 'vendorCode')
+                    vendorCode.text = product.vendorCode
+                    adultitem = etree.SubElement(offer, 'adult')
+                    adultitem.text = 'true'
+                    pickup = etree.SubElement(offer, 'pickup')
+                    pickup.text = 'true'
+                    url = etree.SubElement(offer, 'url')
+                    url.text = 'http://lltoys.ru/products/' + str(product._id)
+                    price = etree.SubElement(offer, 'price')
+                    price.text = str(product.retailPrice)
+                    currencyId = etree.SubElement(offer, 'currencyId')
+                    currencyId.text = 'RUR'
+
+                    categoryId = etree.SubElement(offer, 'categoryId')
+                    categoryId.text = str(i.categoryId)
+                    picture = etree.SubElement(offer, 'picture')
+                    picture.text = product.image1
+                    if product.image2:
+                        picture2 = etree.SubElement(offer, 'picture')
+                        picture2.text = product.image2
+                    if product.image3:
+                        picture3 = etree.SubElement(offer, 'picture')
+                        picture3.text = product.image3
+                    if product.image4:
+                        picture4 = etree.SubElement(offer, 'picture')
+                        picture4.text = product.image4
+                    if product.image5:
+                        picture5 = etree.SubElement(offer, 'picture')
+                        picture5.text = product.image5
+                    if product.image6:
+                        picture6 = etree.SubElement(offer, 'picture')
+                        picture6.text = product.image6
+                    if product.image7:
+                        picture7 = etree.SubElement(offer, 'picture')
+                        picture7.text = product.image7
+                    if product.image8:
+                        picture8 = etree.SubElement(offer, 'picture')
+                        picture8.text = product.image8
+                    description = etree.SubElement(offer, 'description')
+                    description.text = product.description
+                    sales_notes = etree.SubElement(offer, 'sales_notes')
+                    sales_notes.text = 'Предоплата или оплата при получении'
+                    for i in assort:
+                        if i.color:
+                            param = etree.SubElement(offer, 'param', name='Цвет')
+                            param.text = i.color
+                        if i.size:
+                            param = etree.SubElement(offer, 'param', name='Размер')
+                            param.text = i.size
+
+                    weight = etree.SubElement(offer, 'weight')
+                    weight.text = product.brutto
+                    offerCount += 1
+            except:
+                continue
+        count +=1
+        db.close_old_connections()
+
+        print(count)
+    etree.dump(root)
+
+    if settings.DEBUG:
+        etree.ElementTree(root).write(
+            "./public_html/ymlcatalog.yml",
+            xml_declaration=True,
+            encoding='UTF-8',
+        )
+        etree.ElementTree(root).write(
+            "./public_html/turbocatalog.yml",
+            xml_declaration=True,
+            encoding='UTF-8',
+        )
+    else:
+        etree.ElementTree(root).write(
+            "/home/l/leoevgrv/lltoys.ru/public_html/ymlcatalog.yml",
+            xml_declaration=True,
+            encoding='UTF-8',
+        )
+        etree.ElementTree(root).write(
+            "/home/l/leoevgrv/lltoys.ru/public_html/turbocatalog.yml",
+            xml_declaration=True,
+            encoding='UTF-8',
+        )
+    xmlFile = etree.tostring(root, encoding='unicode')
+    myfile = open("ymlcatalog.yml", "w", encoding='utf-8')
+    myfile.write(xmlFile)
+    myfile.close()
+    subject = 'Информация создании файла catalog.yml'
+    message = f'Файл создан'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = ['leoevgeniy@gmail.com']
+    send_mail(subject, message, email_from, recipient_list)
+
+    return Response('Файлы выгрузки созданы')

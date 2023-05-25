@@ -4,12 +4,12 @@ from baseresponse.views import product_views as views
 urlpatterns = [
     path('', views.getProducts, name="products"),
     path('create/', views.createProduct, name="product-create"),
-    path('createfeed/', views.createyml, name="createyml"),
+    # path('createfeed/', views.createyml, name="createyml"),
     path('catalog/', views.getCatalog, name="product-createCatalog"),
     path('migrate/', views.migrateProduct, name="product-migrate"),
     path('migrate/update', views.updateStock, name="product-migrate"),
     path('updatenew30/', views.updateNewBestsellers, name="product-new30"),
-    path('createyml', views.createyml, name="product-migrate"),
+    # path('createyml', views.createyml, name="product-migrate"),
 
     path('supersale/', views.updateBySuperSaleProduct, name="product-super-sale"),
     path('upload/', views.uploadImage, name="image-upload"),
