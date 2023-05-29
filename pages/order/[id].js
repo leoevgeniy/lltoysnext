@@ -198,7 +198,14 @@ function OrderScreen({pageProps}) {
             setSbpReCreate(false)
         }
     }, [paymentDetailsLoading, paymentDetailsSuccess, loading])
-
+    useEffect(() => {
+        if (p5sOrder && p5sOrder.ExtOrderPaid === '1' && !order.isPaid) {
+            successPaymentHandler(p5sOrder.MoneyHistoryDate)
+        }
+        if (p5sOrder && p5sOrder.dsDeliveryDate) {
+            deliverHandler()
+        }
+    },[p5sDetails])
     const successPaymentHandler = (paymentResult) => {
         dispatch(payOrder(orderId, paymentResult));
     };
@@ -276,10 +283,14 @@ function OrderScreen({pageProps}) {
                                         Заказ доставлен {order.deliveredAt}
                                     </Message>
                                 )}
-
                                 {p5sOrder && p5sOrder.status && (
                                     <Message variant="warning">
                                         Статус: {p5sOrder.status}
+                                        {p5sOrder.postDataTrackingUrl &&
+                                        <Button href={p5sOrder.postDataTrackingUrl} target="_blank" className='ml-4'>
+                                            Отследить доставку
+                                        </Button>
+                                        }
                                     </Message>
                                 )}
                                 {order.paymentMethod === 'bankCard' && !order.isPaid &&
