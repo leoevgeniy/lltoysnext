@@ -346,13 +346,18 @@ def getP5sOrderDetails(request, pk):
                                 p5sOrder.status = 'Отгружен. Ожидаем оплату'
                         elif orderItem.getElementsByTagName('status')[0].firstChild.data == '13':
                                 p5sOrder.status = 'Удален'
-                    if orderItem.getElementsByTagName('postData')[0].getElementsByTagName('TrackingUrl')[0].firstChild:
-                        postdata = orderItem.getElementsByTagName('postData')[0].getElementsByTagName('TrackingUrl')[0].firstChild.data
-                        p5sOrder.postDataTrackingUrl = postdata
-                    if orderItem.getElementsByTagName('postData')[0].getElementsByTagName('PostCode')[0].firstChild:
+                    try:
+                        p5sOrder.postDataTrackingUrl = orderItem.getElementsByTagName('postData')[0].getElementsByTagName('TrackingUrl')[0].firstChild.data
+                    except:
+                        continue
+                    try:
                         p5sOrder.postDataCode = orderItem.getElementsByTagName('postData')[0].getElementsByTagName('PostCode')[0].firstChild.data
-                    if orderItem.getElementsByTagName('postData')[0].getElementsByTagName('PostStatusName')[0].firstChild:
+                    except:
+                        continue
+                    try:
                         p5sOrder.postDataStatusName = orderItem.getElementsByTagName('postData')[0].getElementsByTagName('PostStatusName')[0].firstChild.data
+                    except:
+                        continue
             p5sOrder.save()
             serializer = P5sOrderSerializer(p5sOrder, many=False)
             return Response(serializer.data)
