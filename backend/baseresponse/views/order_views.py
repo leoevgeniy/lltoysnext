@@ -346,10 +346,16 @@ def getP5sOrderDetails(request, pk):
                                 p5sOrder.status = 'Отгружен. Ожидаем оплату'
                         elif orderItem.getElementsByTagName('status')[0].firstChild.data == '13':
                                 p5sOrder.status = 'Удален'
-
-                p5sOrder.save()
-                serializer = P5sOrderSerializer(p5sOrder, many=False)
-                return Response(serializer.data)
+                    if orderItem.getElementsByTagName('postData')[0].getElementsByTagName('TrackingUrl')[0].firstChild:
+                        postdata = orderItem.getElementsByTagName('postData')[0].getElementsByTagName('TrackingUrl')[0].firstChild.data
+                        p5sOrder.postDataTrackingUrl = postdata
+                    if orderItem.getElementsByTagName('postData')[0].getElementsByTagName('PostCode')[0].firstChild:
+                        p5sOrder.postDataCode = orderItem.getElementsByTagName('postData')[0].getElementsByTagName('PostCode')[0].firstChild.data
+                    if orderItem.getElementsByTagName('postData')[0].getElementsByTagName('PostStatusName')[0].firstChild:
+                        p5sOrder.postDataStatusName = orderItem.getElementsByTagName('postData')[0].getElementsByTagName('PostStatusName')[0].firstChild.data
+            p5sOrder.save()
+            serializer = P5sOrderSerializer(p5sOrder, many=False)
+            return Response(serializer.data)
         else:
             return Response({'detail': 'Заказ не существует'}, status=status.HTTP_400_BAD_REQUEST)
 
