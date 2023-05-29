@@ -483,22 +483,26 @@ def createyml(request):
                     description.text = product.description
                     sales_notes = etree.SubElement(offer, 'sales_notes')
                     sales_notes.text = 'Предоплата или оплата при получении'
+                    paramcount = 0
                     for i in assort:
-                        if i.color:
-                            param = etree.SubElement(offer, 'param', name='Цвет')
-                            param.text = i.color
-                        if i.size:
-                            param = etree.SubElement(offer, 'param', name='Размер')
-                            param.text = i.size
+                        if paramcount < 199:
+                            if i.color:
+                                param = etree.SubElement(offer, 'param', name='Цвет')
+                                param.text = i.color
+                            if i.size:
+                                param = etree.SubElement(offer, 'param', name='Размер')
+                                param.text = i.size
+                            paramcount += 1
 
                     weight = etree.SubElement(offer, 'weight')
-                    weight.text = product.brutto
+                    weight.text = str(abs(float(product.brutto)))
                     offerCount += 1
             except:
                 continue
         count +=1
         db.close_old_connections()
-
+        if count > 40:
+            break
         print(count)
     etree.dump(root)
 
