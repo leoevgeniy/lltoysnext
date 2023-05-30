@@ -25,6 +25,7 @@ import 'pure-react-carousel/dist/react-carousel.es.css';
 import {wrapper} from "@/redux/store";
 import Head from "next/head";
 import MyVerticallyCenteredModal from "@/components/MyVerticallyCenteredModal";
+import fav from "@/public/favicon.ico";
 
 const MyApp = ({Component, ...rest}) => {
     const {store, props} = wrapper.useWrappedStore(rest);
@@ -34,6 +35,8 @@ const MyApp = ({Component, ...rest}) => {
     return (
         <div style={size.width < 768 ? {'marginTop': '70px'} : {}} className='bg-black'>
             <Head>
+                <link rel="shortcut icon" href={fav}/>
+
             </Head>
             <Provider store={store}>
                 <Layout>
