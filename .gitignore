@@ -1,4 +1,7 @@
 # build output
+*.php
+*.xml
+*.yml
 tmp
 dist
 .next
