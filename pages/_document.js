@@ -11,27 +11,27 @@ export default function Document() {
             <body id='root'>
             <Main/>
             <NextScript/>
-            <script
-                dangerouslySetInnerHTML={{
-                    __html: `
-                (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-                m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-                (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-      
-                ym(90717918, "init", {
-                      clickmap:true,
-                      trackLinks:true,
-                      accurateTrackBounce:true
-                });
-              `,
-                }}
-            />
-            <noscript>
-                <div>
-                    <img src="https://mc.yandex.ru/watch/12345678" style={{position: 'absolute', left: '-9999px'}}
-                         alt=""/>
-                </div>
-            </noscript>
+            {/*<script*/}
+            {/*    dangerouslySetInnerHTML={{*/}
+            {/*        __html: `*/}
+            {/*    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};*/}
+            {/*    m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})*/}
+            {/*    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");*/}
+
+            {/*    ym(90717918, "init", {*/}
+            {/*          clickmap:true,*/}
+            {/*          trackLinks:true,*/}
+            {/*          accurateTrackBounce:true*/}
+            {/*    });*/}
+            {/*  `,*/}
+            {/*    }}*/}
+            {/*/>*/}
+            {/*<noscript>*/}
+            {/*    <div>*/}
+            {/*        <img src="https://mc.yandex.ru/watch/12345678" style={{position: 'absolute', left: '-9999px'}}*/}
+            {/*             alt=""/>*/}
+            {/*    </div>*/}
+            {/*</noscript>*/}
             {/* eslint-disable-next-line @next/next/inline-script-id */}
             <Script strategy="afterInteractive" dangerouslySetInnerHTML={{
                 __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
