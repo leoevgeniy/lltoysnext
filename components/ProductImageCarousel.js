@@ -23,7 +23,7 @@ export default function ProductImageCarousel(products) {
     }
     return (
 
-        <div className='carousel-wrapper w-100'>
+        <div className='carousel-wrapper w-100 product-carousel'>
             <ImageModal
                 src = {source}
 

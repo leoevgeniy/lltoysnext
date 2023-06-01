@@ -14,9 +14,9 @@ export default function ImageModal(props, history) {
              centered
              fullscreen
          >
-             <Modal.Header closeButton closeVariant='white'></Modal.Header>
+             <Modal.Header closeButton closeVariant='black'></Modal.Header>
              <Modal.Body className='position-relative w-full'>
-                 <Image fill style={{objectFit:"contain"}} loading="lazy" alt='полное фото' src={props.src} className='fullImage'></Image>
+                 <Image fill style={{objectFit:'contain', height: '100%', width: '100%'}} loading="lazy" alt='полное фото' src={props.src} className='fullImage'></Image>
              </Modal.Body>
         </Modal>
     )

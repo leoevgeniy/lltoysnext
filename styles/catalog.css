@@ -18,8 +18,8 @@
     color: black !important;
     background-color: rgb(210 199 219) !important;
 }
-.btn-close {
-    color: white !important;
+.offcanvas-header .btn-close {
+    color: black !important;
     background: white;
 }
 @media (max-width: 1200px) {

@@ -1,11 +1,16 @@
 .fullImage {
-    position: fixed;
-    z-index:2;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-    height: 100%;
+    /*position: fixed;*/
+    /*z-index:2;*/
+    /*left: 50%;*/
+    /*top: 50%;*/
+    /*transform: translate(-50%,-50%);*/
+    /*height: 100%;*/
     pointer-events: none;
+}
+
+.modal-header .btn-close {
+    color: white;
+    background-color: #000;
 }
 .centeredImage {
     display: block;
