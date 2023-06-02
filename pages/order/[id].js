@@ -106,8 +106,7 @@ function OrderScreen({pageProps}) {
             dispatch(getOrderDetails(orderId));
             dispatch(p5sgetOrderDetails(orderId));
         }
-
-        if (!loading && p5sDetailsError) {
+        if (!loading && (p5sDetailsError || (p5sOrder && p5sOrder.ResultStatusMsg === "Some orders was not found."))) {
             if (
                 order.paymentMethod === "cash" ||
                 order.paymentMethod === "deliveryCard"
@@ -202,7 +201,7 @@ function OrderScreen({pageProps}) {
         if (p5sOrder && p5sOrder.ExtOrderPaid === '1' && !order.isPaid) {
             successPaymentHandler(p5sOrder.MoneyHistoryDate)
         }
-        if (p5sOrder && p5sOrder.dsDeliveryDate) {
+        if (p5sOrder && p5sOrder.status === 'Оплачен и доставлен') {
             deliverHandler()
         }
     },[p5sDetails])
@@ -264,12 +263,14 @@ function OrderScreen({pageProps}) {
                                     <strong>Имя: </strong>
                                     {order.user.name}
                                 </p>
-                                <p>
-                                    <strong>E-mail: </strong>
-                                    <a href={`mailto:${order.user.email}`}>
-                                        {order.user.email}
-                                    </a>
-                                </p>
+                                {order && order.user.email &&
+                                    <p>
+                                        <strong>E-mail: </strong>
+                                        <a href={`mailto:${order.user.email}`}>
+                                            {order.user.email}
+                                        </a>
+                                    </p>
+                                }
                                 <p>
                                     <strong>Адрес: </strong>
                                     {order.shippingAddress.postalcode},{" "}
@@ -283,9 +284,12 @@ function OrderScreen({pageProps}) {
                                         Заказ доставлен {order.deliveredAt}
                                     </Message>
                                 )}
-                                {p5sOrder && p5sOrder.status && (
+                                {p5sOrder && p5sOrder.status !== 'Оплачен и доставлен' && (
                                     <Message variant="warning">
                                         Статус: {p5sOrder.status}
+                                        {p5sOrder.dsDeliveryDate &&
+                                            <span className='pl-3'>Плановая дата доставки: {p5sOrder.dsDeliveryDate} </span>
+                                        }
                                         {p5sOrder.postDataTrackingUrl &&
                                         <Button href={p5sOrder.postDataTrackingUrl} target="_blank" className='ml-4'>
                                             Отследить доставку
