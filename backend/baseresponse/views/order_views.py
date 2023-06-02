@@ -1,6 +1,8 @@
 import uuid
 from datetime import datetime
-from unicodedata import decimal
+
+from django.contrib.auth.models import User
+# from unicodedata import decimal
 from xml.dom import minidom
 from xml.etree import ElementTree
 
@@ -100,13 +102,18 @@ def addOrderItems(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def addP5sOrder(request):
-    user = request.user
-    profile = Profile.objects.get(user_id=user.id)
+
+    # user = request.user
     data = request.data
+    order = Order.objects.get(_id=data['orderID'])
+    user = User.objects.get(id=order.user_id)
+    profile = Profile.objects.get(user_id=user.id)
     delivery = 0
     payload = ''
     itemsPrice = 0
     deliverPrice = 0
+
+
 
     for i in data['orderItems']:
         payload += f'{i["aID"]}-{i["qty"]}-{i["price"]},'
@@ -128,6 +135,11 @@ def addP5sOrder(request):
         paymentMethod = 1
     if itemsPrice < 3000:
         deliverPrice = 300
+    userEmail = ''
+    if user.email:
+        userEmail= user.email
+    else:
+        userEmail = 'empty'
     headers = {
         # "Content-type": "application/form-data",
         'ApiKey': '62e3b498a67f03.93794391',
@@ -139,7 +151,7 @@ def addP5sOrder(request):
         'dsDelivery': delivery,
         'dsFio': user.first_name,
         'dsMobPhone': str(profile.phone_number),
-        'dsEmail': user.email,
+        'dsEmail': userEmail,
         'dsCity': data['shippingAddress']['city'],
         'dsStreet': data['shippingAddress']['street'],
         'dsHouse': data['shippingAddress']['house'],
@@ -171,7 +183,6 @@ def addP5sOrder(request):
             return Response({'detail': 'Заказ уже создан'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             response = requests.post(url, headers)
-
             if response.ok:
 
                 for i in ElementTree.fromstring(response.content):
@@ -199,29 +210,29 @@ def addP5sOrder(request):
                             ErrorItems = i.text
                         if i.tag == 'messages':
                             messages = i.text
-
-                    p5sOrder = P5sOrder.objects.create(
-                        ResultStatus=ResultStatus,
-                        ResultStatusMsg=ResultStatusMsg,
-                        timestamp=timestamp,
-                        orderID=p5sOrderId,
-                        totalSum=totalSum,
-                        dsComments=comments,
-                        pickupDate=pickupDate,
-                        ExtTotalSum=ExtTotalSum,
-                        ExtDeliveryCost=ExtDeliveryCost,
-                        messages=messages,
-                        ExtOrderID_id=data['orderID']
-                    )
-                    for item in data['orderItems']:
-                        P5sOrderItem.objects.create(
-                            p5sOrder=p5sOrder,
-                            prodID=item['product'],
-                            name=item['name'],
-                            qty=item['qty'],
-                            ds_price=item['price'],
-                            aID=item['aID']
+                    if ResultStatus != '21' and ResultStatus != '20' and ResultStatus != '2' and ResultStatus != '7':
+                        p5sOrder = P5sOrder.objects.create(
+                            ResultStatus=ResultStatus,
+                            ResultStatusMsg=ResultStatusMsg,
+                            timestamp=timestamp,
+                            orderID=p5sOrderId,
+                            totalSum=totalSum,
+                            dsComments=comments,
+                            pickupDate=pickupDate,
+                            ExtTotalSum=ExtTotalSum,
+                            ExtDeliveryCost=ExtDeliveryCost,
+                            messages=messages,
+                            ExtOrderID_id=data['orderID']
                         )
+                        for item in data['orderItems']:
+                            P5sOrderItem.objects.create(
+                                p5sOrder=p5sOrder,
+                                prodID=item['product'],
+                                name=item['name'],
+                                qty=item['qty'],
+                                ds_price=item['price'],
+                                aID=item['aID']
+                            )
                 else:
                     p5sOrder = P5sOrder.objects.create(
                         ResultStatus=ResultStatus,
@@ -264,7 +275,6 @@ def getOrders(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getP5sOrderDetails(request, pk):
-    user = request.user
     order = Order.objects.get(_id=pk)
     try:
         if order.paymentMethod == 'cash' or order.paymentMethod == 'deliveryCard' or order.isPaid:
@@ -275,12 +285,13 @@ def getP5sOrderDetails(request, pk):
             url = 'http://api.ds-platforma.ru/ds_get_order_data.php'
             responce = requests.get(url, headers)
             if responce.ok:
+
+
                 if P5sOrder.objects.filter(ExtOrderID_id=pk).exists():
                     p5sOrder = P5sOrder.objects.get(ExtOrderID_id=pk)
                 else:
                     Response({'detail': 'Заказ не существует'}, status=status.HTTP_400_BAD_REQUEST)
                 data = minidom.parseString(responce.content)
-
                 result = data.getElementsByTagName('Result')
                 p5sOrder.ResultStatus = data.getElementsByTagName('ResultStatus')[0].firstChild.data
                 p5sOrder.ResultStatusMsg = data.getElementsByTagName('ResultStatusMsg')[0].firstChild.data
@@ -358,7 +369,9 @@ def getP5sOrderDetails(request, pk):
                         p5sOrder.postDataStatusName = orderItem.getElementsByTagName('postData')[0].getElementsByTagName('PostStatusName')[0].firstChild.data
                     except:
                         continue
-            p5sOrder.save()
+
+                    p5sOrder.save()
+
             serializer = P5sOrderSerializer(p5sOrder, many=False)
             return Response(serializer.data)
         else:
