@@ -1,5 +1,5 @@
-// export const API_HOST='https://backend.lltoys.ru'
-export const API_HOST='http://127.0.0.1:8000'
+export const API_HOST='https://backend.lltoys.ru'
+// export const API_HOST='http://127.0.0.1:8000'
 // export const LOCATION='http://leoevgrv.beget.tech'
 export const LOCATION= process.env.NODE_ENV === 'production' ? 'https://lltoys.ru' : 'http://localhost:3000'
 export const VALID_KEY = 'iKa0EzMTcxYzNSuPgKecMEZt0K948dP0'

@@ -198,15 +198,16 @@ function OrderScreen({pageProps}) {
         }
     }, [paymentDetailsLoading, paymentDetailsSuccess, loading])
     useEffect(() => {
-        if (p5sOrder && p5sOrder.ExtOrderPaid === '1' && !order.isPaid) {
-            successPaymentHandler(p5sOrder.MoneyHistoryDate)
+        if (p5sOrder && p5sOrder.status === 'Оплачен и доставлен' && !order.isPaid) {
+            successPaymentHandler(order.deliveredAt)
+            // console.log(p5sOrder.MoneyHistoryDate)
         }
         if (p5sOrder && p5sOrder.status === 'Оплачен и доставлен') {
             deliverHandler()
         }
     },[p5sDetails])
-    const successPaymentHandler = (paymentResult) => {
-        dispatch(payOrder(orderId, paymentResult));
+    const successPaymentHandler = () => {
+        dispatch(payOrder(orderId));
     };
 
     const deliverHandler = () => {
@@ -287,7 +288,7 @@ function OrderScreen({pageProps}) {
                                 {p5sOrder && p5sOrder.status !== 'Оплачен и доставлен' && (
                                     <Message variant="warning">
                                         Статус: {p5sOrder.status}
-                                        {p5sOrder.dsDeliveryDate &&
+                                        {(p5sOrder.dsDeliveryDate) &&
                                             <span className='pl-3'>Плановая дата доставки: {p5sOrder.dsDeliveryDate} </span>
                                         }
                                         {p5sOrder.postDataTrackingUrl &&
