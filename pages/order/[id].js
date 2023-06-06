@@ -198,11 +198,11 @@ function OrderScreen({pageProps}) {
         }
     }, [paymentDetailsLoading, paymentDetailsSuccess, loading])
     useEffect(() => {
-        if (p5sOrder && p5sOrder.status === 'Оплачен и доставлен' && !order.isPaid) {
+        if (!p5sDetailsLoading && p5sOrder && p5sOrder.status === 'Оплачен и доставлен' && !order.isPaid) {
             successPaymentHandler(order.deliveredAt)
             // console.log(p5sOrder.MoneyHistoryDate)
         }
-        if (p5sOrder && p5sOrder.status === 'Оплачен и доставлен') {
+        if (p5sOrder && p5sOrder.status === 'Оплачен и доставлен' && !order.isDelivered) {
             deliverHandler()
         }
     },[p5sDetails])
