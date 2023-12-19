@@ -1,4 +1,5 @@
 import datetime
+import math
 import operator
 import urllib
 import urllib.parse
@@ -16,6 +17,27 @@ from base.models import Product, Review, Category, Assortiment
 from django.db.models import Q, Max
 from baseresponse.serializers import ProductSerializer
 from rest_framework import status
+
+def send_telegram():
+    product = Product.objects.filter(Q(assortiment__countInStock__gt=0) & Q(isNovelties__iexact=1)).distinct().order_by(
+        '?')[:1]
+    photo = product.image1
+    name = product.name
+    description = product.description
+    token = '6920212214:AAEaa9dPlxlOv6ZvgrptttRwLgv-W8ua9m8'
+    chat_id = '-1001728234751'
+    text = ''
+    api = 'https://api.telegram.org/bot'
+    method = api + token + '/sendPhoto'
+
+    text = f'🔥 {name} ⚡️' \
+           f' {description}'
+
+    req = requests.post(method + '?chat_id=' + chat_id + '&caption=' + text + '&photo=' + photo)
+    # req = requests.post('https://api.telegram.org/bot' + token + '/getUpdates')
+    # req = requests.get('https://api.telegram.org/bot')
+
+
 
 
 @api_view(['POST'])
@@ -401,6 +423,7 @@ def getBestSellerProducts(request):
     products = Product.objects.filter(Q(assortiment__countInStock__gt=0) & Q(isBestSeller__iexact=1)).distinct()
     products = products.order_by('?')[:10]
     serializer = ProductSerializer(products, many=True)
+    send_telegram()
     return Response(serializer.data)
 
 
@@ -691,33 +714,67 @@ def updateStock(request):
 @api_view(['GET'])
 # @permission_classes([IsAdminUser])
 def updateBySuperSaleProduct(request):
-    old = Product.objects.filter(isSuperSale=True)
-    olds = 0
-    created = 0
-    for i in old:
-        i.isSuperSale = False
-        i.superSaleCost = None
-        i.save()
-        olds += 1
-    url = "https://stripmag.ru/datafeed/p5s_sale.csv"
-    with requests.get(url, stream=True) as r:
-        reader = csv.reader(codecs.iterdecode(r.iter_lines(), 'utf-8'), delimiter=';', quotechar='"')
-        count = 0
-        for row in reader:  # Handle each row here...
-            if count > 0:
-                if Product.objects.filter(prodId=row[0]).exists():
-                    product = Product.objects.get(prodId=row[0])
-                    product.isSuperSale = True
-                    product.superSaleCost = row[4]
-                    product.countInStock = row[5]
-                    product.save()
-                    created += 1
-            count += 1
-    subject = 'Информация об обновлении Супер Скидки'
-    message = f'{olds} Удалено. {created} товаров по Супер скидке обновились в Магазине радости. '
-    email_from = settings.EMAIL_HOST_USER
-    recipient_list = ['leoevgeniy@gmail.com']
-    send_mail(subject, message, email_from, recipient_list)
+    # old = Product.objects.filter(isSuperSale=True)
+    # olds = 0
+    # created = 0
+    # for i in old:
+    #     i.isSuperSale = False
+    #     i.superSaleCost = None
+    #     i.save()
+    #     olds += 1
+    # url = "https://stripmag.ru/datafeed/p5s_sale.csv"
+    # with requests.get(url, stream=True) as r:
+    #     reader = csv.reader(codecs.iterdecode(r.iter_lines(), 'utf-8'), delimiter=';', quotechar='"')
+    #     count = 0
+    #     for row in reader:  # Handle each row here...
+    #         if count > 0:
+    #             if Product.objects.filter(prodId=row[0]).exists():
+    #                 product = Product.objects.get(prodId=row[0])
+    #                 product.isSuperSale = True
+    #                 product.superSaleCost = row[4]
+    #                 product.countInStock = row[5]
+    #                 product.save()
+    #                 created += 1
+    #         count += 1
+    product = Product.objects.filter(Q(assortiment__countInStock__gt=0)).distinct().order_by('?')[:1][0]
+    photo = product.image1
+    name = product.name
+    description = product.description.replace('<br>', '\n')
+    brand = ''
+    collectionname = ''
+    if product.brand != '':
+        brand = '#'+product.brand.replace(' ', '')
+    if product.CollectionName != '':
+        collectionname = '#' + product.CollectionName.replace(' ', '')
+    price = math.floor(product.retailPrice)
+    prodId = product.prodId
+    token = '6920212214:AAEaa9dPlxlOv6ZvgrptttRwLgv-W8ua9m8'
+    chat_id = '-1001728234751'
+    text = ''
+    api = 'https://api.telegram.org/bot'
+    method = api + token + '/sendPhoto'
+
+    text = f'🔥 {name} ⚡️' \
+           f' {description} \n' \
+           f' {brand} {collectionname} \n'\
+           f' {price}₽ \n'\
+           f' [Заказать](https://lltoys.ru/products/{prodId})'
+
+
+    mydata = {
+        'chat_id': chat_id,
+        'caption': text,
+        'photo': photo,
+        "parse_mode": "markdown",
+
+    }
+    req = requests.post(method, data=mydata)
+    # req = requests.post(method + '?chat_id=' + chat_id + '&caption=' + text + '&photo=' + photo)
+    # subject = 'Информация об обновлении Супер Скидки'
+    # message = f'{olds} Удалено. {created} товаров по Супер скидке обновились в Магазине радости. '
+    # email_from = settings.EMAIL_HOST_USER
+    # recipient_list = ['leoevgeniy@gmail.com']
+    # send_mail(subject, message, email_from, recipient_list)
     return Response('Данные обновлены!')
 
 

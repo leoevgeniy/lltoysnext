@@ -1,8 +1,10 @@
 import datetime
+import math
 import urllib
 import xml.etree.ElementTree as etree
 
 from django import db
+import requests
 from rest_framework.decorators import api_view
 from django.conf import settings
 import csv
@@ -168,45 +170,84 @@ def migrateProduct(request):
 
 @api_view(['GET'])
 def updateStock(request):
-    destination = str(settings.BASE_DIR) + "/fullStock.csv"
-    url = 'http://feed.p5s.ru/smartFeedBuild/63e62219e9d345.00449447'
-    urllib.request.urlretrieve(url, destination)
-    productsArr = {product.prodId: product for product in Product.objects.all()}
-    product_assortiment = {p_assortiment.aID: p_assortiment for p_assortiment in Assortiment.objects.all()}
-    db.close_old_connections()
-    productsToUpdate = []
-    assortToUpdate = []
-    updated = 0
-    count = 0
+    # destination = str(settings.BASE_DIR) + "/fullStock.csv"
+    # url = 'http://feed.p5s.ru/smartFeedBuild/63e62219e9d345.00449447'
+    # urllib.request.urlretrieve(url, destination)
+    # productsArr = {product.prodId: product for product in Product.objects.all()}
+    # product_assortiment = {p_assortiment.aID: p_assortiment for p_assortiment in Assortiment.objects.all()}
+    # db.close_old_connections()
+    # productsToUpdate = []
+    # assortToUpdate = []
+    # updated = 0
+    # count = 0
+    #
+    # with open(destination, 'r', newline='', encoding='utf-8') as r:
+    #     reader = csv.reader(r, delimiter=';', quotechar='"')
+    #     for row in reader:
+    #         if productsArr.get(row[0]):
+    #             productsToUpdate.append(Product(_id=row[0], retailPrice=row[2]))
+    #             if product_assortiment.get(row[1]):
+    #                 assortToUpdate.append(
+    #                     Assortiment(id=product_assortiment[row[1]].id, countInStock=row[3], shippingDate=row[4])
+    #                 )
+    #             updated += 1
+    #             count += 1
+    #         if count > 20000:
+    #             count = 0
+    #             Product.objects.bulk_update(productsToUpdate, fields=['retailPrice'])
+    #             Assortiment.objects.bulk_update(assortToUpdate, fields=['countInStock', 'shippingDate'])
+    #             db.close_old_connections()
+    #
+    #             productsToUpdate = []
+    #             assortToUpdate = []
+    #     Product.objects.bulk_update(productsToUpdate, fields=['retailPrice'])
+    #     Assortiment.objects.bulk_update(assortToUpdate, fields=['countInStock', 'shippingDate'])
+    #     db.close_old_connections()
+    product = Product.objects.filter(assortiment__countInStock__gt=2).distinct().order_by('?')[:1][0]
+    photo = product.image1
+    name = product.name
+    description = product.description.replace('<br>', '\n')
+    brand = ''
+    collectionname = ''
+    if product.brand != '':
+        brand = '#'+product.brand.replace(' ', '')
+    if product.CollectionName != '':
+        collectionname = '#' + product.CollectionName.replace(' ', '')
+    price = math.floor(product.retailPrice)
+    prodId = product.prodId
+    token = '6920212214:AAEaa9dPlxlOv6ZvgrptttRwLgv-W8ua9m8'
+    chat_id = '-1001728234751'
+    text = ''
+    api = 'https://api.telegram.org/bot'
+    method = api + token + '/sendPhoto'
+    category = Category.objects.filter(product_id=prodId)[0]
+    print(category.category)
+    cat = ''
+    subcat = ''
+    if category.category:
+        cat = '#' + category.category.replace(' ', '')
+    if category.subCategory:
+        subcat = '#' + category.subCategory.replace(' ', '').replace(',', '')
+    text = f'🔥 {name} ⚡️' \
+           f' {description} \n' \
+           f' {brand} {collectionname} {cat} {subcat}\n'\
+           f' {price}₽ \n'\
+           f' [Заказать](https://lltoys.ru/products/{prodId})'
 
-    with open(destination, 'r', newline='', encoding='utf-8') as r:
-        reader = csv.reader(r, delimiter=';', quotechar='"')
-        for row in reader:
-            if productsArr.get(row[0]):
-                productsToUpdate.append(Product(_id=row[0], retailPrice=row[2]))
-                if product_assortiment.get(row[1]):
-                    assortToUpdate.append(
-                        Assortiment(id=product_assortiment[row[1]].id, countInStock=row[3], shippingDate=row[4])
-                    )
-                updated += 1
-                count += 1
-            if count > 20000:
-                count = 0
-                Product.objects.bulk_update(productsToUpdate, fields=['retailPrice'])
-                Assortiment.objects.bulk_update(assortToUpdate, fields=['countInStock', 'shippingDate'])
-                db.close_old_connections()
 
-                productsToUpdate = []
-                assortToUpdate = []
-        Product.objects.bulk_update(productsToUpdate, fields=['retailPrice'])
-        Assortiment.objects.bulk_update(assortToUpdate, fields=['countInStock', 'shippingDate'])
-        db.close_old_connections()
+    mydata = {
+        'chat_id': chat_id,
+        'caption': text,
+        'photo': photo,
+        "parse_mode": "markdown",
 
-    subject = 'Информация об обновлении остатков'
-    message = f'{updated} товаров обновились в Магазине радости. '
-    email_from = settings.EMAIL_HOST_USER
-    recipient_list = ['leoevgeniy@gmail.com']
-    send_mail(subject, message, email_from, recipient_list)
+    }
+    req = requests.post(method, data=mydata)
+    # subject = 'Информация об обновлении остатков'
+    # message = f'{updated} товаров обновились в Магазине радости. '
+    # email_from = settings.EMAIL_HOST_USER
+    # recipient_list = ['leoevgeniy@gmail.com']
+    # send_mail(subject, message, email_from, recipient_list)
     return Response('Данные обновлены!')
 
 
